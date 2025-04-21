@@ -32,8 +32,7 @@ namespace TextRPG_Week3
                         battleSystem.Encounting(gameSystem, player, BattleSystem.BattleMode.Encounter);
                         break;
                     default:
-                        Start(gameSystem, battleSystem, player);
-                        return;
+                        continue;
                 }
             }
         }
