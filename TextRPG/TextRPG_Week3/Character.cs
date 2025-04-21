@@ -8,12 +8,34 @@ namespace TextRPG_Week3
 {
     public class Character
     {
-        public int Level { get; set; } = 1;
         public string Name { get; set; } = "이름";
         public string Job { get; set; } = "직업";
-        public int Attack { get; set; } = 10;
-        public int Defense { get; set; } = 5;
-        public int Hp { get; set; } = 100;
+        public int Level { get; set; } = 1;
+        public float Attack { get; set; } = 10;
+        public int Defence { get; set; } = 5;
+        public int Health { get; set; } = 100;
         public int Gold { get; set; } = 1500;
+
+        public int EquipAttack { get; set; } = 0;
+        public int EquipDefence { get; set; } = 0;
+        public int EquipHealth { get; set; } = 0;
+
+        public float TotalAttack => Attack;
+
+        public int TotalDefence => Defence;
+
+        public int TotalHealth => Health;
+
+        public int FullHealth = 100;
+
+        public void DisplayStatus(Character player)
+        {
+            Console.WriteLine($"Lv. 0{player.Level}");
+            Console.WriteLine($"{player.Name} ( {player.Job} )");
+            Console.WriteLine($"공격력 : {player.TotalAttack}" + (player.EquipAttack > 0 ? $" (+{player.EquipAttack})" : ""));
+            Console.WriteLine($"방어력 : {player.TotalDefence}" + (player.EquipDefence > 0 ? $" (+{player.EquipDefence})" : ""));
+            Console.WriteLine($"공격력 : {player.TotalHealth}" + (player.EquipHealth > 0 ? $" (+{player.EquipHealth})" : ""));
+            Console.WriteLine($"Gold   : {player.Gold} G");
+        }
     }
 }

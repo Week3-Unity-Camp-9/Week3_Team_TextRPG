@@ -8,12 +8,19 @@ namespace TextRPG_Week3
 {
     public class Enemy
     {
+        public int Level;   
         public string Name;
-        public int Attack;
         public int Hp;
+        public int Attack;
+        public bool IsDead;
 
-        public List<Enemy> enemyList = new List<Enemy>
-                {
-                });
+        public Enemy(int level, string name, int hp, int attack, bool isDead = false)
+        {
+            Level = level;
+            Name = name;
+            Hp = hp;
+            Attack = attack;
+            IsDead = isDead;
+        }
     }
 }
