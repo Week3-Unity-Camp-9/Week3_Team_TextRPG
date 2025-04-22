@@ -53,9 +53,9 @@ namespace TextRPG_Week3
         // 전투 루프 (상태에 따라 전투 UI 및 로직 분기)
         public void Battle(GameSystem gameSystem, Character player, BattleMode mode)
         {
-            if (player.Hp <= 0)
+            if (appearEnemies.All(enemy => enemy.IsDead))
             {
-                BattleResult(Result.Lose, player);
+                BattleResult(Result.Win, player);
                 return;
             }
             while (true)
@@ -164,11 +164,6 @@ namespace TextRPG_Week3
                 {
                     if (input == 0)
                     {
-                        if (appearEnemies.All(enemy => enemy.IsDead))
-                        {
-                            BattleResult(Result.Win, player);
-                            return;
-                        }
                         EnemyAttack(enemies, player);
                         return;
                     }
@@ -191,6 +186,11 @@ namespace TextRPG_Week3
         // 적의 공격 처리
         void EnemyAttack(List<Enemy> enemies, Character player)
         {
+            if (player.Hp <= 0)
+            {
+                BattleResult(Result.Lose, player);
+                return;
+            }
             for (int i = 0; i < enemies.Count; i++)
             {
                 if (enemies[i].IsDead) continue;
