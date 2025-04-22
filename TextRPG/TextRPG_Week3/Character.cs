@@ -75,7 +75,8 @@ namespace TextRPG_Week3
         {
             if (index < 0 || index >= Inventory.Count)
             {
-                Console.WriteLine("잘못된 번호입니다.");
+                Console.WriteLine("잘못된 입력입니다.");
+                Console.ReadKey();
                 return;
             }
 
@@ -103,29 +104,38 @@ namespace TextRPG_Week3
 
         public void ShowInventory()
         {
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("인벤토리");
-            Console.ResetColor();
+            while (true)
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("인벤토리");
+                Console.ResetColor();
 
-            if (Inventory.Count == 0)
-            {
-                Console.WriteLine("보유 중인 아이템이 없습니다.");
-            }
-            else
-            {
-                for (int i = 0; i < Inventory.Count; i++)
+                if (Inventory.Count == 0)
                 {
-                    Console.WriteLine($"{i + 1}. {Inventory[i].GetDisplayInfo()}");
+                    Console.WriteLine("보유 중인 아이템이 없습니다.");
                 }
-
-                Console.WriteLine("\n아이템 번호를 선택하면 장착/해제하거나 포션을 사용할 수 있습니다.");
-                Console.WriteLine("\n0. 나가기");
-                Console.Write(">> ");
-                string input = Console.ReadLine();
-                if (int.TryParse(input, out int selected))
+                else
                 {
-                    UseConsumableItem(selected - 1);  // 회복 아이템 먼저 검사
+                    for (int i = 0; i < Inventory.Count; i++)
+                    {
+                        Console.WriteLine($"{i + 1}. {Inventory[i].GetDisplayInfo()}");
+                    }
+
+                    Console.WriteLine("\n아이템 번호를 선택하면 장착/해제하거나 포션을 사용할 수 있습니다.");
+                    Console.WriteLine("\n0. 나가기");
+                    Console.Write(">> ");
+                    string input = Console.ReadLine();
+                    if (int.TryParse(input, out int selected))
+                    {
+                        if (selected == 0) return;
+                        UseConsumableItem(selected - 1);  // 회복 아이템 먼저 검사
+                    }
+                    else
+                    {
+                        Console.WriteLine("잘못된 입력입니다.");
+                        Console.ReadKey();
+                    }
                 }
             }
         }
@@ -137,7 +147,8 @@ namespace TextRPG_Week3
         {
             if (index < 0 || index >= Inventory.Count)
             {
-                Console.WriteLine("잘못된 번호입니다.");
+                Console.WriteLine("잘못된 입력입니다.");
+                Console.ReadKey();
                 return;
             }
 
@@ -150,6 +161,7 @@ namespace TextRPG_Week3
 
                 Console.WriteLine($"{item.Name}을(를) 사용하여 체력을 {item.Value} 회복했습니다.");
                 Inventory.RemoveAt(index);
+                Console.ReadKey();
             }
             else
             {

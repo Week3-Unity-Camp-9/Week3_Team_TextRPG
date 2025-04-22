@@ -51,6 +51,11 @@ namespace TextRPG_Week3
         // 전투 루프 (상태에 따라 전투 UI 및 로직 분기)
         public void Battle(GameSystem gameSystem, Character player, BattleMode mode)
         {
+            if (player.Hp <= 0)
+            {
+                BattleResult(Result.Lose, player);
+                return;
+            }
             while (true)
             {
                 Console.Clear();
@@ -191,11 +196,6 @@ namespace TextRPG_Week3
                     {
                         if (input == 0)
                         {
-                            if (player.Hp <= 0)
-                            {
-                                BattleResult(Result.Lose, player);
-                                return;
-                            }
                             break;
                         }
                         else
