@@ -86,7 +86,7 @@ namespace TextRPG_Week3
                 // 같은 타입의 기존 장비 해제
                 foreach (var item in Inventory)
                 {
-                    if (item.Type == selectedItem.Type)
+                    if (item.Type == selectedItem.Type && item != selectedItem)
                         item.IsEquipped = false;
                 }
 
@@ -98,6 +98,7 @@ namespace TextRPG_Week3
             {
                 Console.WriteLine("장착할 수 없는 아이템입니다.");
             }
+            Console.ReadKey();
         }
 
         public void ShowInventory()

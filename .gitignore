@@ -398,5 +398,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-TextRPG/TextRPG_Week3/obj/
 
+# Visual Studio build folders
+bin/
+obj/

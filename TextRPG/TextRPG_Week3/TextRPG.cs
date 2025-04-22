@@ -83,7 +83,6 @@ namespace TextRPG_Week3
                     case 0:
                         return;
                     default:
-                        gameSystem.Message("잘못된 입력입니다.");
                         continue;
                 }
             }
