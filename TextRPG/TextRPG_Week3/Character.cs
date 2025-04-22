@@ -35,7 +35,7 @@ namespace TextRPG_Week3
             Console.WriteLine($"공격력 : {player.TotalAttack}" + (player.EquipAttack > 0 ? $" (+{player.EquipAttack})" : ""));
             Console.WriteLine($"방어력 : {player.TotalDefence}" + (player.EquipDefense > 0 ? $" (+{player.EquipDefense})" : ""));
             Console.WriteLine($"공격력 : {player.TotalHealth}" + (player.EquipHealth > 0 ? $" (+{player.EquipHealth})" : ""));
-            Console.WriteLine($"Gold   : {player.Gold} G");
+            Console.WriteLine($"Gold   : {player.Gold} G\n");
         }
     }
 }

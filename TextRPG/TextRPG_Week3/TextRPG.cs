@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using TextRPG_Week3;
 
 namespace TextRPG_Week3
@@ -14,6 +15,13 @@ namespace TextRPG_Week3
         }
 
         void Start(GameSystem gameSystem, BattleSystem battleSystem, Character player)
+        {
+            CharacterCustom custom = new CharacterCustom();
+            custom.Customizing(player, false);
+            Town(gameSystem, battleSystem, player);
+        }
+
+        void Town(GameSystem gameSystem, BattleSystem battleSystem, Character player)
         {
             while (true)
             {
@@ -39,7 +47,7 @@ namespace TextRPG_Week3
 
         void Status(GameSystem gameSystem, Character player)
         {
-            CharacterCustom custom = new CharacterCustom;
+            CharacterCustom custom = new CharacterCustom();
             while (true)
             {
                 Console.WriteLine($"상태 보기");
@@ -51,7 +59,7 @@ namespace TextRPG_Week3
                 switch(input)
                 {
                     case 1:
-                        custom.Customizing(player);
+                        custom.Customizing(player, true);
                         break;
                     case 0:
                         return;

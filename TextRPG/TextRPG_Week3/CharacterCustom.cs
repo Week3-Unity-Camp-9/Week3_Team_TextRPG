@@ -4,13 +4,17 @@ namespace TextRPG_Week3
 {
     public class CharacterCustom
     {
-        public void Customizing(Character character)
+        public void Customizing(Character character, bool hasName)
         {
-            Console.Clear();
-            Console.WriteLine("==== 캐릭터 커스터마이징 ====");
+            if (hasName)
+            {
+                Console.Clear();
+                Console.WriteLine("==== 캐릭터 커스터마이징 ====");
+            }
+            else Console.WriteLine("스파르타 던전에 오신 여러분 환영합니다.");
 
             // 이름 입력
-            Console.Write("캐릭터 이름을 입력하세요: ");
+            Console.Write("원하시는 이름을 설정해주세요.\n>>");
             string name = Console.ReadLine();
             if (!string.IsNullOrWhiteSpace(name))
                 character.Name = name;
@@ -52,7 +56,7 @@ namespace TextRPG_Week3
                     break;
             }
 
-            Console.WriteLine("\n커스터마이징이 완료되었습니다!");
+            Console.WriteLine("\n적용이 완료되었습니다!");
             Console.WriteLine($"이름: {character.Name}");
             Console.WriteLine($"직업: {character.Job}");
             Console.WriteLine($"공격력: {character.Attack}");
