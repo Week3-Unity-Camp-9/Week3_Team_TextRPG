@@ -256,8 +256,7 @@ namespace TextRPG_Week3
             Lose // 패배
         }
 
-        int[] stage = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-        int i = 0;
+        public int stage = 1;
         // 전투 종료 처리
         void BattleResult(Result mode, Character player)
         {
@@ -268,15 +267,11 @@ namespace TextRPG_Week3
             Console.WriteLine($"Lv.{player.Level} {player.Name}");
             Console.WriteLine($"HP {player.MaxHp} -> {player.Hp}"); // 전투 전후 플레이어 HP 변화 출력
             Console.Write("\n0.다음\n>>");
+
             if (mode == Result.Win)
             {
-
-               
-
-                Console.WriteLine($"{stage[i]} 스테이지 클리어");
-                i++;
-
-
+                Console.WriteLine($"{stage} 스테이지 클리어");
+                stage++;
             }
 
             if (int.TryParse(Console.ReadLine(), out int input))

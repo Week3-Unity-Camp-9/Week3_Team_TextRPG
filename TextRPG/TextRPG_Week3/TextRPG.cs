@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 
 namespace TextRPG_Week3
 {
@@ -49,7 +50,7 @@ namespace TextRPG_Week3
                         ShopItem.OpenShop(player);
                         break;
                     case "4":
-                        battleSystem.Encounting(gameSystem, player, BattleSystem.BattleMode.Encounter);
+                        EnteringDungeon(gameSystem, battleSystem,player, BattleSystem.BattleMode.Encounter);
                         break;
                     case "0":
                         Console.WriteLine("게임을 종료합니다.");
@@ -69,7 +70,7 @@ namespace TextRPG_Week3
             CharacterCustom custom = new CharacterCustom();
             while (true)
             {
-                Console.WriteLine($"상태 보기");
+                Console.WriteLine("상태 보기");
                 Console.WriteLine("캐릭터의 정보가 표시됩니다.\n");
 
                 player.DisplayStatus();
@@ -81,6 +82,29 @@ namespace TextRPG_Week3
                         custom.Customizing(player, true);
                         break;
                     case 0:
+                        return;
+                    default:
+                        continue;
+                }
+            }
+        }
+
+        static void EnteringDungeon(GameSystem gameSystem, BattleSystem battleSystem,Character player, BattleSystem.BattleMode mode)
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("스파르타 던전에 오신 여러분 환영합니다.");
+                Console.WriteLine("이제 전투를 시작할 수 있습니다.");
+
+                int input = gameSystem.Select(new string[] { "1.상태 보기", $"2.전투 시작(현재 진행 : {battleSystem.stage})" }, false);
+                switch (input)
+                {
+                    case 1:
+                        Status(gameSystem, player);
+                        break;
+                    case 2:
+                        battleSystem.Encounting(gameSystem, player, mode);
                         return;
                     default:
                         continue;
