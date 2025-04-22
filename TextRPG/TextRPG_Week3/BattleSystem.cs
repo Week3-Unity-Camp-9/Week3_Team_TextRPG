@@ -289,7 +289,7 @@ namespace TextRPG_Week3
                 }
                 Console.WriteLine($"EXP {originalEXP} => {player.EXP}");
 
-                int gold = stage * 500;
+                int gold = (stage * 500) + (appearEnemies.Count * 100);
                 player.Gold += gold;
                 Console.WriteLine("[획득 보상]");
                 Console.WriteLine($"{gold} Gold");
