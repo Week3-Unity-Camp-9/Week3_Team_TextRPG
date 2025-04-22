@@ -23,7 +23,7 @@ namespace TextRPG_Week3
             switch (input)
             {
                 case 1:
-                    //상태보기
+                    CharacterCustom();
                     break;
                 case 2:
                     //전투시작
