@@ -18,6 +18,9 @@ namespace TextRPG_Week3
         public int Hp { get; set; } = 100;
         public int MaxHp { get; set; } = 100;
         public int Gold { get; set; } = 1500;
+        public int EXP { get; set; } = 0;
+
+        public int RequireEXP => (Level == 1 ? 10 : 0) + (Level - 1) * 35;
 
         public float TotalAttack => Attack + Inventory.Where(item => item.IsEquipped && item.Type == ItemType.Weapon).Sum(i => i.Value);
 

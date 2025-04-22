@@ -33,18 +33,21 @@ namespace TextRPG_Week3
                     character.Job = "전사";
                     character.Attack = 15;
                     character.Defense = 10;
+                    if (character.Hp == character.MaxHp) character.Hp = 120;
                     character.MaxHp = 120;
                     break;
                 case "2":
                     character.Job = "마법사";
                     character.Attack = 20;
                     character.Defense = 5;
+                    if (character.Hp == character.MaxHp) character.Hp = 80;
                     character.MaxHp = 80;
                     break;
                 case "3":
                     character.Job = "도적";
                     character.Attack = 12;
                     character.Defense = 7;
+                    if (character.Hp == character.MaxHp) character.Hp = 100;
                     character.MaxHp = 100;
                     break;
                 default:
@@ -52,6 +55,7 @@ namespace TextRPG_Week3
                     character.Job = "전사";
                     character.Attack = 15;
                     character.Defense = 10;
+                    if (character.Hp == character.MaxHp) character.Hp = 120;
                     character.MaxHp = 120;
                     break;
             }
