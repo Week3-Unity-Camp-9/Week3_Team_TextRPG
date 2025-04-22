@@ -4,7 +4,7 @@ namespace TextRPG_Week3
 {
     public class CharacterCustom
     {
-        public void Customizing(Character character, bool hasName)
+        public void Customizing(Character player, bool hasName)
         {
             if (hasName)
             {
@@ -17,7 +17,7 @@ namespace TextRPG_Week3
             Console.Write("원하시는 이름을 설정해주세요.\n>>");
             string name = Console.ReadLine();
             if (!string.IsNullOrWhiteSpace(name))
-                character.Name = name;
+                player.Name = name;
 
             // 직업 선택
             Console.WriteLine("직업을 선택하세요:");
@@ -30,43 +30,43 @@ namespace TextRPG_Week3
             {
 
                 case "1":
-                    character.Job = "전사";
-                    character.Attack = 15;
-                    character.Defense = 10;
-                    if (character.Hp == character.MaxHp) character.Hp = 120;
-                    character.MaxHp = 120;
+                    player.Job = "전사";
+                    player.Attack = 15;
+                    player.Defense = 10;
+                    if (player.Hp == player.MaxHp) player.Hp = 120;
+                    player.MaxHp = 120;
                     break;
                 case "2":
-                    character.Job = "마법사";
-                    character.Attack = 20;
-                    character.Defense = 5;
-                    if (character.Hp == character.MaxHp) character.Hp = 80;
-                    character.MaxHp = 80;
+                    player.Job = "마법사";
+                    player.Attack = 20;
+                    player.Defense = 5;
+                    if (player.Hp == player.MaxHp) player.Hp = 80;
+                    player.MaxHp = 80;
                     break;
                 case "3":
-                    character.Job = "도적";
-                    character.Attack = 12;
-                    character.Defense = 7;
-                    if (character.Hp == character.MaxHp) character.Hp = 100;
-                    character.MaxHp = 100;
+                    player.Job = "도적";
+                    player.Attack = 12;
+                    player.Defense = 7;
+                    if (player.Hp == player.MaxHp) player.Hp = 100;
+                    player.MaxHp = 100;
                     break;
                 default:
                     Console.WriteLine("잘못된 입력입니다. 기본 직업(전사)로 설정합니다.");
-                    character.Job = "전사";
-                    character.Attack = 15;
-                    character.Defense = 10;
-                    if (character.Hp == character.MaxHp) character.Hp = 120;
-                    character.MaxHp = 120;
+                    player.Job = "전사";
+                    player.Attack = 15;
+                    player.Defense = 10;
+                    if (player.Hp == player.MaxHp) player.Hp = 120;
+                    player.MaxHp = 120;
                     break;
             }
 
             Console.WriteLine("\n적용이 완료되었습니다!");
-            Console.WriteLine($"이름: {character.Name}");
-            Console.WriteLine($"직업: {character.Job}");
-            Console.WriteLine($"공격력: {character.Attack}");
-            Console.WriteLine($"방어력: {character.Defense}");
-            Console.WriteLine($"최대 체력: {character.MaxHp}");
-            Console.WriteLine($"골드: {character.Gold}");
+            Console.WriteLine($"이름: {player.Name}");
+            Console.WriteLine($"직업: {player.Job}");
+            Console.WriteLine($"공격력: {player.Attack}");
+            Console.WriteLine($"방어력: {player.Defense}");
+            Console.WriteLine($"최대 체력: {player.MaxHp}");
+            Console.WriteLine($"골드: {player.Gold}");
             Console.WriteLine("\n아무 키나 누르면 계속합니다...");
             Console.ReadKey();
             Console.Clear();

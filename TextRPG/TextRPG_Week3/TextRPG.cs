@@ -50,7 +50,7 @@ namespace TextRPG_Week3
                         ShopItem.OpenShop(player);
                         break;
                     case "4":
-                        EnteringDungeon(gameSystem, battleSystem,player, BattleSystem.BattleMode.Encounter);
+                        EnteringDungeon(gameSystem, battleSystem,player);
                         break;
                     case "0":
                         Console.WriteLine("게임을 종료합니다.");
@@ -89,7 +89,7 @@ namespace TextRPG_Week3
             }
         }
 
-        static void EnteringDungeon(GameSystem gameSystem, BattleSystem battleSystem,Character player, BattleSystem.BattleMode mode)
+        static void EnteringDungeon(GameSystem gameSystem, BattleSystem battleSystem,Character player)
         {
             while (true)
             {
@@ -104,7 +104,7 @@ namespace TextRPG_Week3
                         Status(gameSystem, player);
                         break;
                     case 2:
-                        battleSystem.Encounting(gameSystem, player, mode);
+                        battleSystem.Encounting(player);
                         return;
                     default:
                         continue;

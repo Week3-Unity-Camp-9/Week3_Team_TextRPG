@@ -22,9 +22,9 @@ namespace TextRPG_Week3
 
         public int RequireEXP => (Level == 1 ? 10 : 0) + (Level - 1) * 35;
 
-        public float TotalAttack => Attack + Inventory.Where(item => item.IsEquipped && item.Type == ItemType.Weapon).Sum(i => i.Value);
+        public float TotalAttack => Attack + ((Level - 1) * 0.5f) + Inventory.Where(item => item.IsEquipped && item.Type == ItemType.Weapon).Sum(i => i.Value);
 
-        public int TotalDefense => Defense + Inventory.Where(item => item.IsEquipped && item.Type == ItemType.Armor).Sum(i => i.Value);
+        public int TotalDefense => Defense + ((Level - 1) * 1) + Inventory.Where(item => item.IsEquipped && item.Type == ItemType.Armor).Sum(i => i.Value);
         // ============================
         // 1. 상태 보기
         // ============================
@@ -54,7 +54,8 @@ namespace TextRPG_Week3
             Console.ResetColor();
             Console.WriteLine("캐릭터의 정보가 표시됩니다.\n");
 
-            Console.WriteLine($"Lv. 0{Level}");
+            Console.Write($"Lv. 0{Level} ");
+            Console.WriteLine($"경험치 : {EXP}/{RequireEXP}");
             Console.WriteLine($"{Name} ( {Job} )");
 
             Console.ForegroundColor = ConsoleColor.Red;
