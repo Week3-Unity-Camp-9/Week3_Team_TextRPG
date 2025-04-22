@@ -314,8 +314,8 @@ namespace TextRPG_Week3
                                 Console.Clear();
                                 Console.WriteLine("레벨업!");
                                 Console.WriteLine($"레벨이 {player.Level - 1}에서 {player.Level}이 되었습니다!");
-                                Console.WriteLine($"공격력 : {player.TotalAttack - 0.5f} => {player.TotalAttack}");
-                                Console.WriteLine($"방어력 : {player.TotalDefense - 1} => {player.TotalDefense}");
+                                Console.WriteLine($"공격력 : {player.TotalAttack - 0.5f}{(player.EquipAttack != 0 ? $"(+{player.EquipAttack})" : "")} => {player.TotalAttack}{(player.EquipAttack != 0 ? $"(+{player.EquipAttack})" : "")}");
+                                Console.WriteLine($"방어력 : {player.TotalDefense - 1}{(player.EquipDefense != 0 ? $"(+{player.EquipDefense})" : "")} => {player.TotalDefense}{(player.EquipDefense != 0 ? $"(+{player.EquipDefense})" : "")}");
                                 Console.WriteLine("\n아무 키나 누르면 계속합니다...");
                                 Console.ReadKey();
                             }

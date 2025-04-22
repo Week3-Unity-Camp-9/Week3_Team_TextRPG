@@ -19,12 +19,13 @@ namespace TextRPG_Week3
         public int MaxHp { get; set; } = 100;
         public int Gold { get; set; } = 1500;
         public int EXP { get; set; } = 0;
-
+        public int EquipAttack => Inventory.Where(item => item.IsEquipped && item.Type == ItemType.Weapon).Sum(i => i.Value);
+        public int EquipDefense => Inventory.Where(item => item.IsEquipped && item.Type == ItemType.Armor).Sum(i => i.Value);
         public int RequireEXP => (Level == 1 ? 10 : 0) + (Level - 1) * 35;
 
-        public float TotalAttack => Attack + ((Level - 1) * 0.5f) + Inventory.Where(item => item.IsEquipped && item.Type == ItemType.Weapon).Sum(i => i.Value);
+        public float TotalAttack => Attack + ((Level - 1) * 0.5f) + EquipAttack;
 
-        public int TotalDefense => Defense + ((Level - 1) * 1) + Inventory.Where(item => item.IsEquipped && item.Type == ItemType.Armor).Sum(i => i.Value);
+        public int TotalDefense => Defense + ((Level - 1) * 1) + EquipDefense;
         // ============================
         // 1. 상태 보기
         // ============================
