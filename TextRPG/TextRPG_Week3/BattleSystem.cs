@@ -27,13 +27,6 @@ namespace TextRPG_Week3
         int originalHp; // 전투 시작 시 플레이어의 HP를 저장할 변수
         bool lose;
 
-        // 전투 상태 열거형
-        public enum BattleMode
-        {
-            Encounter,     // 적과 조우했을 때의 상태
-            PlayerAttack    // 플레이어가 공격을 선택한 상태
-        }
-
         // 적과 조우하는 과정
         public void Encounting(Character player)
         {
@@ -50,99 +43,106 @@ namespace TextRPG_Week3
                 appearEnemies.Add(new Enemy(selectedEnemy.Level, selectedEnemy.Name, selectedEnemy.Hp, selectedEnemy.Attack)); // 새로운 Enemy 객체를 생성하여 appearEnemies 리스트에 추가 (기존 적 데이터 복사)
             }
 
-            Battle(player, BattleMode.Encounter); // 전투 메서드 호출, 초기 상태는 적 조우 상태
+            Battle(player); // 전투 메서드 호출, 초기 상태는 적 조우 상태
         }
 
-
-        // 전투 루프 (상태에 따라 전투 UI 및 로직 분기)
-        public void Battle(Character player, BattleMode mode)
+        public void Battle(Character player)
         {
-            while (true) // 전투가 끝날 때까지 무한 루프
+            while (true)
             {
-                if (appearEnemies.All(enemy => enemy.IsDead)) // appearEnemies 리스트의 모든 적이 IsDead 상태인지 확인
+                if (appearEnemies.All(enemy => enemy.IsDead))
                 {
-                    BattleResult(Result.Win, player); // 모든 적이 죽었다면 전투 결과 처리 (승리)
-
-                    return; // 메서드 종료
+                    BattleResult(Result.Win, player);
+                    return;
                 }
 
+                if (lose) return;
+                ShowEnemies(player);
+                SelectTarget(player);
+            }
+        }
 
-                Console.Clear(); // 콘솔 화면 지우기
-                Console.WriteLine("Battle!!\n"); // 전투 시작 메시지 출력
+        // 적 표시
+        private void ShowEnemies(Character player)
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("Battle!!\n");
 
-                if (mode == BattleMode.Encounter) // 현재 전투 상태가 적 조우 상태일 경우
+                foreach (var enemy in appearEnemies)
                 {
-                    // 적 상태 출력
-                    for (int i = 0; i < appearEnemies.Count; i++) // 등장한 모든 적에 대해 반복
-                    {
-                        if (appearEnemies[i].IsDead) Console.ForegroundColor = ConsoleColor.DarkGray; // 적이 죽었다면 글자색을 어둡게 설정
-                        Console.WriteLine($"Lv.{appearEnemies[i].Level} {appearEnemies[i].Name} HP {(!appearEnemies[i].IsDead ? appearEnemies[i].Hp : "Dead")}"); // 적의 레벨, 이름, HP (또는 "Dead") 출력
-                        Console.ResetColor(); // 글자색 초기화
-                    }
-
-                    // 플레이어 정보 출력
-                    Console.WriteLine("\n[내정보]");
-                    Console.WriteLine($"Lv.{player.Level}  {player.Name} ({player.Job})");
-                    Console.WriteLine($"HP {player.Hp}/{player.MaxHp}\n");
-                    Console.WriteLine("1.공격");
-                    Console.Write("해당하는 번호를 입력해주세요.\n>>");
-
-                    if (int.TryParse(Console.ReadLine(), out int input) && input == 1)
-                    {
-                        Battle(player, BattleMode.PlayerAttack);
-                        if (lose) return;
-                    }
-                    else
-                    {
-                        Console.WriteLine("잘못된 입력입니다.");
-                    }
+                    if (enemy.IsDead) Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine($"Lv.{enemy.Level} {enemy.Name} HP {(enemy.IsDead ? "Dead" : enemy.Hp.ToString())}");
+                    Console.ResetColor();
                 }
-                else if (mode == BattleMode.PlayerAttack) // 현재 전투 상태가 플레이어 공격 상태일 경우
+
+                Console.WriteLine("\n[내정보]");
+                Console.WriteLine($"Lv.{player.Level}  {player.Name} ({player.Job})");
+                Console.WriteLine($"HP {player.Hp}/{player.MaxHp}\n");
+
+                Console.WriteLine("1.공격");
+                Console.Write("해당하는 번호를 입력해주세요.\n>>");
+
+                if (!int.TryParse(Console.ReadLine(), out int input) || input == 1) return;
+                else
                 {
-                    // 공격 대상 선택 화면
-                    Console.Clear();
-                    Console.WriteLine("Battle!!\n");
+                    Console.WriteLine("잘못된 입력입니다.");
+                    Thread.Sleep(1000);
+                    continue;
+                }
+            }
+        }
 
-                    for (int i = 0; i < appearEnemies.Count; i++) // 등장한 모든 적에 대해 반복
-                    {
-                        if (appearEnemies[i].IsDead) Console.ForegroundColor = ConsoleColor.DarkGray; // 적이 죽었다면 글자색을 어둡게 설정
-                        Console.WriteLine($"{i + 1} Lv.{appearEnemies[i].Level} {appearEnemies[i].Name} HP {(!appearEnemies[i].IsDead ? appearEnemies[i].Hp : "Dead")}"); // 적의 번호, 레벨, 이름, HP (또는 "Dead") 출력
-                        Console.ResetColor(); // 글자색 초기화
-                    }
+        private void SelectTarget(Character player)
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("Battle!!\n");
 
-                    Console.WriteLine("\n[내정보]");
-                    Console.WriteLine($"Lv.{player.Level}  {player.Name} ({player.Job})");
-                    Console.WriteLine($"HP {player.Hp}/{player.MaxHp}");
-                    Console.WriteLine("\n0.취소\n");
-                    Console.Write("대상을 선택해 주세요.\n>>");
+                for (int i = 0; i < appearEnemies.Count; i++)
+                {
+                    if (appearEnemies[i].IsDead)
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
 
-                    if (int.TryParse(Console.ReadLine(), out int input)) // 사용자로부터 공격 대상 번호 입력 받기
+                    Console.WriteLine($"{i + 1}. Lv.{appearEnemies[i].Level} {appearEnemies[i].Name} HP {(appearEnemies[i].IsDead ? "Dead" : appearEnemies[i].Hp.ToString())}");
+                    Console.ResetColor();
+                }
+
+                Console.WriteLine("\n[내정보]");
+                Console.WriteLine($"Lv.{player.Level}  {player.Name} ({player.Job})");
+                Console.WriteLine($"HP {player.Hp}/{player.MaxHp}");
+                Console.WriteLine("\n0.취소\n");
+                Console.Write("대상을 선택해 주세요.\n>>");
+
+                if (int.TryParse(Console.ReadLine(), out int input))
+                {
+                    if (input == 0)
                     {
-                        if (input == 0) // 0을 입력하면
-                        {
-                            EnemyAttack(appearEnemies, player); // 적의 공격 차례로 넘어감
-                            return; // 메서드 종료
-                        }
-                        else if (input >= 1 && input <= appearEnemies.Count) // 유효한 적 번호를 입력하면
-                        {
-                            if (appearEnemies[input - 1].IsDead) // 선택한 적이 이미 죽었는지 확인
-                            {
-                                Console.WriteLine($"{appearEnemies[input - 1].Name}은 이미 죽었다.");
-                                Thread.Sleep(1000); // 1초 대기
-                                Console.Clear();
-                                continue; // 공격 대상 선택 화면으로 다시 이동
-                            }
-                            PlayerAttack(appearEnemies, input, player); // 플레이어의 공격 처리 메서드 호출
-                            return; // 메서드 종료
-                        }
-                    }
-                    else // 잘못된 입력일 경우
-                    {
-                        Console.WriteLine("잘못된 입력입니다.");
+                        Console.WriteLine("행동을 취소하고 턴을 넘깁니다.");
                         Console.ReadKey();
-                        continue; // 공격 대상 선택 화면으로 다시 이동
+                        EnemyAttack(appearEnemies, player);
+                        return;
+                    }
+
+                    if (input >= 1 && input <= appearEnemies.Count)
+                    {
+                        var target = appearEnemies[input - 1];
+                        if (target.IsDead)
+                        {
+                            Console.WriteLine($"{target.Name}은 이미 죽었습니다.");
+                            Console.ReadKey();
+                            continue;
+                        }
+
+                        PlayerAttack(appearEnemies, input, player);
+                        return;
                     }
                 }
+
+                Console.WriteLine("잘못된 입력입니다.");
+                Thread.Sleep(1000);
             }
         }
 
