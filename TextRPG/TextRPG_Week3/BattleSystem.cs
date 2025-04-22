@@ -293,6 +293,7 @@ namespace TextRPG_Week3
                 player.Gold += gold;
                 Console.WriteLine("[획득 보상]");
                 Console.WriteLine($"{gold} Gold");
+                Console.WriteLine($"{stage} 스테이지 클리어!");
                 stage++;
             }
 
