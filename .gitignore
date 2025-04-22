@@ -400,5 +400,5 @@ FodyWeavers.xsd
 *.sln.iml
 
 # Visual Studio build folders
-bin/
-obj/
+**/bin/
+**/obj/
