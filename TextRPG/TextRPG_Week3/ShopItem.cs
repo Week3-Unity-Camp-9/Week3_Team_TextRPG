@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TextRPG
+namespace TextRPG_Week3
 {
     public class ShopItem
     {
@@ -35,34 +35,34 @@ namespace TextRPG
                 new ShopItem
                 {
                     ItemData = new Item
-                    {
-                        Name = "낡은 검",
-                        Type = ItemType.Weapon,
-                        Value = 5,
-                        Description = "오래된 검이지만 쓸만함"
-                    },
+                    (
+                        "낡은 검",
+                        ItemType.Weapon,
+                        5,
+                        "오래된 검이지만 쓸만함"
+                    ),
                     Price = 300
                 },
                 new ShopItem
                 {
                     ItemData = new Item
-                    {
-                        Name = "가죽 갑옷",
-                        Type = ItemType.Armor,
-                        Value = 3,
-                        Description = "얇은 가죽으로 만들어진 방어구"
-                    },
+                    (
+                        "가죽 갑옷",
+                        ItemType.Armor,
+                        3,
+                        "얇은 가죽으로 만들어진 방어구"
+                    ),
                     Price = 250
                 },
                 new ShopItem
                 {
                     ItemData = new Item
-                    {
-                        Name = "회복 포션",
-                        Type = ItemType.Consumable,
-                        Value = 30,
-                        Description = "체력을 30 회복합니다"
-                    },
+                    (
+                        "회복 포션",
+                        ItemType.Consumable,
+                        30,
+                        "체력을 30 회복합니다"
+                    ),
                     Price = 100
                 }
             };
@@ -119,13 +119,13 @@ namespace TextRPG
             }
 
             player.Gold -= item.Price;
-            player.AddItem(new Item
-            {
-                Name = item.ItemData.Name,
-                Type = item.ItemData.Type,
-                Value = item.ItemData.Value,
-                Description = item.ItemData.Description
-            });
+            player.Inventory.Add(new Item
+                (
+                item.ItemData.Name,
+                item.ItemData.Type,
+                item.ItemData.Value,
+                item.ItemData.Description
+                ));
 
             if (item.ItemData.Type != ItemType.Consumable)
                 item.IsPurchased = true;

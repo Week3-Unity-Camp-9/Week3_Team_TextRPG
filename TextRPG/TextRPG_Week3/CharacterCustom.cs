@@ -33,26 +33,26 @@ namespace TextRPG_Week3
                     character.Job = "전사";
                     character.Attack = 15;
                     character.Defense = 10;
-                    character.Health = 120;
+                    character.MaxHp = 120;
                     break;
                 case "2":
                     character.Job = "마법사";
                     character.Attack = 20;
                     character.Defense = 5;
-                    character.Health = 80;
+                    character.MaxHp = 80;
                     break;
                 case "3":
                     character.Job = "도적";
                     character.Attack = 12;
                     character.Defense = 7;
-                    character.Health = 100;
+                    character.MaxHp = 100;
                     break;
                 default:
                     Console.WriteLine("잘못된 입력입니다. 기본 직업(전사)로 설정합니다.");
                     character.Job = "전사";
                     character.Attack = 15;
                     character.Defense = 10;
-                    character.Health = 120;
+                    character.MaxHp = 120;
                     break;
             }
 
@@ -61,7 +61,7 @@ namespace TextRPG_Week3
             Console.WriteLine($"직업: {character.Job}");
             Console.WriteLine($"공격력: {character.Attack}");
             Console.WriteLine($"방어력: {character.Defense}");
-            Console.WriteLine($"체력: {character.Health}");
+            Console.WriteLine($"최대 체력: {character.MaxHp}");
             Console.WriteLine($"골드: {character.Gold}");
             Console.WriteLine("\n아무 키나 누르면 계속합니다...");
             Console.ReadKey();

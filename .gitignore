@@ -398,5 +398,5 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-TextRPG/TextRPG_Week3/obj/Debug/net8.0/TextRPG_Week3.AssemblyInfo.cs
-TextRPG/TextRPG_Week3/obj/Debug/net8.0/TextRPG_Week3.AssemblyInfoInputs.cache
+TextRPG/TextRPG_Week3/obj/
+

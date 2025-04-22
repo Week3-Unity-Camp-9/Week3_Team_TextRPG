@@ -1,4 +1,4 @@
-﻿namespace TextRPG
+﻿namespace TextRPG_Week3
 {
     public enum ItemType
     {
@@ -15,10 +15,19 @@
         public string Description { get; set; } = "";
         public bool IsEquipped { get; set; } = false;
 
+        public Item(string name, ItemType type, int value, string description, bool isEquipped = false)
+        {
+            Name = name;
+            Type = type;
+            Value = value;
+            Description = description;
+            IsEquipped = isEquipped;
+        }
+
         public string GetDisplayInfo()
         {
-            string equippedMark = (Type == ItemType.Weapon || Type == ItemType.Armor)
-                ? (IsEquipped ? "[E]" : "   ")
+            string equippedMark = Type == ItemType.Weapon || Type == ItemType.Armor
+                ? IsEquipped ? "[E]" : "   "
                 : "   ";
 
             string statText = Type switch
