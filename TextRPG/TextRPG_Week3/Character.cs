@@ -21,7 +21,7 @@ namespace TextRPG_Week3
 
         public float TotalAttack => Attack + Inventory.Where(item => item.IsEquipped && item.Type == ItemType.Weapon).Sum(i => i.Value);
 
-        public int TotalDefence => Defense + Inventory.Where(item => item.IsEquipped && item.Type == ItemType.Armor).Sum(i => i.Value);
+        public int TotalDefense => Defense + Inventory.Where(item => item.IsEquipped && item.Type == ItemType.Armor).Sum(i => i.Value);
         // ============================
         // 1. 상태 보기
         // ============================
@@ -59,7 +59,7 @@ namespace TextRPG_Week3
             if (bonusAttack > 0) Console.Write($" (+{bonusAttack})");
             Console.WriteLine();
 
-            Console.Write($"방어력 : {TotalDefence}");
+            Console.Write($"방어력 : {TotalDefense}");
             if (bonusDefense > 0) Console.Write($" (+{bonusDefense})");
             Console.WriteLine();
 
