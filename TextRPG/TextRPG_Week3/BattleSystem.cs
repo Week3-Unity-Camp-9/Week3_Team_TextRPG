@@ -16,6 +16,9 @@ namespace TextRPG_Week3
             new Enemy(5, "대포미니언", 25, 8)
         };
 
+        //랜덤 사용할때 쓸 랜덤 생성
+        Random random = new Random();
+
         // 현재 전투 중 등장한 적 목록
         List<Enemy> appearEnemies = new List<Enemy>();
 
@@ -35,7 +38,6 @@ namespace TextRPG_Week3
             originalHp = player.Hp;
             appearEnemies.Clear();
 
-            Random random = new Random();
             int enemyCount = random.Next(1, 5); //Next 괄호 안에 들어가는 부분이 몇 마리인지 정하는 부분
 
             for (int i = 0; i < enemyCount; i++)
@@ -132,6 +134,13 @@ namespace TextRPG_Week3
         {
             Enemy selectedEnemy = enemies[select - 1];
             int Damage = (int)player.TotalAttack;
+
+            bool hit = (random.Next(1, 101) > 10);
+            if (!hit) Damage = 0;
+
+            bool critical = (random.Next(1, 101) < 15);
+            if (critical) Damage = (int)(player.TotalAttack * 1.6f);
+
             selectedEnemy.Hp -= Damage;
             if (selectedEnemy.Hp <= 0) selectedEnemy.IsDead = true;
 
@@ -139,12 +148,18 @@ namespace TextRPG_Week3
             {
                 Console.Clear();
                 Console.WriteLine("Battle!!\n");
-                Console.WriteLine($"{player.Name} 의 공격!");
-                Console.WriteLine($"Lv.{selectedEnemy.Level} {selectedEnemy.Name}을(를) 맞췄습니다. [데미지 : {player.TotalAttack}]\n");
-                Console.WriteLine($"Lv.{selectedEnemy.Level} {selectedEnemy.Name}");
-                Console.WriteLine($"HP {selectedEnemy.Hp + Damage} -> {(selectedEnemy.IsDead ? "Dead" : selectedEnemy.Hp)}");
 
-                Console.Write("\n0.다음\n>>");
+                Console.WriteLine($"{player.Name} 의 공격!");
+                Console.Write($"Lv.{selectedEnemy.Level} {selectedEnemy.Name}을(를) ");
+                if (hit)
+                {
+                    Console.WriteLine($"맞췄습니다. [데미지 : {Damage}]" + $"{(critical ? "- 치명타 공격!!" : "")}" +"\n");
+                    Console.WriteLine($"Lv.{selectedEnemy.Level} {selectedEnemy.Name}");
+                    Console.WriteLine($"HP {selectedEnemy.Hp + Damage} -> {(selectedEnemy.IsDead ? "Dead" : selectedEnemy.Hp)}");
+                }
+                else Console.WriteLine("공격했지만 아무일도 일어나지 않았습니다.\n");
+
+                    Console.Write("\n0.다음\n>>");
                 if (int.TryParse(Console.ReadLine(), out int input))
                 {
                     if (input == 0)
@@ -180,16 +195,31 @@ namespace TextRPG_Week3
             {
                 if (enemies[i].IsDead) continue;
 
-                player.Hp -= enemies[i].Attack;
+                int Damage = enemies[i].Attack;
+
+                bool hit = (random.Next(1, 101) > 10);
+                if (!hit) Damage = 0;
+
+                bool critical = (random.Next(1, 101) < 15);
+                if (critical) Damage = (int)(enemies[i].Attack * 1.6f);
+
+                player.Hp -= Damage;
 
                 while (true)
                 {
                     Console.Clear();
                     Console.WriteLine("Battle!!\n");
+
                     Console.WriteLine($"{enemies[i].Name} 의 공격!");
-                    Console.WriteLine($"Lv.{player.Level} {player.Name}을(를) 맞췄습니다. [데미지 : {enemies[i].Attack}]\n");
-                    Console.WriteLine($"Lv.{player.Level} {player.Name}");
-                    Console.WriteLine($"HP {player.Hp + enemies[i].Attack} -> {player.Hp}");
+                    Console.Write($"Lv.{player.Level} {player.Name}을(를)");
+                    if (hit)
+                    {
+                        Console.WriteLine($"맞췄습니다. [데미지 : {Damage}]" + $"{(critical ? "- 치명타 공격!!" : "")}" + "\n");
+                        Console.WriteLine($"Lv.{player.Level} {player.Name}");
+                        Console.WriteLine($"HP {player.Hp + Damage} -> {player.Hp}");
+                    }
+                    else Console.WriteLine("공격했지만 아무일도 일어나지 않았습니다.\n");
+
                     Console.Write("\n0.다음\n>>");
 
                     if (int.TryParse(Console.ReadLine(), out int input))
