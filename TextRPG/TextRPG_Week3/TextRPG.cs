@@ -39,6 +39,7 @@ namespace TextRPG_Week3
 
         void Status(GameSystem gameSystem, Character player)
         {
+            CharacterCustom custom = new CharacterCustom;
             while (true)
             {
                 Console.WriteLine($"상태 보기");
@@ -46,22 +47,17 @@ namespace TextRPG_Week3
 
                 player.DisplayStatus(player);
 
-                Console.Write("\n0.나가기\n해당하는 번호를 입력해주세요.\n>>");
-                if (int.TryParse(Console.ReadLine(), out int input))
+                int input = gameSystem.Select(new string[] {"1.커스터마이징" }, true);
+                switch(input)
                 {
-                    if (input == 0)
-                    {
-                        Console.Clear();
+                    case 1:
+                        custom.Customizing(player);
+                        break;
+                    case 0:
                         return;
-                    }
-                    else
-                    {
+                    default:
                         gameSystem.Message("잘못된 입력입니다.");
-                    }
-                }
-                else
-                {
-                    gameSystem.Message("잘못된 입력입니다.");
+                        continue;
                 }
             }
         }
