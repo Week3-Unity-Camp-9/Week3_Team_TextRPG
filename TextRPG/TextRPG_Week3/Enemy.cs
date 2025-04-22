@@ -16,10 +16,10 @@ namespace TextRPG_Week3
 
         public Enemy(int level, string name, int hp, int attack, bool isDead = false)
         {
-            Level = level;
+            Level = BattleSystem.stage + level;
             Name = name;
-            Hp = hp;
-            Attack = attack;
+            Hp = BattleSystem.stage + hp;
+            Attack = BattleSystem.stage + attack;
             IsDead = isDead;
         }
     }

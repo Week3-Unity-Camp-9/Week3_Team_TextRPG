@@ -97,7 +97,7 @@ namespace TextRPG_Week3
                 Console.WriteLine("스파르타 던전에 오신 여러분 환영합니다.");
                 Console.WriteLine("이제 전투를 시작할 수 있습니다.");
 
-                int input = gameSystem.Select(new string[] { "1.상태 보기", $"2.전투 시작(현재 진행 : {battleSystem.stage})" }, false);
+                int input = gameSystem.Select(new string[] { "1.상태 보기", $"2.전투 시작(현재 진행 : {BattleSystem.stage})" }, false);
                 switch (input)
                 {
                     case 1:

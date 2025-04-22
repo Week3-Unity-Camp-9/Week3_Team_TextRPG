@@ -11,9 +11,10 @@ namespace TextRPG_Week3
         // 적 캐릭터 목록 (기본 설정)
         List<Enemy> enemyList = new List<Enemy>
         {
-            new Enemy(2, "미니언", 15, 5), // 레벨 2, 이름 "미니언", HP 15, 공격력 5인 적 생성
-            new Enemy(3, "공허충", 10, 9), // 레벨 3, 이름 "공허충", HP 10, 공격력 9인 적 생성
-            new Enemy(5, "대포미니언", 25, 8) // 레벨 5, 이름 "대포미니언", HP 25, 공격력 8인 적 생성
+            new Enemy(1, "미니언", 10, 4), // 레벨 1, 이름 "미니언", HP 10, 공격력 4인 적 생성
+            new Enemy(2, "공허충", 5, 8), // 레벨 2, 이름 "공허충", HP 5, 공격력 8인 적 생성
+            new Enemy(4, "대포미니언", 20, 7) // 레벨 4, 이름 "대포미니언", HP 20, 공격력 7인 적 생성
+                                                //스테이지가 올라감에 따라 레벨 및 HP, 그리고 공격력 상승..
         };
 
         //랜덤 사용할때 쓸 랜덤 생성
@@ -256,7 +257,7 @@ namespace TextRPG_Week3
             Lose // 패배
         }
 
-        public int stage = 1;
+        static public int stage = 1;
         // 전투 종료 처리
         void BattleResult(Result mode, Character player)
         {
