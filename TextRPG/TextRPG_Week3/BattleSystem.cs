@@ -161,42 +161,21 @@ namespace TextRPG_Week3
             selectedEnemy.Hp -= Damage; // 선택된 적의 HP에서 데미지 감소
             if (selectedEnemy.Hp <= 0) selectedEnemy.IsDead = true; // 적의 HP가 0 이하가 되면 IsDead 상태를 true로 변경
 
-            while (true)
+            Console.Clear();
+            Console.WriteLine("Battle!!\n");
+
+            Console.WriteLine($"{player.Name} 의 공격!");
+            Console.Write($"Lv.{selectedEnemy.Level} {selectedEnemy.Name}을(를) ");
+            if (hit)
             {
-                Console.Clear();
-                Console.WriteLine("Battle!!\n");
-
-                Console.WriteLine($"{player.Name} 의 공격!");
-                Console.Write($"Lv.{selectedEnemy.Level} {selectedEnemy.Name}을(를) ");
-                if (hit)
-                {
-                    Console.WriteLine($"맞췄습니다. [데미지 : {Damage}]" + $"{(critical ? "- 치명타 공격!!" : "")}" + "\n");
-                    Console.WriteLine($"Lv.{selectedEnemy.Level} {selectedEnemy.Name}");
-                    Console.WriteLine($"HP {selectedEnemy.Hp + Damage} => {(selectedEnemy.IsDead ? "Dead" : selectedEnemy.Hp)}");
-                }
-                else Console.WriteLine("공격했지만 아무일도 일어나지 않았습니다.\n");
-
-                Console.Write("\n0.다음\n>>");
-                if (int.TryParse(Console.ReadLine(), out int input))
-                {
-                    if (input == 0)
-                    {
-                        return;
-                    }
-                    else
-                    {
-                        Console.Write("잘못된 입력입니다.");
-                        Console.ReadKey();
-                        Console.Clear();
-                    }
-                }
-                else
-                {
-                    Console.Write("잘못된 입력입니다.");
-                    Console.ReadKey();
-                    Console.Clear();
-                }
+                Console.WriteLine($"맞췄습니다. [데미지 : {Damage}]" + $"{(critical ? "- 치명타 공격!!" : "")}" + "\n");
+                Console.WriteLine($"Lv.{selectedEnemy.Level} {selectedEnemy.Name}");
+                Console.WriteLine($"HP {selectedEnemy.Hp + Damage} => {(selectedEnemy.IsDead ? "Dead" : selectedEnemy.Hp)}");
             }
+            else Console.WriteLine("공격했지만 아무일도 일어나지 않았습니다.\n");
+
+            Console.Write("\n아무 키나 눌러서 계속\n>>");
+            Console.ReadKey();
         }
 
         // 적의 공격 처리
@@ -216,47 +195,25 @@ namespace TextRPG_Week3
 
                 player.Hp -= Damage; // 플레이어의 HP에서 데미지 감소
 
-                while (true)
+                Console.Clear();
+                Console.WriteLine("Battle!!\n");
+
+                Console.WriteLine($"{enemies[i].Name} 의 공격!");
+                Console.Write($"Lv.{player.Level} {player.Name}을(를)");
+                if (hit)
                 {
-                    Console.Clear();
-                    Console.WriteLine("Battle!!\n");
+                    Console.WriteLine($"맞췄습니다. [데미지 : {Damage}]" + $"{(critical ? "- 치명타 공격!!" : "")}" + "\n");
+                    Console.WriteLine($"Lv.{player.Level} {player.Name}");
+                    Console.WriteLine($"HP {player.Hp + Damage} => {player.Hp}");
+                }
+                else Console.WriteLine("공격했지만 아무일도 일어나지 않았습니다.\n");
 
-                    Console.WriteLine($"{enemies[i].Name} 의 공격!");
-                    Console.Write($"Lv.{player.Level} {player.Name}을(를)");
-                    if (hit)
-                    {
-                        Console.WriteLine($"맞췄습니다. [데미지 : {Damage}]" + $"{(critical ? "- 치명타 공격!!" : "")}" + "\n");
-                        Console.WriteLine($"Lv.{player.Level} {player.Name}");
-                        Console.WriteLine($"HP {player.Hp + Damage} => {player.Hp}");
-                    }
-                    else Console.WriteLine("공격했지만 아무일도 일어나지 않았습니다.\n");
-
-                    Console.Write("\n0.다음\n>>");
-
-                    if (int.TryParse(Console.ReadLine(), out int input))
-                    {
-                        if (input == 0)
-                        {
-                            if (player.Hp <= 0) // 플레이어의 HP가 0 이하이면
-                            {
-                                BattleLose(player); // 전투 결과 처리 (패배)
-                                return; // 메서드 종료
-                            }
-                            break; // 다음 턴 진행
-                        }
-                        else
-                        {
-                            Console.Write("잘못된 입력입니다.");
-                            Console.ReadKey();
-                            Console.Clear();
-                        }
-                    }
-                    else
-                    {
-                        Console.Write("잘못된 입력입니다.");
-                        Console.ReadKey();
-                        Console.Clear();
-                    }
+                Console.Write("\n아무 키나 눌러서 계속\n>>");
+                Console.ReadKey();
+                if (player.Hp <= 0) // 플레이어의 HP가 0 이하이면
+                {
+                    BattleLose(player); // 전투 결과 처리 (패배)
+                    return; // 메서드 종료
                 }
             }
         }
@@ -317,8 +274,6 @@ namespace TextRPG_Week3
                         }
                         else break;
                     }
-                    Encounting(player);
-                    return;
                 }
                 else
                 {
@@ -333,6 +288,8 @@ namespace TextRPG_Week3
                 Console.ReadKey();
                 Console.Clear();
             }
+            Encounting(player);
+            return;
         }
         // 전투 종료 처리
         void BattleLose(Character player)
