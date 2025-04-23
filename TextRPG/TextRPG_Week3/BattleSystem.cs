@@ -52,13 +52,14 @@ namespace TextRPG_Week3
             {
                 if (appearEnemies.All(enemy => enemy.IsDead))
                 {
-                    BattleResult(Result.Win, player);
+                    BattleWin(player);
                     return;
                 }
 
                 if (lose) return;
                 ShowEnemies(player);
                 SelectTarget(player);
+                EnemyAttack(appearEnemies, player);
             }
         }
 
@@ -88,7 +89,7 @@ namespace TextRPG_Week3
                 else
                 {
                     Console.WriteLine("잘못된 입력입니다.");
-                    Thread.Sleep(1000);
+                    Console.ReadKey();
                     continue;
                 }
             }
@@ -122,7 +123,6 @@ namespace TextRPG_Week3
                     {
                         Console.WriteLine("행동을 취소하고 턴을 넘깁니다.");
                         Console.ReadKey();
-                        EnemyAttack(appearEnemies, player);
                         return;
                     }
 
@@ -136,20 +136,20 @@ namespace TextRPG_Week3
                             continue;
                         }
 
-                        PlayerAttack(appearEnemies, input, player);
+                        PlayerAttack(input, player);
                         return;
                     }
                 }
 
                 Console.WriteLine("잘못된 입력입니다.");
-                Thread.Sleep(1000);
+                Console.ReadKey();
             }
         }
 
         // 플레이어의 공격 처리
-        void PlayerAttack(List<Enemy> enemies, int select, Character player)
+        void PlayerAttack(int select, Character player)
         {
-            Enemy selectedEnemy = enemies[select - 1]; // 선택된 적 객체 가져오기
+            Enemy selectedEnemy = appearEnemies[select - 1]; // 선택된 적 객체 가져오기
             int Damage = (int)player.TotalAttack; // 플레이어의 총 공격력을 기본 데미지로 설정
 
             bool critical = (random.Next(1, 101) < 15); // 15% 확률로 치명타 발생 여부 결정
@@ -181,20 +181,19 @@ namespace TextRPG_Week3
                 {
                     if (input == 0)
                     {
-                        EnemyAttack(enemies, player); // 적의 공격 차례로 넘어감
                         return;
                     }
                     else
                     {
                         Console.Write("잘못된 입력입니다.");
-                        Thread.Sleep(1000);
+                        Console.ReadKey();
                         Console.Clear();
                     }
                 }
                 else
                 {
                     Console.Write("잘못된 입력입니다.");
-                    Thread.Sleep(1000);
+                    Console.ReadKey();
                     Console.Clear();
                 }
             }
@@ -240,7 +239,7 @@ namespace TextRPG_Week3
                         {
                             if (player.Hp <= 0) // 플레이어의 HP가 0 이하이면
                             {
-                                BattleResult(Result.Lose, player); // 전투 결과 처리 (패배)
+                                BattleLose(player); // 전투 결과 처리 (패배)
                                 return; // 메서드 종료
                             }
                             break; // 다음 턴 진행
@@ -248,54 +247,44 @@ namespace TextRPG_Week3
                         else
                         {
                             Console.Write("잘못된 입력입니다.");
-                            Thread.Sleep(1000);
+                            Console.ReadKey();
                             Console.Clear();
                         }
                     }
                     else
                     {
                         Console.Write("잘못된 입력입니다.");
-                        Thread.Sleep(1000);
+                        Console.ReadKey();
                         Console.Clear();
                     }
                 }
             }
         }
 
-        // 전투 결과 열거형
-        enum Result
-        {
-            Win, // 승리
-            Lose // 패배
-        }
-
         static public int stage = 1;
-        // 전투 종료 처리
-        void BattleResult(Result mode, Character player)
+
+        void BattleWin(Character player)
         {
             Console.Clear();
             Console.WriteLine("Battle!! - Result\n");
-            Console.WriteLine(mode == Result.Win ? "Victory" : "You Lose"); // 전투 결과 메시지 출력 (승리 또는 패배)
-            Console.WriteLine(mode == Result.Win ? $"\n던전에서 몬스터 {appearEnemies.Count}마리를 잡았습니다." : ""); // 승리 시 잡은 몬스터 수 출력
+            Console.WriteLine("Victory");
+            Console.WriteLine($"\n던전에서 몬스터 {appearEnemies.Count}마리를 잡았습니다.");
             Console.WriteLine($"Lv.{player.Level} {player.Name}");
-            Console.WriteLine($"HP {player.MaxHp} -> {player.Hp}"); // 전투 전후 플레이어 HP 변화 출력
+            Console.WriteLine($"HP {player.MaxHp} -> {player.Hp}");
 
-            if (mode == Result.Win)
+            int originalEXP = player.EXP;
+            for (int i = 0; i < appearEnemies.Count; i++)
             {
-                int originalEXP = player.EXP;
-                for (int i = 0; i < appearEnemies.Count; i++)
-                {
-                    player.EXP += appearEnemies[i].Level;
-                }
-                Console.WriteLine($"EXP {originalEXP} => {player.EXP}");
-
-                int gold = (stage * 500) + (appearEnemies.Count * 100);
-                player.Gold += gold;
-                Console.WriteLine("[획득 보상]");
-                Console.WriteLine($"{gold} Gold");
-                Console.WriteLine($"{stage} 스테이지 클리어!");
-                stage++;
+                player.EXP += appearEnemies[i].Level;
             }
+            Console.WriteLine($"EXP {originalEXP} => {player.EXP}");
+
+            int gold = (stage * 500) + (appearEnemies.Count * 100);
+            player.Gold += gold;
+            Console.WriteLine("[획득 보상]");
+            Console.WriteLine($"{gold} Gold");
+            Console.WriteLine($"{stage} 스테이지 클리어!");
+            stage++;
 
             Console.Write("\n0.다음\n>>");
 
@@ -303,77 +292,21 @@ namespace TextRPG_Week3
             {
                 if (input == 0)
                 {
-                    if(mode == Result.Win)
+                    while (true)
                     {
-                        while (true)
+                        if (player.EXP >= player.RequireEXP)
                         {
-                            if (player.EXP >= player.RequireEXP)
-                            {
-                                player.EXP -= player.RequireEXP;
-                                player.Level++;
-                                Console.Clear();
-                                Console.WriteLine("레벨업!");
-                                Console.WriteLine($"레벨이 {player.Level - 1}에서 {player.Level}이 되었습니다!");
-                                Console.WriteLine($"공격력 : {player.TotalAttack - 0.5f}{(player.EquipAttack != 0 ? $"(+{player.EquipAttack})" : "")} => {player.TotalAttack}{(player.EquipAttack != 0 ? $"(+{player.EquipAttack})" : "")}");
-                                Console.WriteLine($"방어력 : {player.TotalDefense - 1}{(player.EquipDefense != 0 ? $"(+{player.EquipDefense})" : "")} => {player.TotalDefense}{(player.EquipDefense != 0 ? $"(+{player.EquipDefense})" : "")}");
-                                Console.WriteLine("\n아무 키나 누르면 계속합니다...");
-                                Console.ReadKey();
-                            }
-                            else break;
+                            player.EXP -= player.RequireEXP;
+                            player.Level++;
+                            Console.Clear();
+                            Console.WriteLine("레벨업!");
+                            Console.WriteLine($"레벨이 {player.Level - 1}에서 {player.Level}이 되었습니다!");
+                            Console.WriteLine($"공격력 : {player.TotalAttack - 0.5f}{(player.EquipAttack != 0 ? $"(+{player.EquipAttack})" : "")} => {player.TotalAttack}{(player.EquipAttack != 0 ? $"(+{player.EquipAttack})" : "")}");
+                            Console.WriteLine($"방어력 : {player.TotalDefense - 1}{(player.EquipDefense != 0 ? $"(+{player.EquipDefense})" : "")} => {player.TotalDefense}{(player.EquipDefense != 0 ? $"(+{player.EquipDefense})" : "")}");
+                            Console.WriteLine("\n아무 키나 누르면 계속합니다...");
+                            Console.ReadKey();
                         }
-                    }
-
-                    if (mode == Result.Lose)
-                    {
-                        Console.Clear();
-                        Console.WriteLine("패배했습니다.\n");
-                        Console.WriteLine("[최종 능력치]");
-                        Console.WriteLine($"Lv.{player.Level} {player.Name}");
-                        Console.WriteLine($"공격력 : {player.TotalAttack}");
-                        Console.WriteLine($"방어력 : {player.TotalDefense}");
-                        Console.WriteLine($"HP {player.MaxHp}");
-
-                        string[] lastStats = new string[] { player.Level.ToString(), player.TotalAttack.ToString(), player.TotalDefense.ToString(), player.MaxHp.ToString() };
-
-                        int gold = (int)((player.Level * 500));
-                        player.Gold += gold;
-                        player.Level = 1;
-                        player.EXP = 0;
-                        stage = 1;
-
-                        switch (player.Job)
-                        {
-                            case "전사":
-                                player.Attack = 15;
-                                player.Defense = 10;
-                                player.Hp = 120;
-                                player.MaxHp = 120;
-                                break;
-                            case "마법사":
-                                player.Attack = 20;
-                                player.Defense = 5;
-                                player.Hp = 80;
-                                player.MaxHp = 80;
-                                break;
-                            case "도적":
-                                player.Attack = 12;
-                                player.Defense = 7;
-                                player.Hp = 100;
-                                player.MaxHp = 100;
-                                break;
-                        }
-
-                        lose = true;
-
-                        Console.WriteLine("레벨이 1로 돌아갑니다.\n");
-                        Console.WriteLine($"Lv : {lastStats[0]} => {player.Level}");
-                        Console.WriteLine($"공격력 : {lastStats[1]} => {player.TotalAttack}");
-                        Console.WriteLine($"방어력 : {lastStats[2]} => {player.TotalDefense}");
-                        Console.WriteLine($"HP : {lastStats[3]} => {player.MaxHp}");
-                        Console.WriteLine($"레벨에 대한 보상으로 {gold} Gold를 획득했습니다.");
-                        Console.WriteLine("\n아무 키나 누르면 계속합니다...");
-                        Console.ReadKey();
-                        return;
+                        else break;
                     }
                     Encounting(player);
                     return;
@@ -381,14 +314,93 @@ namespace TextRPG_Week3
                 else
                 {
                     Console.Write("잘못된 입력입니다.");
-                    Thread.Sleep(1000);
+                    Console.ReadKey();
                     Console.Clear();
                 }
             }
             else
             {
                 Console.Write("잘못된 입력입니다.");
-                Thread.Sleep(1000);
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+        // 전투 종료 처리
+        void BattleLose(Character player)
+        {
+            Console.Clear();
+            Console.WriteLine("Battle!! - Result\n");
+            Console.WriteLine("You Lose");
+            Console.WriteLine($"Lv.{player.Level} {player.Name}");
+            Console.WriteLine($"HP {player.MaxHp} -> {player.Hp}");
+
+            Console.Write("\n0.다음\n>>");
+
+            if (int.TryParse(Console.ReadLine(), out int input))
+            {
+                if (input == 0)
+                {
+                    Console.Clear();
+                    Console.WriteLine("패배했습니다.\n");
+                    Console.WriteLine("[최종 능력치]");
+                    Console.WriteLine($"Lv.{player.Level} {player.Name}");
+                    Console.WriteLine($"공격력 : {player.TotalAttack}");
+                    Console.WriteLine($"방어력 : {player.TotalDefense}");
+                    Console.WriteLine($"HP {player.MaxHp}");
+
+                    string[] lastStats = new string[] { player.Level.ToString(), player.TotalAttack.ToString(), player.TotalDefense.ToString(), player.MaxHp.ToString() };
+
+                    int gold = (int)((player.Level * 500));
+                    player.Gold += gold;
+                    player.Level = 1;
+                    player.EXP = 0;
+                    stage = 1;
+
+                    switch (player.Job)
+                    {
+                        case "전사":
+                            player.Attack = 15;
+                            player.Defense = 10;
+                            player.Hp = 120;
+                            player.MaxHp = 120;
+                            break;
+                        case "마법사":
+                            player.Attack = 20;
+                            player.Defense = 5;
+                            player.Hp = 80;
+                            player.MaxHp = 80;
+                            break;
+                        case "도적":
+                            player.Attack = 12;
+                            player.Defense = 7;
+                            player.Hp = 100;
+                            player.MaxHp = 100;
+                            break;
+                    }
+
+                    lose = true;
+
+                    Console.WriteLine("레벨이 1로 돌아갑니다.\n");
+                    Console.WriteLine($"Lv : {lastStats[0]} => {player.Level}");
+                    Console.WriteLine($"공격력 : {lastStats[1]} => {player.TotalAttack}");
+                    Console.WriteLine($"방어력 : {lastStats[2]} => {player.TotalDefense}");
+                    Console.WriteLine($"HP : {lastStats[3]} => {player.MaxHp}");
+                    Console.WriteLine($"레벨에 대한 보상으로 {gold} Gold를 획득했습니다.");
+                    Console.WriteLine("\n아무 키나 누르면 계속합니다...");
+                    Console.ReadKey();
+                    return;
+                }
+                else
+                {
+                    Console.Write("잘못된 입력입니다.");
+                    Console.ReadKey();
+                    Console.Clear();
+                }
+            }
+            else
+            {
+                Console.Write("잘못된 입력입니다.");
+                Console.ReadKey();
                 Console.Clear();
             }
         }
