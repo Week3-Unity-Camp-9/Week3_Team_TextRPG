@@ -267,6 +267,7 @@ namespace TextRPG_Week3
         {
             int heal = (int)(player.MaxHp / 10);
             player.Hp += heal;
+            if (player.Hp > player.MaxHp) player.Hp = player.MaxHp;
             Console.Clear();
             Console.WriteLine("Battle!! - Result\n");
             Console.WriteLine("Victory");
@@ -303,6 +304,7 @@ namespace TextRPG_Week3
                             player.Level++;
                             heal = (int)(player.MaxHp / 5);
                             player.Hp += heal;
+                            if (player.Hp > player.MaxHp) player.Hp = player.MaxHp;
                             Console.Clear();
                             Console.WriteLine("레벨업!");
                             Console.WriteLine($"레벨이 {player.Level - 1}에서 {player.Level}이 되었습니다!");
