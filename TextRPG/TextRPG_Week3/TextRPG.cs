@@ -30,6 +30,9 @@ namespace TextRPG_Week3
             while (true)
             {
                 Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("마을");
+                Console.ResetColor();
                 Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.");
                 Console.WriteLine("이곳에서 던전으로 들어가기 전 활동을 할 수 있습니다.\n");
 
@@ -76,9 +79,6 @@ namespace TextRPG_Week3
             CharacterCustom custom = new CharacterCustom();
             while (true)
             {
-                Console.WriteLine("상태 보기");
-                Console.WriteLine("캐릭터의 정보가 표시됩니다.\n");
-
                 player.DisplayStatus();
 
                 int input = GameSystem.Select(new string[] { "1.커스터마이징", "2.저장하기", "3.불러오기" });

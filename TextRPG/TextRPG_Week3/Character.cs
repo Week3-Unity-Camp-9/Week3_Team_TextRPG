@@ -59,7 +59,9 @@ namespace TextRPG_Week3
             Console.WriteLine("캐릭터의 정보가 표시됩니다.\n");
 
             Console.Write($"Lv. 0{Level} ");
+            Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine($"경험치 : {EXP}/{RequireEXP}");
+            Console.ResetColor();
             Console.WriteLine($"{Name} ( {Job} )");
 
             Console.ForegroundColor = ConsoleColor.Red;
@@ -74,6 +76,7 @@ namespace TextRPG_Week3
             Console.WriteLine($"체 력 : {Hp}/{MaxHp}");
             Console.WriteLine($"Gold   : {Gold} G");
             Console.ResetColor();
+            Console.WriteLine();
         }
 
         // ============================

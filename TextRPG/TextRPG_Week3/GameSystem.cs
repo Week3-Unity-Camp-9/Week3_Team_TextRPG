@@ -51,8 +51,10 @@ namespace TextRPG_Week3
                     Console.WriteLine($"{options[i]}");
                 }
             }
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.Write($"{(hasExit ? $"\n{zeroSelection}\n" : "")}");
-            Console.WriteLine($"{question}");
+            Console.ResetColor();
+            Console.Write($"{question}");
             if (int.TryParse(Console.ReadLine(), out int input) && input >= 0 && input <= options.Length)
             {
                 if ((options != null && input >= 1 && input <= options.Length) || (hasExit && input == 0))
@@ -61,14 +63,18 @@ namespace TextRPG_Week3
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("잘못된 입력입니다.");
+                    Console.ResetColor();
                     Console.ReadKey();
                     return -1;
                 }
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("잘못된 입력입니다.");
+                Console.ResetColor();
                 Console.ReadKey();
                 return -1;
             }
