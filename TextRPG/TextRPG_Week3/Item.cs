@@ -2,7 +2,7 @@
 {
     public enum ItemType
     {
-        Weapon,
+        Weapon =1,
         Armor,
         Consumable   // 회복 아이템 추가됨
     }

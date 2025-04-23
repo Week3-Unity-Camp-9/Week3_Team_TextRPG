@@ -44,6 +44,7 @@ namespace TextRPG_Week3
     {
         public static int Select(string[]? options = null, bool hasExit = true, string zeroSelection = "0.나가기", string question = "원하시는 행동을 입력해 주세요.\n>>")
         {
+            Console.ForegroundColor = ConsoleColor.Yellow;
             if (options != null)
             {
                 for (int i = 0; i < options.Length; i++)
@@ -52,9 +53,10 @@ namespace TextRPG_Week3
                 }
             }
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write($"{(hasExit ? $"\n{zeroSelection}\n" : "")}");
-            Console.ResetColor();
+            Console.Write($"{(hasExit ? $"\n{zeroSelection}\n" : "\n")}");
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.Write($"{question}");
+            Console.ResetColor();
             if (int.TryParse(Console.ReadLine(), out int input) && input >= 0 && input <= options.Length)
             {
                 if ((options != null && input >= 1 && input <= options.Length) || (hasExit && input == 0))

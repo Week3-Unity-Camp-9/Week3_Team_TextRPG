@@ -132,17 +132,35 @@ namespace TextRPG_Week3
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("상점");
-                Console.ResetColor();
-
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine($"보유 골드: {player.Gold} G\n");
 
                 for (int i = 0; i < ItemList.Count; i++)
                 {
+                    switch (ItemList[i].ItemData.Type)
+                    {
+                        case ItemType.Weapon:
+                            Console.ForegroundColor = ConsoleColor.DarkRed;
+                            break;
+                        case ItemType.Armor:
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            break;
+                        case ItemType.Consumable:
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            break;
+                        default:
+                            Console.ResetColor();
+                            break;
+                    }
                     Console.WriteLine(ItemList[i].GetDisplayInfo(i));
                 }
 
-                Console.WriteLine("\n아이템 번호를 입력하여 구매하세요. (0: 나가기)");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\n0: 나가기");
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("아이템 번호를 입력하여 구매하세요.");
                 Console.Write(">> ");
+                Console.ResetColor();
                 string input = Console.ReadLine();
 
                 if (input == "0") break;
@@ -153,6 +171,7 @@ namespace TextRPG_Week3
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("잘못된 입력입니다.");
                     Console.ReadKey();
                 }
@@ -162,13 +181,14 @@ namespace TextRPG_Week3
         private static void Buy(Character player, ShopItem item)
         {
             Item healingPotion = player.Inventory.FirstOrDefault(item => item.Name == "회복 포션");
-            if (healingPotion != null && item.ItemData == healingPotion)
+            if (healingPotion != null && item.ItemData.Name == healingPotion.Name)
             {
                 healingPotion.Count++;
             }
 
             if (item.IsPurchased && item.ItemData.Type != ItemType.Consumable)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("이미 구매한 아이템입니다.");
                 Console.ReadKey();
                 return;
@@ -176,6 +196,7 @@ namespace TextRPG_Week3
 
             if (player.Gold < item.Price)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("골드가 부족합니다.");
                 Console.ReadKey();
                 return;
@@ -190,14 +211,15 @@ namespace TextRPG_Week3
                 item.ItemData.Value,
                 item.ItemData.Description
                 ));
-                if (healingPotion != null)
-                {
-                    player.Inventory.Remove(healingPotion);
-                    player.Inventory.Add(healingPotion);
-                }
+
+                player.Inventory = player.Inventory
+                .OrderBy(item => item.Type)
+                .ThenBy(item => item.Value)
+                .ToList();
+
                 if (item.ItemData.Type != ItemType.Consumable) item.IsPurchased = true;
             }
-
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"{item.ItemData.Name}을(를) 구매했습니다!");
             Console.ReadKey();
         }

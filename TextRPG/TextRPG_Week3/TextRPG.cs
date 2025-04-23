@@ -43,9 +43,9 @@ namespace TextRPG_Week3
                 Console.WriteLine("4. 전투 시작");
                 Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine("0. 게임 종료");
-                Console.ResetColor();
-
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.Write("\n원하시는 행동을 입력해주세요.\n>> ");
+                Console.ResetColor();
                 string input = Console.ReadLine();
 
                 switch (input)
@@ -131,6 +131,7 @@ namespace TextRPG_Week3
             while (true)
             {
                 Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("저장할 파일을 선택해 주세요.");
                 string[] options = SaveFileRead();
                 int selection = GameSystem.Select(options, question: "\n>>");
@@ -150,6 +151,7 @@ namespace TextRPG_Week3
             while (true)
             {
                 Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("불러올 파일을 선택해 주세요.");
                 string[] options = SaveFileRead();
                 int selection = GameSystem.Select(options, question: "\n>>");
@@ -157,7 +159,11 @@ namespace TextRPG_Week3
 
                 Character loadedPlayer = null;
                 ShopItem loadedStore = null;
-                if (selection > 0 && selection <= options.Length)
+                if(selection == 0)
+                {
+                    return;
+                }
+                else if (selection > 0 && selection <= options.Length)
                 {
                     string saveFilePath = $"save{selection}.json";
 
@@ -192,7 +198,7 @@ namespace TextRPG_Week3
                 Console.WriteLine("던전 입장");
                 Console.ResetColor();
                 Console.WriteLine("스파르타 던전에 오신 여러분 환영합니다.");
-                Console.WriteLine("이제 전투를 시작할 수 있습니다.");
+                Console.WriteLine("이제 전투를 시작할 수 있습니다.\n");
 
                 int input = GameSystem.Select(new string[] { "1.상태 보기", $"2.전투 시작(현재 진행 : {BattleSystem.stage})", "3.회복 아이템" }, false);
 

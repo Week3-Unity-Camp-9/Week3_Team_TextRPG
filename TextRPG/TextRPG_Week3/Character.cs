@@ -57,11 +57,11 @@ namespace TextRPG_Week3
             Console.WriteLine("상태 보기");
             Console.ResetColor();
             Console.WriteLine("캐릭터의 정보가 표시됩니다.\n");
-
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write($"Lv. 0{Level} ");
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine($"경험치 : {EXP}/{RequireEXP}");
-            Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($"{Name} ( {Job} )");
 
             Console.ForegroundColor = ConsoleColor.Red;
@@ -74,6 +74,7 @@ namespace TextRPG_Week3
             Console.WriteLine();
 
             Console.WriteLine($"체 력 : {Hp}/{MaxHp}");
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine($"Gold   : {Gold} G");
             Console.ResetColor();
             Console.WriteLine();
@@ -126,6 +127,7 @@ namespace TextRPG_Week3
 
                 if (Inventory.Count == 0)
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("보유 중인 아이템이 없습니다.");
                 }
                 else
@@ -135,16 +137,35 @@ namespace TextRPG_Week3
                     {
                         if (Inventory[i].Type == ItemType.Consumable)
                         {
+                            Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine($"{i + 1}. {healingPotion.GetDisplayInfo()} | {healingPotion.Count} 개");
                             continue;
                         }
+                        switch (Inventory[i].Type)
+                        {
+                            case ItemType.Weapon:
+                                Console.ForegroundColor = ConsoleColor.DarkRed;
+                                break;
+                            case ItemType.Armor:
+                                Console.ForegroundColor = ConsoleColor.Blue;
+                                break;
+                            case ItemType.Consumable:
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                break;
+                            default:
+                                Console.ResetColor();
+                                break;
+                        }
                         Console.WriteLine($"{i + 1}. {Inventory[i].GetDisplayInfo()}");
                     }
-
+                    Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("\n아이템 번호를 선택하면 장착/해제하거나 포션을 사용할 수 있습니다.");
                 }
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("\n0. 나가기");
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.Write(">> ");
+                Console.ResetColor();
                 string input = Console.ReadLine();
                 if (int.TryParse(input, out int selected))
                 {
@@ -188,12 +209,10 @@ namespace TextRPG_Week3
         {
             Inventory.Add(item);
 
-            Item healingPotion = Inventory.FirstOrDefault(i => i.Name == "회복 포션");
-            if (healingPotion != null)
-            {
-                Inventory.Remove(healingPotion);
-                Inventory.Add(healingPotion);
-            }
+            Inventory = Inventory
+            .OrderBy(item => item.Type)
+            .ThenBy(item => item.Value)
+            .ToList();
 
             Console.WriteLine($"{item.Name}을(를) 인벤토리에 추가했습니다.");
         }
