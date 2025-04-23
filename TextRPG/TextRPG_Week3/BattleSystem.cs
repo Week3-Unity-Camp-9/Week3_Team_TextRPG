@@ -228,15 +228,19 @@ namespace TextRPG_Week3
         static void BattleWin(Character player)
         {
             int heal = (int)(player.MaxHp / 10);
+            int originalEXP = player.EXP;
+            int gold = (stage * 500) + (appearEnemies.Count * 100);
+
             player.Hp += heal;
             if (player.Hp > player.MaxHp) player.Hp = player.MaxHp;
-            int originalEXP = player.EXP;
+
             for (int i = 0; i < appearEnemies.Count; i++)
             {
                 player.EXP += appearEnemies[i].Level;
             }
-            int gold = (stage * 500) + (appearEnemies.Count * 100);
+
             player.Gold += gold;
+
             stage++;
 
             while (true)
@@ -263,11 +267,13 @@ namespace TextRPG_Week3
                         {
                             if (player.EXP >= player.RequireEXP)
                             {
-                                player.EXP -= player.RequireEXP;
                                 player.Level++;
+                                player.EXP -= player.RequireEXP;
                                 heal = (int)(player.MaxHp / 5);
+
                                 player.Hp += heal;
                                 if (player.Hp > player.MaxHp) player.Hp = player.MaxHp;
+
                                 Console.Clear();
                                 Console.WriteLine("레벨업!");
                                 Console.WriteLine($"레벨이 {player.Level - 1}에서 {player.Level}이 되었습니다!");
@@ -301,12 +307,15 @@ namespace TextRPG_Week3
 
         static void BattleLose(Character player)
         {
+            lose = true;
             string[] lastStats = new string[] { player.Level.ToString(), player.TotalAttack.ToString(), player.TotalDefense.ToString(), player.MaxHp.ToString() };
             int originalHp = player.Hp;
             int gold = (int)((player.Level * 500));
-            player.Gold += gold;
+
             player.Level = 1;
             player.EXP = 0;
+            player.Gold += gold;
+
             stage = 1;
 
             switch (player.Job)
@@ -331,7 +340,6 @@ namespace TextRPG_Week3
                     break;
             }
 
-            lose = true;
             while (true)
             {
                 Console.Clear();
