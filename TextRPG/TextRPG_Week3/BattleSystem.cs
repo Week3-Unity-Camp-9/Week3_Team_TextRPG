@@ -178,6 +178,10 @@ namespace TextRPG_Week3
         // 적의 공격 처리
         void EnemyAttack(List<Enemy> enemies, Character player)
         {
+            if (enemies.All(enemy => enemy.IsDead)) return;
+            Console.Clear();
+            Console.WriteLine("Battle!!\n");
+            int originalHp = player.Hp;
             for (int i = 0; i < enemies.Count; i++) // 등장한 모든 적에 대해 반복
             {
                 if (enemies[i].IsDead) continue; // 이미 죽은 적은 공격하지 않음
@@ -192,26 +196,22 @@ namespace TextRPG_Week3
 
                 player.Hp -= Damage; // 플레이어의 HP에서 데미지 감소
 
-                Console.Clear();
-                Console.WriteLine("Battle!!\n");
-
                 Console.WriteLine($"{enemies[i].Name} 의 공격!");
                 Console.Write($"Lv.{player.Level} {player.Name}을(를)");
                 if (hit)
                 {
                     Console.WriteLine($"맞췄습니다. [데미지 : {Damage}]" + $"{(critical ? "- 치명타 공격!!" : "")}" + "\n");
-                    Console.WriteLine($"Lv.{player.Level} {player.Name}");
-                    Console.WriteLine($"HP {player.Hp + Damage} => {player.Hp}");
                 }
                 else Console.WriteLine("공격했지만 아무일도 일어나지 않았습니다.\n");
-
-                Console.Write("\n아무 키나 눌러서 계속\n>>");
-                Console.ReadKey();
-                if (player.Hp <= 0) // 플레이어의 HP가 0 이하이면
-                {
-                    BattleLose(player); // 전투 결과 처리 (패배)
-                    return; // 메서드 종료
-                }
+            }
+            Console.WriteLine($"Lv.{player.Level} {player.Name}");
+            Console.WriteLine($"HP {originalHp} => {player.Hp}");
+            Console.Write("\n아무 키나 눌러서 계속\n>>");
+            Console.ReadKey();
+            if (player.Hp <= 0) // 플레이어의 HP가 0 이하이면
+            {
+                BattleLose(player); // 전투 결과 처리 (패배)
+                return; // 메서드 종료
             }
         }
 
@@ -295,7 +295,7 @@ namespace TextRPG_Week3
         void BattleLose(Character player)
         {
             string[] lastStats = new string[] { player.Level.ToString(), player.TotalAttack.ToString(), player.TotalDefense.ToString(), player.MaxHp.ToString() };
-
+            int originalHp = player.Hp;
             int gold = (int)((player.Level * 500));
             player.Gold += gold;
             player.Level = 1;
@@ -331,7 +331,7 @@ namespace TextRPG_Week3
                 Console.WriteLine("Battle!! - Result\n");
                 Console.WriteLine("You Lose");
                 Console.WriteLine($"Lv.{player.Level} {player.Name}");
-                Console.WriteLine($"HP {player.MaxHp} => {player.Hp}");
+                Console.WriteLine($"HP {player.MaxHp} => {originalHp}");
 
                 Console.Write("\n0.다음\n>>");
 
