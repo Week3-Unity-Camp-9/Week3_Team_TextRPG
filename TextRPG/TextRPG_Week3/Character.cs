@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -122,9 +123,20 @@ namespace TextRPG_Week3
                 }
                 else
                 {
+                    Item healingPotion = Inventory.FirstOrDefault(item => item.Name == "회복 포션");
+                    int displayIndex = 0;
                     for (int i = 0; i < Inventory.Count; i++)
                     {
+                        if (Inventory[i].Type == ItemType.Consumable)
+                        {
+                            continue;
+                        }
                         Console.WriteLine($"{i + 1}. {Inventory[i].GetDisplayInfo()}");
+                        displayIndex++;
+                    }
+                    if(healingPotion != null)
+                    {
+                        Console.WriteLine($"{displayIndex + 1}. {healingPotion.GetDisplayInfo()} | {healingPotion.Count} 개");
                     }
 
                     Console.WriteLine("\n아이템 번호를 선택하면 장착/해제하거나 포션을 사용할 수 있습니다.");

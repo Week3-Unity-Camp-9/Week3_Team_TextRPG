@@ -22,29 +22,21 @@ namespace TextRPG_Week3
             {
                 if ((input >= 1 && input <= options.Length) || (hasExit && input == 0))
                 {
-                    Console.Clear();
                     return input;
                 }
                 else
                 {
-                    Message("잘못된 입력입니다.");
+                    Console.WriteLine("잘못된 입력입니다.");
+                    Console.ReadKey();
                     return -1;
                 }
             }
             else
             {
-                Message("잘못된 입력입니다.");
+                Console.WriteLine("잘못된 입력입니다.");
+                Console.ReadKey();
                 return -1;
             }
-        }
-
-        //메세지를 보여줄때 사용하는 함수입니다. 
-        //너무 빨리 연산되어서 메세지 내용을 볼 수 없는 경우에 써주세요.
-        public void Message(string message)
-        {
-            Console.WriteLine(message);
-            Thread.Sleep(1000);
-            Console.Clear();
         }
     }
 }

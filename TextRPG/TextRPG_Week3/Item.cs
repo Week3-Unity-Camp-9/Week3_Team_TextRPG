@@ -14,14 +14,15 @@
         public int Value { get; set; } // 공격력, 방어력, 회복량
         public string Description { get; set; } = "";
         public bool IsEquipped { get; set; } = false;
-
-        public Item(string name, ItemType type, int value, string description, bool isEquipped = false)
+        public int Count { get; set; } = 1;
+        public Item(string name, ItemType type, int value, string description, bool isEquipped = false, int count = 1)
         {
             Name = name;
             Type = type;
             Value = value;
             Description = description;
             IsEquipped = isEquipped;
+            Count = count;
         }
 
         public string GetDisplayInfo()
