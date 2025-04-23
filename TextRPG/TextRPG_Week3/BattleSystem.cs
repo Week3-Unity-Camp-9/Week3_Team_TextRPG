@@ -172,7 +172,7 @@ namespace TextRPG_Week3
                 {
                     Console.WriteLine($"맞췄습니다. [데미지 : {Damage}]" + $"{(critical ? "- 치명타 공격!!" : "")}" + "\n");
                     Console.WriteLine($"Lv.{selectedEnemy.Level} {selectedEnemy.Name}");
-                    Console.WriteLine($"HP {selectedEnemy.Hp + Damage} -> {(selectedEnemy.IsDead ? "Dead" : selectedEnemy.Hp)}");
+                    Console.WriteLine($"HP {selectedEnemy.Hp + Damage} => {(selectedEnemy.IsDead ? "Dead" : selectedEnemy.Hp)}");
                 }
                 else Console.WriteLine("공격했지만 아무일도 일어나지 않았습니다.\n");
 
@@ -227,7 +227,7 @@ namespace TextRPG_Week3
                     {
                         Console.WriteLine($"맞췄습니다. [데미지 : {Damage}]" + $"{(critical ? "- 치명타 공격!!" : "")}" + "\n");
                         Console.WriteLine($"Lv.{player.Level} {player.Name}");
-                        Console.WriteLine($"HP {player.Hp + Damage} -> {player.Hp}");
+                        Console.WriteLine($"HP {player.Hp + Damage} => {player.Hp}");
                     }
                     else Console.WriteLine("공격했지만 아무일도 일어나지 않았습니다.\n");
 
@@ -265,12 +265,15 @@ namespace TextRPG_Week3
 
         void BattleWin(Character player)
         {
+            int heal = (int)(player.MaxHp / 10);
+            player.Hp += heal;
             Console.Clear();
             Console.WriteLine("Battle!! - Result\n");
             Console.WriteLine("Victory");
             Console.WriteLine($"\n던전에서 몬스터 {appearEnemies.Count}마리를 잡았습니다.");
+            Console.WriteLine($"체력을 {heal}만큼 회복합니다.");
             Console.WriteLine($"Lv.{player.Level} {player.Name}");
-            Console.WriteLine($"HP {player.MaxHp} -> {player.Hp}");
+            Console.WriteLine($"HP {player.Hp - heal} => {player.Hp}");
 
             int originalEXP = player.EXP;
             for (int i = 0; i < appearEnemies.Count; i++)
@@ -298,11 +301,15 @@ namespace TextRPG_Week3
                         {
                             player.EXP -= player.RequireEXP;
                             player.Level++;
+                            heal = (int)(player.MaxHp / 5);
+                            player.Hp += heal;
                             Console.Clear();
                             Console.WriteLine("레벨업!");
                             Console.WriteLine($"레벨이 {player.Level - 1}에서 {player.Level}이 되었습니다!");
                             Console.WriteLine($"공격력 : {player.TotalAttack - 0.5f}{(player.EquipAttack != 0 ? $"(+{player.EquipAttack})" : "")} => {player.TotalAttack}{(player.EquipAttack != 0 ? $"(+{player.EquipAttack})" : "")}");
                             Console.WriteLine($"방어력 : {player.TotalDefense - 1}{(player.EquipDefense != 0 ? $"(+{player.EquipDefense})" : "")} => {player.TotalDefense}{(player.EquipDefense != 0 ? $"(+{player.EquipDefense})" : "")}");
+                            Console.WriteLine($"체력을 {heal}만큼 회복합니다!");
+                            Console.WriteLine($"{player.Hp - heal} => {player.Hp}");
                             Console.WriteLine("\n아무 키나 누르면 계속합니다...");
                             Console.ReadKey();
                         }
@@ -332,7 +339,7 @@ namespace TextRPG_Week3
             Console.WriteLine("Battle!! - Result\n");
             Console.WriteLine("You Lose");
             Console.WriteLine($"Lv.{player.Level} {player.Name}");
-            Console.WriteLine($"HP {player.MaxHp} -> {player.Hp}");
+            Console.WriteLine($"HP {player.MaxHp} => {player.Hp}");
 
             Console.Write("\n0.다음\n>>");
 
