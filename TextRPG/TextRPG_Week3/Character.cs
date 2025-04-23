@@ -125,19 +125,14 @@ namespace TextRPG_Week3
                 else
                 {
                     Item healingPotion = Inventory.FirstOrDefault(item => item.Name == "회복 포션");
-                    int displayIndex = 0;
                     for (int i = 0; i < Inventory.Count; i++)
                     {
                         if (Inventory[i].Type == ItemType.Consumable)
                         {
+                            Console.WriteLine($"{i + 1}. {healingPotion.GetDisplayInfo()} | {healingPotion.Count} 개");
                             continue;
                         }
                         Console.WriteLine($"{i + 1}. {Inventory[i].GetDisplayInfo()}");
-                        displayIndex++;
-                    }
-                    if (healingPotion != null)
-                    {
-                        Console.WriteLine($"{displayIndex + 1}. {healingPotion.GetDisplayInfo()} | {healingPotion.Count} 개");
                     }
 
                     Console.WriteLine("\n아이템 번호를 선택하면 장착/해제하거나 포션을 사용할 수 있습니다.");
@@ -147,8 +142,12 @@ namespace TextRPG_Week3
                     if (int.TryParse(input, out int selected))
                     {
                         if (selected == 0) return;
-                        if (selected == displayIndex + 1 && healingPotion != null) UseConsumableItem(healingPotion);  // 회복 아이템 먼저 검사
-                        if (selected < 0 || selected >= displayIndex && Inventory[selected -1] != healingPotion)
+                        else if (Inventory[selected - 1] == healingPotion)
+                        {
+                            UseConsumableItem(healingPotion);
+                            continue;
+                        }
+                        else if (selected < Inventory.Count)
                         {
                             ToggleEquipItem(selected - 1);
                         }
@@ -182,6 +181,14 @@ namespace TextRPG_Week3
         public void AddItem(Item item)
         {
             Inventory.Add(item);
+
+            Item healingPotion = Inventory.FirstOrDefault(i => i.Name == "회복 포션");
+            if (healingPotion != null)
+            {
+                Inventory.Remove(healingPotion);
+                Inventory.Add(healingPotion);
+            }
+
             Console.WriteLine($"{item.Name}을(를) 인벤토리에 추가했습니다.");
         }
     }

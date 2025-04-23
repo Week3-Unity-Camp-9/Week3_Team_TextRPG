@@ -5,7 +5,7 @@ namespace TextRPG_Week3
 {
     public class ShopItem
     {
-        public static List<ShopItem> ItemList = new List<ShopItem>();
+        public static List<ShopItem> ItemList { get; set; } = new List<ShopItem>();
 
         public Item ItemData { get; set; }
         public int Price { get; set; }
@@ -190,7 +190,12 @@ namespace TextRPG_Week3
                 item.ItemData.Value,
                 item.ItemData.Description
                 ));
-                if(item.ItemData.Type != ItemType.Consumable) item.IsPurchased = true;
+                if (healingPotion != null)
+                {
+                    player.Inventory.Remove(healingPotion);
+                    player.Inventory.Add(healingPotion);
+                }
+                if (item.ItemData.Type != ItemType.Consumable) item.IsPurchased = true;
             }
 
             Console.WriteLine($"{item.ItemData.Name}을(를) 구매했습니다!");
