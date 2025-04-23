@@ -148,7 +148,7 @@ namespace TextRPG_Week3
                     {
                         if (selected == 0) return;
                         if (selected == displayIndex + 1 && healingPotion != null) UseConsumableItem(healingPotion);  // 회복 아이템 먼저 검사
-                        if (selected < 0 || selected >= displayIndex)
+                        if (selected < 0 || selected >= displayIndex && Inventory[selected -1] != healingPotion)
                         {
                             ToggleEquipItem(selected - 1);
                         }
