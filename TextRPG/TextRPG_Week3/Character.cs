@@ -151,7 +151,7 @@ namespace TextRPG_Week3
                             UseConsumableItem(healingPotion);
                             continue;
                         }
-                        else if (selected < Inventory.Count)
+                        else if (selected <= Inventory.Count)
                         {
                             ToggleEquipItem(selected - 1);
                         }
