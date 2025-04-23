@@ -8,26 +8,22 @@ namespace TextRPG_Week3
 {
     public static class BattleSystem // 전투 시스템 클래스 정의
     {
-        // 적 캐릭터 목록 (기본 설정)
+        static public int stage = 1;
+
+        static Random random = new Random();
+
         static List<Enemy> enemyList = new List<Enemy>
         {
-            new Enemy(1, "미니언", 10, 4), // 레벨 1, 이름 "미니언", HP 10, 공격력 4인 적 생성
-            new Enemy(2, "공허충", 5, 8), // 레벨 2, 이름 "공허충", HP 5, 공격력 8인 적 생성
-            new Enemy(4, "대포미니언", 20, 7) // 레벨 4, 이름 "대포미니언", HP 20, 공격력 7인 적 생성
-                                                //스테이지가 올라감에 따라 레벨 및 HP, 그리고 공격력 상승..
+            new Enemy(1, "미니언", 10, 4),
+            new Enemy(2, "공허충", 5, 8),
+            new Enemy(4, "대포미니언", 20, 7)
         };
 
-        //랜덤 사용할때 쓸 랜덤 생성
-        static Random random = new Random(); // Random 클래스의 새 인스턴스 생성
+        static List<Enemy> appearEnemies = new List<Enemy>();
 
-        // 현재 전투 중 등장한 적 목록
-        static List<Enemy> appearEnemies = new List<Enemy>(); // 현재 전투에 참여한 적들을 저장하는 리스트
-
-        // 전투 시작 전 플레이어 HP 저장
-        static int originalHp; // 전투 시작 시 플레이어의 HP를 저장할 변수
+        static int originalHp;
         static bool lose;
 
-        // 적과 조우하는 과정
         public static void Encounting(Character player)
         {
             originalHp = player.Hp; // 전투 시작 전 플레이어의 현재 HP를 저장
@@ -151,7 +147,6 @@ namespace TextRPG_Week3
             }
         }
 
-        // 플레이어의 공격 처리
         static void PlayerAttack(int select, Character player)
         {
             Enemy selectedEnemy = appearEnemies[select - 1]; // 선택된 적 객체 가져오기
@@ -183,7 +178,6 @@ namespace TextRPG_Week3
             Console.ReadKey();
         }
 
-        // 적의 공격 처리
         static void EnemyAttack(List<Enemy> enemies, Character player)
         {
             if (enemies.All(enemy => enemy.IsDead)) return;
@@ -230,8 +224,6 @@ namespace TextRPG_Week3
                 }
             }
         }
-
-        static public int stage = 1;
 
         static void BattleWin(Character player)
         {
@@ -306,7 +298,7 @@ namespace TextRPG_Week3
             }
             return;
         }
-        // 전투 종료 처리
+
         static void BattleLose(Character player)
         {
             string[] lastStats = new string[] { player.Level.ToString(), player.TotalAttack.ToString(), player.TotalDefense.ToString(), player.MaxHp.ToString() };
