@@ -182,7 +182,7 @@ namespace TextRPG_Week3
             }
 
             player.Gold -= item.Price;
-            if(item.ItemData.Type != ItemType.Consumable)
+            if (item.ItemData.Type != ItemType.Consumable || healingPotion == null)
             {
                 player.Inventory.Add(new Item(
                 item.ItemData.Name,
@@ -190,7 +190,7 @@ namespace TextRPG_Week3
                 item.ItemData.Value,
                 item.ItemData.Description
                 ));
-                item.IsPurchased = true;
+                if(item.ItemData.Type != ItemType.Consumable) item.IsPurchased = true;
             }
 
             Console.WriteLine($"{item.ItemData.Name}을(를) 구매했습니다!");

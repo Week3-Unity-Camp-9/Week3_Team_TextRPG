@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -134,7 +135,7 @@ namespace TextRPG_Week3
                         Console.WriteLine($"{i + 1}. {Inventory[i].GetDisplayInfo()}");
                         displayIndex++;
                     }
-                    if(healingPotion != null)
+                    if (healingPotion != null)
                     {
                         Console.WriteLine($"{displayIndex + 1}. {healingPotion.GetDisplayInfo()} | {healingPotion.Count} 개");
                     }
@@ -146,7 +147,11 @@ namespace TextRPG_Week3
                     if (int.TryParse(input, out int selected))
                     {
                         if (selected == 0) return;
-                        UseConsumableItem(selected - 1);  // 회복 아이템 먼저 검사
+                        if (selected == displayIndex + 1 && healingPotion != null) UseConsumableItem(healingPotion);  // 회복 아이템 먼저 검사
+                        if (selected < 0 || selected >= displayIndex)
+                        {
+                            ToggleEquipItem(selected - 1);
+                        }
                     }
                     else
                     {
@@ -160,30 +165,15 @@ namespace TextRPG_Week3
         // ============================
         // 3. 회복 아이템 사용
         // ============================
-        public void UseConsumableItem(int index)
+        public void UseConsumableItem(Item healingPotion)
         {
-            if (index < 0 || index >= Inventory.Count)
-            {
-                Console.WriteLine("잘못된 입력입니다.");
-                Console.ReadKey();
-                return;
-            }
+            Hp += healingPotion.Value;
+            healingPotion.Count--;
+            if (healingPotion.Count == 0) Inventory.Remove(healingPotion);
+            if (Hp > MaxHp) Hp = MaxHp;
 
-            Item item = Inventory[index];
-
-            if (item.Type == ItemType.Consumable)
-            {
-                Hp += item.Value;
-                if (Hp > MaxHp) Hp = MaxHp;
-
-                Console.WriteLine($"{item.Name}을(를) 사용하여 체력을 {item.Value} 회복했습니다.");
-                Inventory.RemoveAt(index);
-                Console.ReadKey();
-            }
-            else
-            {
-                ToggleEquipItem(index);  // 무기/방어구는 장착 토글
-            }
+            Console.WriteLine($"{healingPotion.Name}을(를) 사용하여 체력을 {healingPotion.Value} 회복했습니다.");
+            Console.ReadKey();
         }
 
         // ============================
