@@ -42,7 +42,62 @@ namespace TextRPG_Week3
                         "오래된 검이지만 쓸만함"
                     ),
                     Price = 300
-                },
+                },// 낡은 검 5 300
+                new ShopItem
+                {
+                    ItemData = new Item
+                    (
+                        "검",
+                        ItemType.Weapon,
+                        7,
+                        "잘 제련된 양산현 검"
+                    ),
+                    Price = 350
+                },// 검 7 350
+                new ShopItem
+                {
+                    ItemData = new Item
+                    (
+                        "강철 검",
+                        ItemType.Weapon,
+                        10,
+                        "강철로 제련한 튼튼한 검"
+                    ),
+                    Price = 370
+                },// 강철 검 10 370
+                new ShopItem
+                {
+                    ItemData = new Item
+                    (
+                        "낡은 스파르타의 창",
+                        ItemType.Weapon,
+                        20,
+                        "오래된 스파르타의 창"
+                    ),
+                    Price = 470
+                },// 낡은 스파르타의 창 12 470
+                new ShopItem
+                {
+                    ItemData = new Item
+                    (
+                        "스파르타의 창",
+                        ItemType.Weapon,
+                        30,
+                        "강인한 스파르타 인들의 무기"
+                    ),
+                    Price = 520
+                },// 스파르타의 창 30 520
+                new ShopItem
+                {
+                    ItemData = new Item
+                    (
+                        "스파르타의 혼",
+                        ItemType.Weapon,
+                        2500,
+                        "고대 스파르타 영웅들의 혼이 담긴 에고웨폰"
+                    ),
+                    Price = 100000
+                },// 스파르타의 혼 2500 100000
                 new ShopItem
                 {
                     ItemData = new Item
