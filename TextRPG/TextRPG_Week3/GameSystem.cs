@@ -42,16 +42,20 @@ namespace TextRPG_Week3
 
     public static class GameSystem
     {
-        public static int Select(string[] options, bool hasExit)
+        public static int Select(string[]? options = null, bool hasExit = true, string zeroSelection = "0.나가기", string question = "원하시는 행동을 입력해 주세요.\n>>")
         {
-            for (int i = 0; i < options.Length; i++)
+            if(options != null)
             {
-                Console.WriteLine($"{options[i]}\t");
+                for (int i = 0; i < options.Length; i++)
+                {
+                    Console.WriteLine($"{options[i]}");
+                }
             }
-            Console.Write($"{(hasExit ? "\n0.나가기" : "")}\n해당하는 번호를 입력해주세요.\n>>");
+            Console.Write($"{(hasExit ? $"\n{zeroSelection}\n" : "")}");
+            Console.WriteLine($"{question}");
             if (int.TryParse(Console.ReadLine(), out int input) && input >= 0 && input <= options.Length)
             {
-                if ((input >= 1 && input <= options.Length) || (hasExit && input == 0))
+                if ((options != null && input >= 1 && input <= options.Length) || (hasExit && input == 0))
                 {
                     return input;
                 }

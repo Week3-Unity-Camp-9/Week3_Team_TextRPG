@@ -141,26 +141,26 @@ namespace TextRPG_Week3
                     Console.WriteLine("\n아이템 번호를 선택하면 장착/해제하거나 포션을 사용할 수 있습니다.");
                 }
                 Console.WriteLine("\n0. 나가기");
-                    Console.Write(">> ");
-                    string input = Console.ReadLine();
-                    if (int.TryParse(input, out int selected))
+                Console.Write(">> ");
+                string input = Console.ReadLine();
+                if (int.TryParse(input, out int selected))
+                {
+                    if (selected == 0) return;
+                    else if (Inventory[selected - 1] == healingPotion)
                     {
-                        if (selected == 0) return;
-                        else if (Inventory[selected - 1] == healingPotion)
-                        {
-                            UseConsumableItem(healingPotion);
-                            continue;
-                        }
-                        else if (selected <= Inventory.Count)
-                        {
-                            ToggleEquipItem(selected - 1);
-                        }
+                        UseConsumableItem(healingPotion);
+                        continue;
                     }
-                    else
+                    else if (selected <= Inventory.Count)
                     {
-                        Console.WriteLine("잘못된 입력입니다.");
-                        Console.ReadKey();
+                        ToggleEquipItem(selected - 1);
                     }
+                }
+                else
+                {
+                    Console.WriteLine("잘못된 입력입니다.");
+                    Console.ReadKey();
+                }
             }
         }
 

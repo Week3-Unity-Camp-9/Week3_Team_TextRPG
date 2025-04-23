@@ -81,8 +81,8 @@ namespace TextRPG_Week3
 
                 player.DisplayStatus();
 
-                int input = GameSystem.Select(new string[] {"1.커스터마이징", "2.저장하기","3.불러오기" }, true);
-                switch(input)
+                int input = GameSystem.Select(new string[] { "1.커스터마이징", "2.저장하기", "3.불러오기" });
+                switch (input)
                 {
                     case 0:
                         return;
@@ -132,7 +132,8 @@ namespace TextRPG_Week3
                 Console.Clear();
                 Console.WriteLine("저장할 파일을 선택해 주세요.");
                 string[] options = SaveFileRead();
-                int selection = GameSystem.Select(options, true);
+                int selection = GameSystem.Select(options, question: "\n>>");
+                Console.WriteLine("\n>>");
                 if (selection == 0) return;
                 else if (selection > 0 && selection <= options.Length)
                 {
@@ -150,7 +151,8 @@ namespace TextRPG_Week3
                 Console.Clear();
                 Console.WriteLine("불러올 파일을 선택해 주세요.");
                 string[] options = SaveFileRead();
-                int selection = GameSystem.Select(options, true);
+                int selection = GameSystem.Select(options, question: "\n>>");
+                Console.WriteLine("\n>>");
 
                 Character loadedPlayer = null;
                 ShopItem loadedStore = null;
@@ -189,6 +191,7 @@ namespace TextRPG_Week3
                 Console.WriteLine("이제 전투를 시작할 수 있습니다.");
 
                 int input = GameSystem.Select(new string[] { "1.상태 보기", $"2.전투 시작(현재 진행 : {BattleSystem.stage})", "3.회복 아이템" }, false);
+
                 switch (input)
                 {
                     case 1:
@@ -211,13 +214,13 @@ namespace TextRPG_Week3
                             Console.WriteLine("회복");
                             Console.WriteLine($"포션을 사용하면 체력을 30 회복 할 수 있습니다. (남은 포션 : {healingPotionCount})\n");
 
-                            int select = GameSystem.Select(new string[] { "1.사용하기" }, true);
+                            int select = GameSystem.Select(new string[] { "1.사용하기" });
                             switch (select)
                             {
                                 case 0:
                                     break;
                                 case 1:
-                                    if(healingPotion == null)
+                                    if (healingPotion == null)
                                     {
                                         Console.WriteLine("포션이 부족합니다.");
                                         Console.ReadKey();
