@@ -36,11 +36,15 @@ namespace TextRPG_Week3
                 Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.");
                 Console.WriteLine("이곳에서 던전으로 들어가기 전 활동을 할 수 있습니다.\n");
 
-                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("1. 상태 보기");
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("2. 인벤토리");
+                Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("3. 상점");
+                Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine("4. 전투 시작");
+                Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine("0. 게임 종료");
                 Console.ResetColor();
 
@@ -187,6 +191,9 @@ namespace TextRPG_Week3
             while (true)
             {
                 Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.WriteLine("던전 입장");
+                Console.ResetColor();
                 Console.WriteLine("스파르타 던전에 오신 여러분 환영합니다.");
                 Console.WriteLine("이제 전투를 시작할 수 있습니다.");
 
