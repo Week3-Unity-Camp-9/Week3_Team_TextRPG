@@ -21,6 +21,7 @@ namespace TextRPG_Week3
         public int MaxHp { get; set; } = 100;
         public int Gold { get; set; } = 1500;
         public int EXP { get; set; } = 0;
+        public Character() { }
         public int EquipAttack => Inventory.Where(item => item.IsEquipped && item.Type == ItemType.Weapon).Sum(i => i.Value);
         public int EquipDefense => Inventory.Where(item => item.IsEquipped && item.Type == ItemType.Armor).Sum(i => i.Value);
         public int RequireEXP => (Level == 1 ? 10 : 0) + (Level - 1) * 35;
@@ -113,6 +114,8 @@ namespace TextRPG_Week3
         {
             while (true)
             {
+                Item healingPotion = Inventory.FirstOrDefault(item => item.Name == "회복 포션");
+
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("인벤토리");
@@ -124,7 +127,7 @@ namespace TextRPG_Week3
                 }
                 else
                 {
-                    Item healingPotion = Inventory.FirstOrDefault(item => item.Name == "회복 포션");
+
                     for (int i = 0; i < Inventory.Count; i++)
                     {
                         if (Inventory[i].Type == ItemType.Consumable)
@@ -136,7 +139,8 @@ namespace TextRPG_Week3
                     }
 
                     Console.WriteLine("\n아이템 번호를 선택하면 장착/해제하거나 포션을 사용할 수 있습니다.");
-                    Console.WriteLine("\n0. 나가기");
+                }
+                Console.WriteLine("\n0. 나가기");
                     Console.Write(">> ");
                     string input = Console.ReadLine();
                     if (int.TryParse(input, out int selected))
@@ -157,7 +161,6 @@ namespace TextRPG_Week3
                         Console.WriteLine("잘못된 입력입니다.");
                         Console.ReadKey();
                     }
-                }
             }
         }
 

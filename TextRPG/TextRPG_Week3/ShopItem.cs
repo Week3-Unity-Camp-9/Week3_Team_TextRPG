@@ -5,12 +5,12 @@ namespace TextRPG_Week3
 {
     public class ShopItem
     {
-        public static List<ShopItem> ItemList { get; set; } = new List<ShopItem>();
+        public List<ShopItem> ItemList { get; set; } = new List<ShopItem>();
 
         public Item ItemData { get; set; }
         public int Price { get; set; }
         public bool IsPurchased { get; set; } = false;
-
+        public ShopItem() { }
         public string GetDisplayInfo(int index)
         {
             string statText = ItemData.Type switch
@@ -28,7 +28,7 @@ namespace TextRPG_Week3
             return $"- {index + 1}. {ItemData.Name,-12} | {statText,-14} | {ItemData.Description,-30} | {rightText}";
         }
 
-        public static void InitShopItems()
+        public void InitShopItems()
         {
             ItemList = new List<ShopItem>
             {
@@ -125,7 +125,7 @@ namespace TextRPG_Week3
             };
         }
 
-        public static void OpenShop(Character player)
+        public void OpenShop(Character player)
         {
             while (true)
             {
