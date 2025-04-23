@@ -8,7 +8,7 @@ namespace TextRPG_Week3
 {
     public class Enemy
     {
-        public int Level;   
+        public int Level;
         public string Name;
         public int Hp;
         public int Attack;
@@ -38,7 +38,7 @@ namespace TextRPG_Week3
             int healAmount = 0;
             switch (SpecialSkill)
             {
-                
+
                 case "불멸":
                     // 보스의 체력을 회복시키는 효과
                     healAmount = 12;
@@ -53,5 +53,5 @@ namespace TextRPG_Week3
 
         }
     }
-    
-} 
+
+}

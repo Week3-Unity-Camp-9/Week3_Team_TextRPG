@@ -162,7 +162,7 @@ namespace TextRPG_Week3
         private static void Buy(Character player, ShopItem item)
         {
             Item healingPotion = player.Inventory.FirstOrDefault(item => item.Name == "회복 포션");
-            if(healingPotion != null && item.ItemData == healingPotion)
+            if (healingPotion != null && item.ItemData == healingPotion)
             {
                 healingPotion.Count++;
             }

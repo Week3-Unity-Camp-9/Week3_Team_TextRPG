@@ -44,7 +44,7 @@ namespace TextRPG_Week3
     {
         public static int Select(string[]? options = null, bool hasExit = true, string zeroSelection = "0.나가기", string question = "원하시는 행동을 입력해 주세요.\n>>")
         {
-            if(options != null)
+            if (options != null)
             {
                 for (int i = 0; i < options.Length; i++)
                 {
