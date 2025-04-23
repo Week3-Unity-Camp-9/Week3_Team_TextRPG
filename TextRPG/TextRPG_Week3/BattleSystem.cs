@@ -22,7 +22,7 @@ namespace TextRPG_Week3
         static List<Enemy> appearEnemies = new List<Enemy>();
 
         static int originalHp;
-        static bool lose;
+        public static bool lose;
 
         public static void Encounting(Character player)
         {
@@ -73,28 +73,25 @@ namespace TextRPG_Week3
             while (true)
             {
                 Console.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine("Battle!!\n");
-
                 foreach (var enemy in appearEnemies)
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     if (enemy.IsDead) Console.ForegroundColor = ConsoleColor.DarkGray;
                     Console.WriteLine($"Lv.{enemy.Level} {enemy.Name} HP {(enemy.IsDead ? "Dead" : enemy.Hp.ToString())}");
                     Console.ResetColor();
                 }
-
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("\n[내정보]");
                 Console.WriteLine($"Lv.{player.Level}  {player.Name} ({player.Job})");
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"HP {player.Hp}/{player.MaxHp}\n");
 
                 int input = GameSystem.Select(new string[] { "1.공격" }, false);
 
                 if (input == 1) return;
-                else
-                {
-                    Console.WriteLine("잘못된 입력입니다.");
-                    Console.ReadKey();
-                    continue;
-                }
+                else continue;
             }
         }
 
@@ -103,21 +100,27 @@ namespace TextRPG_Week3
             while (true)
             {
                 Console.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine("Battle!!\n");
+
                 for (int i = 0; i < appearEnemies.Count; i++)
                 {
-                    if (appearEnemies[i].IsDead)
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    if (appearEnemies[i].IsDead) Console.ForegroundColor = ConsoleColor.DarkGray;
 
                     Console.WriteLine($"{i + 1}. Lv.{appearEnemies[i].Level} {appearEnemies[i].Name} HP {(appearEnemies[i].IsDead ? "Dead" : appearEnemies[i].Hp.ToString())}");
                     Console.ResetColor();
                 }
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("\n[내정보]");
                 Console.WriteLine($"Lv.{player.Level}  {player.Name} ({player.Job})");
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"HP {player.Hp}/{player.MaxHp}");
                 Console.WriteLine("\n0.취소\n");
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.Write("대상을 선택해 주세요.\n>>");
-
+                Console.ResetColor();
                 if (int.TryParse(Console.ReadLine(), out int input))
                 {
                     if (input == 0)
@@ -131,6 +134,7 @@ namespace TextRPG_Week3
                         Enemy target = appearEnemies[input - 1];
                         if (target.IsDead)
                         {
+                            Console.ForegroundColor = ConsoleColor.DarkRed;
                             Console.WriteLine($"{target.Name}은 이미 죽었습니다.");
                             Console.ReadKey();
                             continue;
@@ -139,6 +143,7 @@ namespace TextRPG_Week3
                         return;
                     }
                 }
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("잘못된 입력입니다.");
                 Console.ReadKey();
                 continue;
@@ -160,19 +165,23 @@ namespace TextRPG_Week3
             if (selectedEnemy.Hp <= 0) selectedEnemy.IsDead = true; // 적의 HP가 0 이하가 되면 IsDead 상태를 true로 변경
 
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.WriteLine("Battle!!\n");
-
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"{player.Name} 의 공격!");
             Console.Write($"Lv.{selectedEnemy.Level} {selectedEnemy.Name}을(를) ");
             if (hit)
             {
+                if (critical) Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine($"맞췄습니다. [데미지 : {Damage}]" + $"{(critical ? "- 치명타 공격!!" : "")}" + "\n");
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"Lv.{selectedEnemy.Level} {selectedEnemy.Name}");
                 Console.WriteLine($"HP {selectedEnemy.Hp + Damage} => {(selectedEnemy.IsDead ? "Dead" : selectedEnemy.Hp)}");
             }
             else Console.WriteLine("공격했지만 아무일도 일어나지 않았습니다.\n");
-
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.Write("\n아무 키나 눌러서 계속\n>>");
+            Console.ResetColor();
             Console.ReadKey();
         }
 
@@ -180,6 +189,7 @@ namespace TextRPG_Week3
         {
             if (enemies.All(enemy => enemy.IsDead)) return;
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.WriteLine("Battle!!\n");
             int originalHp = player.Hp;
             for (int i = 0; i < enemies.Count; i++) // 등장한 모든 적에 대해 반복
@@ -195,18 +205,23 @@ namespace TextRPG_Week3
                 if (!hit) Damage = 0; // 공격 실패 시 데미지는 0
 
                 player.Hp -= Damage; // 플레이어의 HP에서 데미지 감소
-
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"{enemies[i].Name} 의 공격!");
                 Console.Write($"Lv.{player.Level} {player.Name}을(를)");
                 if (hit)
                 {
+                    if(critical) Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Console.WriteLine($"맞췄습니다. [데미지 : {Damage}]" + $"{(critical ? "- 치명타 공격!!" : "")}" + "\n");
+                    Console.ForegroundColor = ConsoleColor.Red;
                 }
                 else Console.WriteLine("공격했지만 아무일도 일어나지 않았습니다.\n");
             }
             Console.WriteLine($"Lv.{player.Level} {player.Name}");
+            if(player.Hp <= 0) Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.WriteLine($"HP {originalHp} => {player.Hp}");
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.Write("\n아무 키나 눌러서 계속\n>>");
+            Console.ResetColor();
             Console.ReadKey();
             if (player.Hp <= 0) // 플레이어의 HP가 0 이하이면
             {
@@ -244,16 +259,21 @@ namespace TextRPG_Week3
             while (true)
             {
                 Console.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine("Battle!! - Result\n");
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine("Victory");
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine($"\n던전에서 몬스터 {appearEnemies.Count}마리를 잡았습니다.");
                 Console.WriteLine($"체력을 {heal}만큼 회복합니다.");
                 Console.WriteLine($"Lv.{player.Level} {player.Name}");
                 Console.WriteLine($"HP {player.Hp - heal} => {player.Hp}");
                 Console.WriteLine($"EXP {originalEXP} => {player.EXP}");
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine("[획득 보상]");
                 Console.WriteLine($"{gold} Gold");
-                Console.WriteLine($"{stage} 스테이지 클리어!");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine($"{stage-1} 스테이지 클리어!");
 
                 int input = GameSystem.Select(zeroSelection: "0.다음", question: "\n>>");
 
@@ -271,12 +291,16 @@ namespace TextRPG_Week3
                             if (player.Hp > player.MaxHp) player.Hp = player.MaxHp;
 
                             Console.Clear();
+                            Console.ForegroundColor = ConsoleColor.Cyan;
                             Console.WriteLine("레벨업!");
                             Console.WriteLine($"레벨이 {player.Level - 1}에서 {player.Level}이 되었습니다!");
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
                             Console.WriteLine($"공격력 : {player.TotalAttack - 0.5f}{(player.EquipAttack != 0 ? $"(+{player.EquipAttack})" : "")} => {player.TotalAttack}{(player.EquipAttack != 0 ? $"(+{player.EquipAttack})" : "")}");
                             Console.WriteLine($"방어력 : {player.TotalDefense - 1}{(player.EquipDefense != 0 ? $"(+{player.EquipDefense})" : "")} => {player.TotalDefense}{(player.EquipDefense != 0 ? $"(+{player.EquipDefense})" : "")}");
+                            Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine($"체력을 {heal}만큼 회복합니다!");
                             Console.WriteLine($"{player.Hp - heal} => {player.Hp}");
+                            Console.ForegroundColor = ConsoleColor.DarkGreen;
                             Console.WriteLine("\n아무 키나 누르면 계속합니다...");
                             Console.ReadKey();
                         }

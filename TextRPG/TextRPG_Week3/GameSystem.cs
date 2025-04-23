@@ -57,7 +57,7 @@ namespace TextRPG_Week3
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.Write($"{question}");
             Console.ResetColor();
-            if (int.TryParse(Console.ReadLine(), out int input) && input >= 0 && input <= options.Length)
+            if (int.TryParse(Console.ReadLine(), out int input) && input >= 0)
             {
                 if ((options != null && input >= 1 && input <= options.Length) || (hasExit && input == 0))
                 {
