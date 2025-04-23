@@ -161,6 +161,12 @@ namespace TextRPG_Week3
 
         private static void Buy(Character player, ShopItem item)
         {
+            Item healingPotion = player.Inventory.FirstOrDefault(item => item.Name == "회복 포션");
+            if(healingPotion != null && item.ItemData == healingPotion)
+            {
+                healingPotion.Count++;
+            }
+
             if (item.IsPurchased && item.ItemData.Type != ItemType.Consumable)
             {
                 Console.WriteLine("이미 구매한 아이템입니다.");
@@ -176,15 +182,16 @@ namespace TextRPG_Week3
             }
 
             player.Gold -= item.Price;
-            player.Inventory.Add(new Item(
+            if(item.ItemData.Type != ItemType.Consumable)
+            {
+                player.Inventory.Add(new Item(
                 item.ItemData.Name,
                 item.ItemData.Type,
                 item.ItemData.Value,
                 item.ItemData.Description
-            ));
-
-            if (item.ItemData.Type != ItemType.Consumable)
+                ));
                 item.IsPurchased = true;
+            }
 
             Console.WriteLine($"{item.ItemData.Name}을(를) 구매했습니다!");
             Console.ReadKey();

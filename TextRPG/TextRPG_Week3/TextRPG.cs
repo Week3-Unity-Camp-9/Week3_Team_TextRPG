@@ -13,7 +13,8 @@ namespace TextRPG_Week3
             player.Inventory.AddRange(new List<Item>
                 {
                 new Item("무쇠갑옷", ItemType.Armor, 5, "무쇠로 만들어져 튼튼한 갑옷입니다.", true),
-                new Item("스파르타의 창", ItemType.Weapon,7, "스파르타의 전사들이 사용했다는 전설의 창입니다.", false)
+                new Item("스파르타의 창", ItemType.Weapon,7, "스파르타의 전사들이 사용했다는 전설의 창입니다.", false),
+                new Item("회복 포션", ItemType.Consumable, 30, "체력을 30 회복합니다", false, 3)
                 });
 
             ShopItem.InitShopItems();
@@ -97,7 +98,7 @@ namespace TextRPG_Week3
                 Console.WriteLine("스파르타 던전에 오신 여러분 환영합니다.");
                 Console.WriteLine("이제 전투를 시작할 수 있습니다.");
 
-                int input = gameSystem.Select(new string[] { "1.상태 보기", $"2.전투 시작(현재 진행 : {BattleSystem.stage})" }, false);
+                int input = gameSystem.Select(new string[] { "1.상태 보기", $"2.전투 시작(현재 진행 : {BattleSystem.stage})", "3.회복 아이템" }, false);
                 switch (input)
                 {
                     case 1:
@@ -106,6 +107,50 @@ namespace TextRPG_Week3
                     case 2:
                         battleSystem.Encounting(player);
                         return;
+                    case 3:
+                        while (true)
+                        {
+                            Item healingPotion = player.Inventory.FirstOrDefault(item => item.Name == "회복 포션");
+                            int healingPotionCount = 0;
+                            if (healingPotion != null)
+                            {
+                                healingPotionCount = healingPotion.Count;
+                            }
+
+                            Console.Clear();
+                            Console.WriteLine("회복");
+                            Console.WriteLine($"포션을 사용하면 체력을 30 회복 할 수 있습니다. (남은 포션 : {healingPotionCount})\n");
+
+                            int select = gameSystem.Select(new string[] { "1.사용하기" }, true);
+                            switch (select)
+                            {
+                                case 0:
+                                    break;
+                                case 1:
+                                    if(healingPotion == null)
+                                    {
+                                        Console.WriteLine("포션이 부족합니다.");
+                                        Console.ReadKey();
+                                        continue;
+                                    }
+
+                                    healingPotion.Count--;
+                                    if (healingPotion.Count == 0) player.Inventory.Remove(healingPotion);
+
+                                    int originalHp = player.Hp;
+                                    player.Hp += healingPotion.Value;
+                                    if (player.Hp > player.MaxHp) player.Hp = player.MaxHp;
+
+                                    Console.WriteLine($"{healingPotion.Name}을(를) 사용하여 체력을 {healingPotion.Value} 회복했습니다.");
+                                    Console.WriteLine($"HP {originalHp} => {player.Hp}");
+                                    Console.ReadKey();
+                                    continue;
+                                default:
+                                    continue;
+                            }
+                            break;
+                        }
+                        break;
                     default:
                         continue;
                 }
