@@ -106,7 +106,7 @@ namespace TextRPG_Week3
                         break;
                     case 2:
                         battleSystem.Encounting(player);
-                        return;
+                        continue;
                     case 3:
                         while (true)
                         {

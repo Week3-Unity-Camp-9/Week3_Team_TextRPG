@@ -304,7 +304,6 @@ namespace TextRPG_Week3
                     Console.Clear();
                 }
             }
-            Encounting(player);
             return;
         }
         // 전투 종료 처리
