@@ -36,11 +36,19 @@ namespace TextRPG_Week3
 
             int enemyCount = random.Next(1 + (stage / 3), 5); // 1마리에서 4마리 사이의 적 개수를 랜덤으로 결정
 
-            for (int i = 0; i < enemyCount; i++) // 결정된 적의 수만큼 반복
+            if(stage % 10 == 0) // 10의 배수 스테이지마다 보스 등장
             {
-                int randomIndex = random.Next(enemyList.Count); // enemyList에서 랜덤한 인덱스 선택
-                Enemy selectedEnemy = enemyList[randomIndex]; // 선택된 인덱스에 해당하는 적 정보 가져오기
-                appearEnemies.Add(new Enemy(selectedEnemy.Level, selectedEnemy.Name, selectedEnemy.Hp, selectedEnemy.Attack)); // 새로운 Enemy 객체를 생성하여 appearEnemies 리스트에 추가 (기존 적 데이터 복사)
+                appearEnemies.Clear();
+                appearEnemies.Add(new Boss(5, "내셔 남작", 85, 15, "불멸")); // 보스 몬스터 추가
+            }
+            else
+            {
+                for (int i = 0; i < enemyCount; i++) // 결정된 적의 수만큼 반복
+                {
+                    int randomIndex = random.Next(enemyList.Count); // enemyList에서 랜덤한 인덱스 선택
+                    Enemy selectedEnemy = enemyList[randomIndex]; // 선택된 인덱스에 해당하는 적 정보 가져오기
+                    appearEnemies.Add(new Enemy(selectedEnemy.Level, selectedEnemy.Name, selectedEnemy.Hp, selectedEnemy.Attack)); // 새로운 Enemy 객체를 생성하여 appearEnemies 리스트에 추가 (기존 적 데이터 복사)
+                }
             }
 
             Battle(player); // 전투 메서드 호출, 초기 상태는 적 조우 상태
@@ -212,6 +220,14 @@ namespace TextRPG_Week3
             {
                 BattleLose(player); // 전투 결과 처리 (패배)
                 return; // 메서드 종료
+            }
+            foreach (var appearEnemy in appearEnemies)
+            {
+                if (appearEnemy is Boss boss)
+                {
+                    boss.UseSpecialSkill(player);
+                    Console.ReadKey();
+                }
             }
         }
 
