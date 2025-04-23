@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,12 +7,42 @@ using System.Threading.Tasks;
 
 namespace TextRPG_Week3
 {
-    public class GameSystem
+    public class GameData
     {
-        //선택지가 여러가지 일 때 사용하려고 만들어둔 함수입니다.
-        //선택지에 번호까지 붙여서 사용해 주세요.
-        //예시 : int input = gameSystem.Select(new string[] {"1. 상태 보기", "2. 전투 시작" }, false); = 선택지 두 개에 나가기가 없는 선택지
-        public int Select(string[] options, bool hasExit)
+        public Character Player { get; set; }
+        public ShopItem Shop { get; set; }
+        public GameData() { }
+        public GameData(Character player, ShopItem shop)
+        {
+            Player = player;
+            Shop = shop;
+        }
+    }
+
+    public static class SaveManager
+    {
+        public static void SaveGame(Character player, ShopItem shop, int slot)
+        {
+            string saveFilePath = $"save{slot}.json";
+            GameData gameData = new GameData(player, shop);
+            string json = JsonConvert.SerializeObject(gameData, Formatting.Indented);
+            File.WriteAllText(saveFilePath, json);
+        }
+
+        public static (Character, ShopItem) LoadGame(int slot)
+        {
+            string saveFilePath = $"save{slot}.json";
+
+            string json = File.ReadAllText(saveFilePath);
+            GameData gameData = JsonConvert.DeserializeObject<GameData>(json);
+
+            return (gameData.Player, gameData.Shop);
+        }
+    }
+
+    public static class GameSystem
+    {
+        public static int Select(string[] options, bool hasExit)
         {
             for (int i = 0; i < options.Length; i++)
             {

@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Numerics;
 
 namespace TextRPG_Week3
 {
-    internal class TextRPG
+    static class TextRPG
     {
+        static Character player = new Character();
+        static ShopItem shop = new ShopItem();
         static void Main()
         {
-            GameSystem gameSystem = new GameSystem();
-            BattleSystem battleSystem = new BattleSystem();
-            Character player = new Character();
             player.Inventory.AddRange(new List<Item>
                 {
                 new Item("무쇠갑옷", ItemType.Armor, 5, "무쇠로 만들어져 튼튼한 갑옷입니다.", true),
@@ -17,11 +17,16 @@ namespace TextRPG_Week3
                 new Item("회복 포션", ItemType.Consumable, 30, "체력을 30 회복합니다", false, 3)
                 });
 
-            ShopItem.InitShopItems();
+            shop.InitShopItems();
 
             CharacterCustom custom = new CharacterCustom();
             custom.Customizing(player, false);
 
+            Town();
+        }
+
+        static void Town()
+        {
             while (true)
             {
                 Console.Clear();
@@ -42,16 +47,16 @@ namespace TextRPG_Week3
                 switch (input)
                 {
                     case "1":
-                        Status(gameSystem, player);
+                        Status();
                         break;
                     case "2":
                         player.ShowInventory();
                         break;
                     case "3":
-                        ShopItem.OpenShop(player);
+                        shop.OpenShop(player);
                         break;
                     case "4":
-                        EnteringDungeon(gameSystem, battleSystem,player);
+                        EnteringDungeon();
                         break;
                     case "0":
                         Console.WriteLine("게임을 종료합니다.");
@@ -66,7 +71,7 @@ namespace TextRPG_Week3
             }
         }
 
-        static void Status(GameSystem gameSystem, Character player)
+        static void Status()
         {
             CharacterCustom custom = new CharacterCustom();
             while (true)
@@ -76,21 +81,106 @@ namespace TextRPG_Week3
 
                 player.DisplayStatus();
 
-                int input = gameSystem.Select(new string[] {"1.커스터마이징" }, true);
+                int input = GameSystem.Select(new string[] {"1.커스터마이징", "2.저장하기","3.불러오기" }, true);
                 switch(input)
                 {
+                    case 0:
+                        return;
                     case 1:
                         custom.Customizing(player, true);
                         break;
-                    case 0:
-                        return;
+                    case 2:
+                        Save();
+                        break;
+                    case 3:
+                        Load();
+                        break;
                     default:
                         continue;
                 }
             }
         }
+        static string[] SaveFileRead()
+        {
+            string[] options = new string[3];
+            for (int i = 0; i < 3; i++)
+            {
+                string path = $"save{i + 1}.json";
+                GameData gameData = null;
+                if (File.Exists(path))
+                {
+                    string json = File.ReadAllText(path);
+                    gameData = JsonConvert.DeserializeObject<GameData>(json);
+                }
 
-        static void EnteringDungeon(GameSystem gameSystem, BattleSystem battleSystem,Character player)
+                if (gameData != null && gameData.Player != null)
+                {
+                    options[i] = $"{i + 1}번 슬롯 [{gameData.Player.Name}]";
+                }
+                else
+                {
+                    options[i] = $"{i + 1}번 슬롯 [비어있음]";
+                }
+            }
+            return options;
+        }
+
+        static void Save()
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("저장할 파일을 선택해 주세요.");
+                string[] options = SaveFileRead();
+                int selection = GameSystem.Select(options, true);
+                if (selection == 0) return;
+                else if (selection > 0 && selection <= options.Length)
+                {
+                    SaveManager.SaveGame(player, shop, selection);
+                    Console.WriteLine($"{selection}파일에 {player.Name}의 정보를 저장했습니다.");
+                    Console.ReadKey();
+                }
+            }
+        }
+
+        static void Load()
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("불러올 파일을 선택해 주세요.");
+                string[] options = SaveFileRead();
+                int selection = GameSystem.Select(options, true);
+
+                Character loadedPlayer = null;
+                ShopItem loadedStore = null;
+                if (selection > 0 && selection <= options.Length)
+                {
+                    string saveFilePath = $"save{selection}.json";
+
+                    if (File.Exists(saveFilePath) && new FileInfo(saveFilePath).Length > 0)
+                    {
+                        (loadedPlayer, loadedStore) = SaveManager.LoadGame(selection);
+                        player.Inventory.Clear();
+                        shop.ItemList.Clear();
+
+                        player = loadedPlayer;
+                        shop = loadedStore;
+
+                        Console.WriteLine($"{loadedPlayer.Name}의 정보를 불러왔습니다.");
+                        Console.ReadKey();
+                        return;
+                    }
+                    else
+                    {
+                        Console.WriteLine("선택한 슬롯은 저장된 데이터가 없습니다.");
+                        continue;
+                    }
+                }
+            }
+        }
+
+        static void EnteringDungeon()
         {
             while (true)
             {
@@ -98,14 +188,14 @@ namespace TextRPG_Week3
                 Console.WriteLine("스파르타 던전에 오신 여러분 환영합니다.");
                 Console.WriteLine("이제 전투를 시작할 수 있습니다.");
 
-                int input = gameSystem.Select(new string[] { "1.상태 보기", $"2.전투 시작(현재 진행 : {BattleSystem.stage})", "3.회복 아이템" }, false);
+                int input = GameSystem.Select(new string[] { "1.상태 보기", $"2.전투 시작(현재 진행 : {BattleSystem.stage})", "3.회복 아이템" }, false);
                 switch (input)
                 {
                     case 1:
-                        Status(gameSystem, player);
+                        Status();
                         break;
                     case 2:
-                        battleSystem.Encounting(player);
+                        BattleSystem.Encounting(player);
                         continue;
                     case 3:
                         while (true)
@@ -121,7 +211,7 @@ namespace TextRPG_Week3
                             Console.WriteLine("회복");
                             Console.WriteLine($"포션을 사용하면 체력을 30 회복 할 수 있습니다. (남은 포션 : {healingPotionCount})\n");
 
-                            int select = gameSystem.Select(new string[] { "1.사용하기" }, true);
+                            int select = GameSystem.Select(new string[] { "1.사용하기" }, true);
                             switch (select)
                             {
                                 case 0:

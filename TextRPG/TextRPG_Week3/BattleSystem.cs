@@ -6,10 +6,10 @@ using TextRPG_Week3; // 현재 프로젝트의 네임스페이스 참조
 
 namespace TextRPG_Week3
 {
-    public class BattleSystem // 전투 시스템 클래스 정의
+    public static class BattleSystem // 전투 시스템 클래스 정의
     {
         // 적 캐릭터 목록 (기본 설정)
-        List<Enemy> enemyList = new List<Enemy>
+        static List<Enemy> enemyList = new List<Enemy>
         {
             new Enemy(1, "미니언", 10, 4), // 레벨 1, 이름 "미니언", HP 10, 공격력 4인 적 생성
             new Enemy(2, "공허충", 5, 8), // 레벨 2, 이름 "공허충", HP 5, 공격력 8인 적 생성
@@ -18,17 +18,17 @@ namespace TextRPG_Week3
         };
 
         //랜덤 사용할때 쓸 랜덤 생성
-        Random random = new Random(); // Random 클래스의 새 인스턴스 생성
+        static Random random = new Random(); // Random 클래스의 새 인스턴스 생성
 
         // 현재 전투 중 등장한 적 목록
-        List<Enemy> appearEnemies = new List<Enemy>(); // 현재 전투에 참여한 적들을 저장하는 리스트
+        static List<Enemy> appearEnemies = new List<Enemy>(); // 현재 전투에 참여한 적들을 저장하는 리스트
 
         // 전투 시작 전 플레이어 HP 저장
-        int originalHp; // 전투 시작 시 플레이어의 HP를 저장할 변수
-        bool lose;
+        static int originalHp; // 전투 시작 시 플레이어의 HP를 저장할 변수
+        static bool lose;
 
         // 적과 조우하는 과정
-        public void Encounting(Character player)
+        public static void Encounting(Character player)
         {
             originalHp = player.Hp; // 전투 시작 전 플레이어의 현재 HP를 저장
             lose = false;
@@ -54,7 +54,7 @@ namespace TextRPG_Week3
             Battle(player); // 전투 메서드 호출, 초기 상태는 적 조우 상태
         }
 
-        public void Battle(Character player)
+        static void Battle(Character player)
         {
             while (true)
             {
@@ -72,7 +72,7 @@ namespace TextRPG_Week3
         }
 
         // 적 표시
-        private void ShowEnemies(Character player)
+        static void ShowEnemies(Character player)
         {
             while (true)
             {
@@ -103,7 +103,7 @@ namespace TextRPG_Week3
             }
         }
 
-        private void SelectTarget(Character player)
+        static void SelectTarget(Character player)
         {
             while (true)
             {
@@ -152,7 +152,7 @@ namespace TextRPG_Week3
         }
 
         // 플레이어의 공격 처리
-        void PlayerAttack(int select, Character player)
+        static void PlayerAttack(int select, Character player)
         {
             Enemy selectedEnemy = appearEnemies[select - 1]; // 선택된 적 객체 가져오기
             int Damage = (int)player.TotalAttack; // 플레이어의 총 공격력을 기본 데미지로 설정
@@ -184,7 +184,7 @@ namespace TextRPG_Week3
         }
 
         // 적의 공격 처리
-        void EnemyAttack(List<Enemy> enemies, Character player)
+        static void EnemyAttack(List<Enemy> enemies, Character player)
         {
             if (enemies.All(enemy => enemy.IsDead)) return;
             Console.Clear();
@@ -233,7 +233,7 @@ namespace TextRPG_Week3
 
         static public int stage = 1;
 
-        void BattleWin(Character player)
+        static void BattleWin(Character player)
         {
             int heal = (int)(player.MaxHp / 10);
             player.Hp += heal;
@@ -307,7 +307,7 @@ namespace TextRPG_Week3
             return;
         }
         // 전투 종료 처리
-        void BattleLose(Character player)
+        static void BattleLose(Character player)
         {
             string[] lastStats = new string[] { player.Level.ToString(), player.TotalAttack.ToString(), player.TotalDefense.ToString(), player.MaxHp.ToString() };
             int originalHp = player.Hp;

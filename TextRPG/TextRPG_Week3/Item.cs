@@ -9,12 +9,13 @@
 
     public class Item
     {
-        public string Name { get; set; } = "";
+        public string Name { get; set; }
         public ItemType Type { get; set; }
         public int Value { get; set; } // 공격력, 방어력, 회복량
-        public string Description { get; set; } = "";
-        public bool IsEquipped { get; set; } = false;
-        public int Count { get; set; } = 1;
+        public string Description { get; set; }
+        public bool IsEquipped { get; set; }
+        public int Count { get; set; }
+        public Item() { }
         public Item(string name, ItemType type, int value, string description, bool isEquipped = false, int count = 1)
         {
             Name = name;
