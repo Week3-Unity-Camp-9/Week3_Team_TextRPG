@@ -85,7 +85,7 @@ namespace TextRPG_Week3
                 Console.WriteLine("1.공격");
                 Console.Write("해당하는 번호를 입력해주세요.\n>>");
 
-                if (!int.TryParse(Console.ReadLine(), out int input) || input == 1) return;
+                if (int.TryParse(Console.ReadLine(), out int input) && input == 1) return;
                 else
                 {
                     Console.WriteLine("잘못된 입력입니다.");
@@ -101,7 +101,6 @@ namespace TextRPG_Week3
             {
                 Console.Clear();
                 Console.WriteLine("Battle!!\n");
-
                 for (int i = 0; i < appearEnemies.Count; i++)
                 {
                     if (appearEnemies[i].IsDead)
@@ -110,7 +109,6 @@ namespace TextRPG_Week3
                     Console.WriteLine($"{i + 1}. Lv.{appearEnemies[i].Level} {appearEnemies[i].Name} HP {(appearEnemies[i].IsDead ? "Dead" : appearEnemies[i].Hp.ToString())}");
                     Console.ResetColor();
                 }
-
                 Console.WriteLine("\n[내정보]");
                 Console.WriteLine($"Lv.{player.Level}  {player.Name} ({player.Job})");
                 Console.WriteLine($"HP {player.Hp}/{player.MaxHp}");
@@ -135,14 +133,13 @@ namespace TextRPG_Week3
                             Console.ReadKey();
                             continue;
                         }
-
                         PlayerAttack(input, player);
                         return;
                     }
                 }
-
                 Console.WriteLine("잘못된 입력입니다.");
                 Console.ReadKey();
+                continue;
             }
         }
 
