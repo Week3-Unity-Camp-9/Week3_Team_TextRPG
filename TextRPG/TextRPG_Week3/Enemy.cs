@@ -35,7 +35,7 @@ namespace TextRPG_Week3
         public void UseSpecialSkill(Character character)
         {
             Console.WriteLine($"{Name}이(가) {SpecialSkill}을(를) 사용했습니다!");
-            int healAmount = 30;
+            int healAmount = 0;
             switch (SpecialSkill)
             {
                 
