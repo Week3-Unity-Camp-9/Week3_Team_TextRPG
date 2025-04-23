@@ -31,42 +31,130 @@ namespace TextRPG_Week3
         public static void InitShopItems()
         {
             ItemList = new List<ShopItem>
-            {
-                new ShopItem
-                {
-                    ItemData = new Item
-                    (
-                        "낡은 검",
-                        ItemType.Weapon,
-                        5,
-                        "오래된 검이지만 쓸만함"
-                    ),
-                    Price = 300
-                },
-                new ShopItem
-                {
-                    ItemData = new Item
-                    (
-                        "가죽 갑옷",
-                        ItemType.Armor,
-                        3,
-                        "얇은 가죽으로 만들어진 방어구"
-                    ),
-                    Price = 250
-                },
-                new ShopItem
-                {
-                    ItemData = new Item
-                    (
-                        "회복 포션",
-                        ItemType.Consumable,
-                        30,
-                        "체력을 30 회복합니다"
-                    ),
-                    Price = 100
-                }
-            };
+    {
+        new ShopItem
+        {
+            ItemData = new Item(
+                "낡은 검",
+                ItemType.Weapon,
+                5,
+                "오래된 검이지만 쓸만함"
+            ),
+            Price = 300
+        },
+        new ShopItem
+        {
+            ItemData = new Item(
+                "가죽 갑옷",
+                ItemType.Armor,
+                3,
+                "얇은 가죽으로 만들어진 기본 방어구입니다."
+            ),
+            Price = 250
+        },
+        new ShopItem
+        {
+            ItemData = new Item(
+                "강화 가죽 갑옷",
+                ItemType.Armor,
+                5,
+                "추가 패딩으로 보호력이 향상된 가죽 방어구입니다."
+            ),
+            Price = 400
+        },
+        new ShopItem
+        {
+            ItemData = new Item(
+                "청동 갑옷",
+                ItemType.Armor,
+                7,
+                "기초 금속으로 제작된 무난한 방어구입니다."
+            ),
+            Price = 550
+        },
+        new ShopItem
+        {
+            ItemData = new Item(
+                "무쇠 갑옷",
+                ItemType.Armor,
+                9,
+                "무쇠로 제작되어 튼튼하고 신뢰할 수 있는 방어구입니다."
+            ),
+            Price = 700
+        },
+        new ShopItem
+        {
+            ItemData = new Item(
+                "사슬 갑옷",
+                ItemType.Armor,
+                11,
+                "금속 사슬로 엮어 찌르기에 강한 방어구입니다."
+            ),
+            Price = 900
+        },
+        new ShopItem
+        {
+            ItemData = new Item(
+                "강철 갑옷",
+                ItemType.Armor,
+                13,
+                "강철로 만들어진 중갑. 뛰어난 내구성을 자랑합니다."
+            ),
+            Price = 1100
+        },
+        new ShopItem
+        {
+            ItemData = new Item(
+                "중갑 기사단 갑옷",
+                ItemType.Armor,
+                15,
+                "중갑 기사단이 착용하던 신뢰도 높은 갑옷입니다."
+            ),
+            Price = 1300
+        },
+        new ShopItem
+        {
+            ItemData = new Item(
+                "마법 금속 갑옷",
+                ItemType.Armor,
+                17,
+                "마법이 부여된 금속 방어구로 물리와 마법을 함께 방어합니다."
+            ),
+            Price = 1500
+        },
+        new ShopItem
+        {
+            ItemData = new Item(
+                "용비늘 갑옷",
+                ItemType.Armor,
+                19,
+                "전설 속 용의 비늘을 정제해 만든 강력한 방어구입니다."
+            ),
+            Price = 1750
+        },
+        new ShopItem
+        {
+            ItemData = new Item(
+                "스파르타 갑옷",
+                ItemType.Armor,
+                21,
+                "스파르타 최정예 전사들이 착용했던 전설적인 갑옷입니다."
+            ),
+            Price = 2000
+        },
+        new ShopItem
+        {
+            ItemData = new Item(
+                "회복 포션",
+                ItemType.Consumable,
+                30,
+                "체력을 30 회복합니다"
+            ),
+            Price = 100
         }
+    };
+        }
+
 
         public static void OpenShop(Character player)
         {
