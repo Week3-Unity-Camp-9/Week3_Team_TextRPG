@@ -13,9 +13,9 @@ namespace TextRPG_Week3
         {
             new Enemy(1, "미니언", 10, 4), // 레벨 1, 이름 "미니언", HP 10, 공격력 4인 적 생성
             new Enemy(2, "공허충", 5, 8), // 레벨 2, 이름 "공허충", HP 5, 공격력 8인 적 생성
-            new Enemy(4, "대포미니언", 20, 7) // 레벨 4, 이름 "대포미니언", HP 20, 공격력 7인 적 생성
-                                                //스테이지가 올라감에 따라 레벨 및 HP, 그리고 공격력 상승..
-        };
+            new Enemy(4, "대포미니언", 20, 7), // 레벨 4, 이름 "대포미니언", HP 20, 공격력 7인 적 생성
+                                                  //스테이지가 올라감에 따라 레벨 및 HP, 그리고 공격력 상승..
+    };
 
         //랜덤 사용할때 쓸 랜덤 생성
         Random random = new Random(); // Random 클래스의 새 인스턴스 생성
@@ -26,6 +26,7 @@ namespace TextRPG_Week3
         // 전투 시작 전 플레이어 HP 저장
         int originalHp; // 전투 시작 시 플레이어의 HP를 저장할 변수
         bool lose;
+        
 
         // 적과 조우하는 과정
         public void Encounting(Character player)
@@ -36,13 +37,20 @@ namespace TextRPG_Week3
 
             int enemyCount = random.Next(1 + (stage / 3), 5); // 1마리에서 4마리 사이의 적 개수를 랜덤으로 결정
 
-            for (int i = 0; i < enemyCount; i++) // 결정된 적의 수만큼 반복
+            if (stage % 10 == 0) // 10의 배수 스테이지마다 보스 등장
             {
-                int randomIndex = random.Next(enemyList.Count); // enemyList에서 랜덤한 인덱스 선택
-                Enemy selectedEnemy = enemyList[randomIndex]; // 선택된 인덱스에 해당하는 적 정보 가져오기
-                appearEnemies.Add(new Enemy(selectedEnemy.Level, selectedEnemy.Name, selectedEnemy.Hp, selectedEnemy.Attack)); // 새로운 Enemy 객체를 생성하여 appearEnemies 리스트에 추가 (기존 적 데이터 복사)
+                appearEnemies.Clear();
+                appearEnemies.Add(new Boss(5, "내셔 남작", 85, 15, "불멸")); // 보스 몬스터 추가
             }
-
+            else
+            {
+                for (int i = 0; i < enemyCount; i++) // 결정된 적의 수만큼 반복
+                {
+                    int randomIndex = random.Next(enemyList.Count); // enemyList에서 랜덤한 인덱스 선택
+                    Enemy selectedEnemy = enemyList[randomIndex]; // 선택된 인덱스에 해당하는 적 정보 가져오기
+                    appearEnemies.Add(new Enemy(selectedEnemy.Level, selectedEnemy.Name, selectedEnemy.Hp, selectedEnemy.Attack)); // 새로운 Enemy 객체를 생성하여 appearEnemies 리스트에 추가 (기존 적 데이터 복사)
+                }
+            }
             Battle(player); // 전투 메서드 호출, 초기 상태는 적 조우 상태
         }
 
@@ -215,6 +223,16 @@ namespace TextRPG_Week3
                     BattleLose(player); // 전투 결과 처리 (패배)
                     return; // 메서드 종료
                 }
+
+                foreach (var appearEnemy in appearEnemies)
+                {
+                    if (appearEnemy is Boss boss)
+                    {
+                        boss.UseSpecialSkill(player);
+                        Console.ReadKey();
+                    }
+                }
+
             }
         }
 
