@@ -172,8 +172,9 @@ namespace TextRPG_Week3
             Console.Write($"Lv.{selectedEnemy.Level} {selectedEnemy.Name}을(를) ");
             if (hit)
             {
+                Console.Write("맞췄습니다.");
                 if (critical) Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine($"맞췄습니다. [데미지 : {Damage}]" + $"{(critical ? "- 치명타 공격!!" : "")}" + "\n");
+                Console.WriteLine($"[데미지 : {Damage}]" + $"{(critical ? "- 치명타 공격!!" : "")}" + "\n");
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"Lv.{selectedEnemy.Level} {selectedEnemy.Name}");
                 Console.WriteLine($"HP {selectedEnemy.Hp + Damage} => {(selectedEnemy.IsDead ? "Dead" : selectedEnemy.Hp)}");
@@ -213,7 +214,11 @@ namespace TextRPG_Week3
                         block = (random.Next(player.TotalDefense - enemies[i].Attack, 101) > 50);
                     }
                 }
-                if (block) Damage = (int)Damage / 2;
+                if (block)
+                {
+                    int blockDamage = (int)Damage / 2;
+                    Damage = blockDamage;
+                }
 
                 player.Hp -= Damage; // 플레이어의 HP에서 데미지 감소
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -221,8 +226,9 @@ namespace TextRPG_Week3
                 Console.Write($"Lv.{player.Level} {player.Name}을(를)");
                 if (hit && !block)
                 {
+                    Console.Write("맞췄습니다.");
                     if (critical) Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    Console.WriteLine($"맞췄습니다. [데미지 : {Damage}]" + $"{(critical ? "- 치명타 공격!!" : "")}" + "\n");
+                    Console.WriteLine($"[데미지 : {Damage}]" + $"{(critical ? "- 치명타 공격!!" : "")}" + "\n");
                     Console.ForegroundColor = ConsoleColor.Red;
                 }
                 else if (!hit) Console.WriteLine("공격했지만 아무일도 일어나지 않았습니다.\n");
