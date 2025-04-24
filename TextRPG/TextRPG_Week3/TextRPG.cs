@@ -78,13 +78,21 @@ namespace TextRPG_Week3
             }
         }
 
-        static void Status()
+        static void Status(bool fromTown = true)
         {
             CharacterCustom custom = new CharacterCustom();
             while (true)
             {
                 player.DisplayStatus();
-
+                if (!fromTown)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("던전에서는 기능을 사용할 수 없습니다.");
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    Console.Write(">>");
+                    Console.ReadKey();
+                    break;
+                }
                 int input = GameSystem.Select(new string[] { "1.커스터마이징", "2.저장하기", "3.불러오기" });
                 switch (input)
                 {
@@ -195,7 +203,7 @@ namespace TextRPG_Week3
             }
         }
 
-        static void OpenQuest()
+        static void OpenQuest(bool fromTown = true)
         {
             while (true)
             {
@@ -212,16 +220,16 @@ namespace TextRPG_Week3
                 {
                     Console.ResetColor();
                     if (quest[i].IsClear) Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    options[i] = $"{i + 1}. {quest[i].QuestName}";
+                    options[i] = $"{i + 1}.{quest[i].QuestName}";
                 }
 
                 int input = GameSystem.Select(options, question: "열람하고 싶은 퀘스트를 선택해 주세요\n>>");
                 if (input == 0) return;
-                else if (input > 0 && input <= quest.Count) SelectQuest(input);
+                else if (input > 0 && input <= quest.Count) SelectQuest(input, fromTown);
             }
         }
 
-        static void SelectQuest(int input)
+        static void SelectQuest(int input, bool fromTown)
         {
             List<Quest> quest = QuestManager.Quests;
             input--;
@@ -239,6 +247,15 @@ namespace TextRPG_Week3
                     case true:
                         Console.ForegroundColor = ConsoleColor.DarkYellow;
                         Console.WriteLine("달성\n");
+                        if (!fromTown)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("보상 수령은 마을에서만 가능합니다.");
+                            Console.ForegroundColor = ConsoleColor.DarkGreen;
+                            Console.Write(">>");
+                            Console.ReadKey();
+                            break;
+                        }
 
                         int selection = GameSystem.Select(new string[] { "1.보상 받기" });
                         switch (selection)
@@ -249,6 +266,15 @@ namespace TextRPG_Week3
                                 quest[input].IsClear = false;
                                 player.Gold += quest[input].Reword;
                                 quest[input].ClearCount++;
+                                switch (quest[input])
+                                {
+                                    case DefeatQuest defeatQuest:
+                                        defeatQuest.DefeatCount = 0;
+                                        break;
+                                    case DungeonQuest dungeonQuest:
+                                        dungeonQuest.ReachedStage = 0;
+                                        break;
+                                }
                                 Console.ForegroundColor = ConsoleColor.Cyan;
                                 Console.WriteLine($"퀘스트 달성! 보상으로 {quest[input].Reword} Gold를 받았습니다!");
                                 Console.ReadKey();
@@ -262,15 +288,31 @@ namespace TextRPG_Week3
                         {
                             case true:
                                 Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine("진행중\n");
-
+                                Console.Write("진행중\n진행률 : ");
+                                switch (quest[input])
+                                {
+                                    case DefeatQuest defeatQuest:
+                                        Console.WriteLine($"{defeatQuest.DefeatCount}/{defeatQuest.RequiredDefeatCount} 마리");
+                                        break;
+                                    case DungeonQuest dungeonQuest:
+                                        Console.WriteLine($"{dungeonQuest.ReachedStage}/{dungeonQuest.RequiredStage} 층");
+                                        break;
+                                }
                                 int select = GameSystem.Select();
                                 if (select == 0) break;
                                 continue;
                             case false:
                                 Console.ForegroundColor = ConsoleColor.Blue;
                                 Console.WriteLine("수주가능\n");
-
+                                if (!fromTown)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("퀘스트 수주는 마을에서만 가능합니다.");
+                                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                                    Console.Write(">>");
+                                    Console.ReadKey();
+                                    break;
+                                }
                                 int select1 = GameSystem.Select(new string[] { "1.퀘스트 수주" });
                                 if (select1 == 0) break;
                                 else if(select1 == 1)
@@ -301,12 +343,12 @@ namespace TextRPG_Week3
                 Console.WriteLine("스파르타 던전에 오신 여러분 환영합니다.");
                 Console.WriteLine("이제 전투를 시작할 수 있습니다.\n");
 
-                int input = GameSystem.Select(new string[] { "1.상태 보기", $"2.전투 시작(현재 진행 : {BattleSystem.stage})", "3.회복 아이템" }, false);
+                int input = GameSystem.Select(new string[] { "1.상태 보기", $"2.전투 시작(현재 진행 : {BattleSystem.stage})", "3.회복 아이템", "4.퀘스트 열람" }, false);
 
                 switch (input)
                 {
                     case 1:
-                        Status();
+                        Status(false);
                         break;
                     case 2:
                         BattleSystem.Encounting(player);
@@ -326,7 +368,8 @@ namespace TextRPG_Week3
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("회복");
                             Console.ResetColor();
-                            Console.WriteLine($"포션을 사용하면 체력을 30 회복 할 수 있습니다. (남은 포션 : {healingPotionCount})\n");
+                            Console.WriteLine($"포션을 사용하면 체력을 30 회복 할 수 있습니다. (남은 포션 : {healingPotionCount})");
+                            Console.WriteLine($"Hp : {player.Hp}/{player.MaxHp}\n");
 
                             int select = GameSystem.Select(new string[] { "1.사용하기" });
                             switch (select)
@@ -348,6 +391,9 @@ namespace TextRPG_Week3
                             }
                             break;
                         }
+                        break;
+                    case 4:
+                        OpenQuest(false);
                         break;
                     default:
                         continue;

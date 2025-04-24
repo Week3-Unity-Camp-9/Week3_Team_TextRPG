@@ -421,7 +421,15 @@
                 Console.WriteLine("You Lose");
                 Console.WriteLine($"Lv.{player.Level} {player.Name}");
                 Console.WriteLine($"HP {player.MaxHp} => {originalHp}");
-
+                foreach (Quest quest in QuestManager.Quests)
+                {
+                    if (quest.IsClear)
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.WriteLine($"퀘스트 : {quest.QuestName} 달성!");
+                        Console.ResetColor();
+                    }
+                }
                 int input = GameSystem.Select(zeroSelection: "0.다음",question: "\n>>");
 
                 if (input == 0)
