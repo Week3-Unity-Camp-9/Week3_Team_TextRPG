@@ -6,6 +6,7 @@ namespace TextRPG_Week3
     {
         public void Customizing(Character player, bool hasName)
         {
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
             if (hasName)
             {
                 Console.Clear();
@@ -15,16 +16,20 @@ namespace TextRPG_Week3
 
             // 이름 입력
             Console.Write("원하시는 이름을 설정해주세요.\n>>");
+            Console.ResetColor();
             string name = Console.ReadLine();
             if (!string.IsNullOrWhiteSpace(name))
                 player.Name = name;
 
             // 직업 선택
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("직업을 선택하세요:");
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("1. 전사");
             Console.WriteLine("2. 마법사");
             Console.WriteLine("3. 도적");
-            Console.Write("번호 입력: ");
+            Console.Write("원하시는 직업을 골라주세요.\n>>");
+            Console.ResetColor();
             string jobInput = Console.ReadLine();
             switch (jobInput)
             {
@@ -51,6 +56,7 @@ namespace TextRPG_Week3
                     player.MaxHp = 100;
                     break;
                 default:
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("잘못된 입력입니다. 기본 직업(전사)로 설정합니다.");
                     player.Job = "전사";
                     player.Attack = 15;
@@ -59,15 +65,18 @@ namespace TextRPG_Week3
                     player.MaxHp = 120;
                     break;
             }
-
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("\n적용이 완료되었습니다!");
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"이름: {player.Name}");
             Console.WriteLine($"직업: {player.Job}");
             Console.WriteLine($"공격력: {player.Attack}");
             Console.WriteLine($"방어력: {player.Defense}");
             Console.WriteLine($"최대 체력: {player.MaxHp}");
             Console.WriteLine($"골드: {player.Gold}");
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("\n아무 키나 누르면 계속합니다...");
+            Console.ResetColor();
             Console.ReadKey();
             Console.Clear();
         }

@@ -222,7 +222,9 @@ namespace TextRPG_Week3
                             }
 
                             Console.Clear();
+                            Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("회복");
+                            Console.ResetColor();
                             Console.WriteLine($"포션을 사용하면 체력을 30 회복 할 수 있습니다. (남은 포션 : {healingPotionCount})\n");
 
                             int select = GameSystem.Select(new string[] { "1.사용하기" });
@@ -233,21 +235,12 @@ namespace TextRPG_Week3
                                 case 1:
                                     if (healingPotion == null)
                                     {
+                                        Console.ForegroundColor = ConsoleColor.Red;
                                         Console.WriteLine("포션이 부족합니다.");
                                         Console.ReadKey();
                                         continue;
                                     }
-
-                                    healingPotion.Count--;
-                                    if (healingPotion.Count == 0) player.Inventory.Remove(healingPotion);
-
-                                    int originalHp = player.Hp;
-                                    player.Hp += healingPotion.Value;
-                                    if (player.Hp > player.MaxHp) player.Hp = player.MaxHp;
-
-                                    Console.WriteLine($"{healingPotion.Name}을(를) 사용하여 체력을 {healingPotion.Value} 회복했습니다.");
-                                    Console.WriteLine($"HP {originalHp} => {player.Hp}");
-                                    Console.ReadKey();
+                                    player.UseConsumableItem(healingPotion);
                                     continue;
                                 default:
                                     continue;

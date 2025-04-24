@@ -193,12 +193,15 @@ namespace TextRPG_Week3
         // ============================
         public void UseConsumableItem(Item healingPotion)
         {
+            int originalHp = Hp;
             Hp += healingPotion.Value;
             healingPotion.Count--;
             if (healingPotion.Count == 0) Inventory.Remove(healingPotion);
             if (Hp > MaxHp) Hp = MaxHp;
-
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"{healingPotion.Name}을(를) 사용하여 체력을 {healingPotion.Value} 회복했습니다.");
+            Console.WriteLine($"HP {originalHp} => {Hp}");
+            Console.ResetColor();
             Console.ReadKey();
         }
 
