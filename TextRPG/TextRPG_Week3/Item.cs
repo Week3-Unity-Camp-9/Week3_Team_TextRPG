@@ -4,7 +4,8 @@
     {
         Weapon =1,
         Armor,
-        Consumable   // 회복 아이템 추가됨
+        HealthPotion,
+        ManaPotion
     }
 
     public class Item
@@ -15,8 +16,9 @@
         public string Description { get; set; }
         public bool IsEquipped { get; set; }
         public int Count { get; set; }
+        public bool IsConsumable { get; set; }
         public Item() { }
-        public Item(string name, ItemType type, int value, string description, bool isEquipped = false, int count = 1)
+        public Item(string name, ItemType type, int value, string description, bool isEquipped = false, int count = 1, bool isConsumable = false)
         {
             Name = name;
             Type = type;
@@ -24,6 +26,7 @@
             Description = description;
             IsEquipped = isEquipped;
             Count = count;
+            IsConsumable = isConsumable;
         }
 
         public string GetDisplayInfo()
@@ -36,7 +39,8 @@
             {
                 ItemType.Weapon => $"공격력 +{Value}",
                 ItemType.Armor => $"방어력 +{Value}",
-                ItemType.Consumable => $"체력 회복 +{Value}",
+                ItemType.HealthPotion => $"체력 회복 +{Value}",
+                ItemType.ManaPotion => $"마나 회복 + {Value}",
                 _ => ""
             };
 

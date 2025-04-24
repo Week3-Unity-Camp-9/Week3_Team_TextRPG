@@ -1,4 +1,6 @@
-﻿namespace TextRPG_Week3
+﻿using static TextRPG_Week3.Character;
+
+namespace TextRPG_Week3
 {
     public class CharacterCustom
     {
@@ -34,35 +36,40 @@
             string jobInput = Console.ReadLine();
             switch (jobInput)
             {
-
                 case "1":
-                    player.Job = "전사";
+                    player.Job = PlayerClass.Warrior;
                     player.Attack = 15;
                     player.Defense = 10;
-                    if (player.Hp == player.MaxHp) player.Hp = 120;
+                    player.Hp = 120;
                     player.MaxHp = 120;
+                    player.Mp = 50;
+                    player.MaxHp = 50;
                     break;
                 case "2":
-                    player.Job = "마법사";
+                    player.Job = PlayerClass.Wizard;
                     player.Attack = 20;
                     player.Defense = 5;
-                    if (player.Hp == player.MaxHp) player.Hp = 80;
+                    player.Hp = 80;
                     player.MaxHp = 80;
+                    player.Mp = 120;
+                    player.MaxHp = 120;
                     break;
                 case "3":
-                    player.Job = "도적";
+                    player.Job = PlayerClass.Thief;
                     player.Attack = 12;
                     player.Defense = 7;
-                    if (player.Hp == player.MaxHp) player.Hp = 100;
+                    player.Hp = 100;
+                    player.MaxHp = 100;
+                    player.Mp = 100;
                     player.MaxHp = 100;
                     break;
                 default:
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("잘못된 입력입니다. 기본 직업(전사)로 설정합니다.");
-                    player.Job = "전사";
+                    player.Job = PlayerClass.Warrior;
                     player.Attack = 15;
                     player.Defense = 10;
-                    if (player.Hp == player.MaxHp) player.Hp = 120;
+                    player.Hp = 120;
                     player.MaxHp = 120;
                     break;
             }
