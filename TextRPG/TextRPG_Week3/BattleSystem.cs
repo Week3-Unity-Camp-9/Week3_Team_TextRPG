@@ -283,8 +283,8 @@ namespace TextRPG_Week3
                     {
                         if (player.EXP >= player.RequireEXP)
                         {
-                            player.Level++;
                             player.EXP -= player.RequireEXP;
+                            player.Level++;
                             heal = (int)(player.MaxHp / 5);
 
                             player.Hp += heal;
@@ -350,6 +350,7 @@ namespace TextRPG_Week3
             while (true)
             {
                 Console.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine("Battle!! - Result\n");
                 Console.WriteLine("You Lose");
                 Console.WriteLine($"Lv.{player.Level} {player.Name}");
@@ -360,19 +361,25 @@ namespace TextRPG_Week3
                 if (input == 0)
                 {
                     Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
                     Console.WriteLine("패배했습니다.\n");
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Console.WriteLine("[최종 능력치]");
                     Console.WriteLine($"Lv.{player.Level} {player.Name}");
                     Console.WriteLine($"공격력 : {player.TotalAttack}");
                     Console.WriteLine($"방어력 : {player.TotalDefense}");
                     Console.WriteLine($"HP {player.MaxHp}");
-                    Console.WriteLine("레벨이 1로 돌아갑니다.\n");
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine("\n레벨이 1로 돌아갑니다.\n");
                     Console.WriteLine($"Lv : {lastStats[0]} => {player.Level}");
                     Console.WriteLine($"공격력 : {lastStats[1]} => {player.TotalAttack}");
                     Console.WriteLine($"방어력 : {lastStats[2]} => {player.TotalDefense}");
                     Console.WriteLine($"HP : {lastStats[3]} => {player.MaxHp}");
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Console.WriteLine($"레벨에 대한 보상으로 {gold} Gold를 획득했습니다.");
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.WriteLine("\n아무 키나 누르면 계속합니다...");
+                    Console.ResetColor();
                     Console.ReadKey();
                     return;
                 }
