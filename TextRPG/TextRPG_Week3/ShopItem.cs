@@ -1,4 +1,6 @@
-﻿namespace TextRPG_Week3
+﻿using Newtonsoft.Json.Linq;
+
+namespace TextRPG_Week3
 {
     public class ShopItem
     {
@@ -14,11 +16,12 @@
             {
                 ItemType.Weapon => $"공격력 +{ItemData.Value}",
                 ItemType.Armor => $"방어력 +{ItemData.Value}",
-                ItemType.Consumable => $"체력 회복 +{ItemData.Value}",
+                ItemType.HealthPotion => $"체력 회복 +{ItemData.Value}",
+                ItemType.ManaPotion => $"마나 회복 + {ItemData.Value}",
                 _ => ""
             };
 
-            string rightText = IsPurchased && ItemData.Type != ItemType.Consumable
+            string rightText = IsPurchased && ItemData.IsConsumable
                 ? "구매완료"
                 : $"{Price} G";
 
@@ -116,7 +119,12 @@
                 // 소비 아이템
                 new ShopItem
                 {
-                    ItemData = new Item("회복 포션", ItemType.Consumable, 30, "체력을 30 회복합니다"),
+                    ItemData = new Item("회복 포션", ItemType.HealthPotion, 30, "체력을 30 회복합니다", isConsumable: true),
+                    Price = 100
+                },
+                new ShopItem
+                {
+                    ItemData = new Item("마나 포션", ItemType.ManaPotion, 30, "체력을 30 회복합니다", isConsumable: true),
                     Price = 100
                 }
             };
@@ -140,10 +148,13 @@
                             Console.ForegroundColor = ConsoleColor.DarkRed;
                             break;
                         case ItemType.Armor:
-                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.ForegroundColor = ConsoleColor.DarkBlue;
                             break;
-                        case ItemType.Consumable:
+                        case ItemType.HealthPotion:
                             Console.ForegroundColor = ConsoleColor.Red;
+                            break;
+                        case ItemType.ManaPotion:
+                            Console.ForegroundColor = ConsoleColor.Blue;
                             break;
                         default:
                             Console.ResetColor();
@@ -177,20 +188,6 @@
 
         private static void Buy(Character player, ShopItem item)
         {
-            Item healingPotion = player.Inventory.FirstOrDefault(item => item.Name == "회복 포션");
-            if (healingPotion != null && item.ItemData.Name == healingPotion.Name)
-            {
-                healingPotion.Count++;
-            }
-
-            if (item.IsPurchased && item.ItemData.Type != ItemType.Consumable)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("이미 구매한 아이템입니다.");
-                Console.ReadKey();
-                return;
-            }
-
             if (player.Gold < item.Price)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -198,25 +195,40 @@
                 Console.ReadKey();
                 return;
             }
-
-            player.Gold -= item.Price;
-            if (item.ItemData.Type != ItemType.Consumable || healingPotion == null)
+            ItemType type = item.ItemData.Type;
+            Item invenPotion = player.Inventory.FirstOrDefault(item => item.Type == type);
+            if (invenPotion != null && item.ItemData.Type == invenPotion.Type)
             {
+                invenPotion.Count++;
+            }
+            else
+            {
+                if (item.IsPurchased)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("이미 구매한 아이템입니다.");
+                    Console.ReadKey();
+                    return;
+                }
                 player.Inventory.Add(new Item(
                 item.ItemData.Name,
                 item.ItemData.Type,
                 item.ItemData.Value,
                 item.ItemData.Description
                 ));
-
-                player.Inventory = player.Inventory
-                .OrderBy(item => item.Type)
-                .ThenBy(item => item.Value)
-                .ThenBy(item => item.Name.Length)
-                .ToList();
-
-                if (item.ItemData.Type != ItemType.Consumable) item.IsPurchased = true;
             }
+            player.Gold -= item.Price;
+
+
+
+            if (!item.ItemData.IsConsumable) item.IsPurchased = true;
+
+            player.Inventory = player.Inventory
+            .OrderBy(item => item.Type)
+            .ThenBy(item => item.Value)
+            .ThenBy(item => item.Name.Length)
+            .ToList();
+
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"{item.ItemData.Name}을(를) 구매했습니다!");
             Console.ReadKey();

@@ -1,4 +1,6 @@
-﻿namespace TextRPG_Week3
+﻿using static TextRPG_Week3.Character;
+
+namespace TextRPG_Week3
 {
     public static class BattleSystem // 전투 시스템 클래스 정의
     {
@@ -30,7 +32,7 @@
 
             int enemyCount = random.Next(1 + (stage / 3), 5); // 1마리에서 4마리 사이의 적 개수를 랜덤으로 결정
 
-            if(stage % 10 == 0) // 10의 배수 스테이지마다 보스 등장
+            if (stage % 10 == 0) // 10의 배수 스테이지마다 보스 등장
             {
                 appearEnemies.Clear();
                 appearEnemies.Add(bossList[0]); // 보스 몬스터 추가
@@ -58,15 +60,14 @@
                     return;
                 }
 
-                ShowEnemies(player);
-                SelectTarget(player);
-                EnemyAttack(appearEnemies, player);
+                (float blockBonus, bool hidden) = ShowEnemies(player);
+                EnemyAttack(appearEnemies, player, blockBonus, hidden);
                 if (lose) return;
             }
         }
 
         // 적 표시
-        static void ShowEnemies(Character player)
+        static (float, bool) ShowEnemies(Character player)
         {
             while (true)
             {
@@ -86,14 +87,88 @@
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"HP {player.Hp}/{player.MaxHp}\n");
 
-                int input = GameSystem.Select(new string[] { "1.공격" }, false);
+                int input = GameSystem.Select(new string[] { "1.공격", "2.스킬" }, false);
 
-                if (input == 1) return;
+                if (input == 1)
+                {
+                    SelectTarget(player);
+                    return(1, false);
+                }
+                else if (input == 2)
+                {
+                    (float blockBonus, bool hidden) = UseSkill(player);
+                    return(blockBonus, hidden);
+                }
                 else continue;
             }
         }
 
-        static void SelectTarget(Character player)
+        static (float, bool) UseSkill(Character player)
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("Battle!!\n");
+                (string skill1, string skill2) = player.GetSkills();
+                string[] skills = new string[] { $"1.{skill1}", $"2.{skill2}" };
+                int input = GameSystem.Select(skills, zeroSelection: "0.취소", question: "사용할 스킬을 골라주세요.\n>>");
+                if (input == 0 || input == -1) continue;
+                switch (player.Job)
+                {
+                    case PlayerClass.Warrior:
+                        switch (input)
+                        {
+                            case 1:
+                                SelectTarget(player, 2, canDodge: false);
+                                break;
+                            case 2:
+                                SelectTarget(player, canDodge: false);
+                                return(2, false);
+                        }
+                        break;
+                    case PlayerClass.Wizard:
+                        switch (input)
+                        {
+                            case 1:
+                                SelectTarget(player, 1.5f, canDodge: false);
+                                break;
+                            case 2:
+                                int count = random.Next(2, 5);
+                                Console.ForegroundColor = ConsoleColor.DarkRed;
+                                Console.WriteLine($"{count}번 공격!!");
+                                Console.ReadKey();
+                                for(int i = 0; i < count; i++)
+                                {
+                                    int randomTarget = random.Next(0, appearEnemies.Count);
+                                    Enemy target = appearEnemies[randomTarget];
+                                    int enemyHp = target.Hp;
+                                    target.Hp -= (int)player.TotalAttack;
+                                    Console.WriteLine($"Lv.{target.Level} {target.Name}을 맞췄다! [{(int)player.TotalAttack}의 데미지!]");
+                                    Console.WriteLine($"HP {enemyHp} -> {target.Hp}\n");
+                                    Thread.Sleep(500);
+                                }
+                                break;
+                        }
+                        break;
+                    case PlayerClass.Thief:
+                        switch (input)
+                        {
+                            case 1:
+                                SelectTarget(player, 3);
+                                break;
+                            case 2:
+                                SelectTarget(player);
+                                return(1, true);
+                        }
+                        break;
+                }
+                break;
+            }
+            return (1, false);
+        }
+
+        static void SelectTarget(Character player, float attackBonus = 1f, bool canDodge = true)
         {
             while (true)
             {
@@ -115,50 +190,48 @@
                 Console.WriteLine($"Lv.{player.Level}  {player.Name} ({player.Job})");
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"HP {player.Hp}/{player.MaxHp}");
-                Console.WriteLine("\n0.취소\n");
-                Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.Write("대상을 선택해 주세요.\n>>");
-                Console.ResetColor();
-                if (int.TryParse(Console.ReadLine(), out int input))
+                int input = GameSystem.Select(zeroSelection: "0.취소", question: "대상을 선택해 주세요.\n>>");
+                switch (input)
                 {
-                    if (input == 0)
-                    {
+                    case -1:
+                        continue;
+                    case 0:
                         Console.WriteLine("행동을 취소하고 턴을 넘깁니다.");
                         Console.ReadKey();
                         return;
-                    }
-                    else if (input >= 1 && input <= appearEnemies.Count)
-                    {
-                        Enemy target = appearEnemies[input - 1];
-                        if (target.IsDead)
+                    default:
+                        if (input >= 1 && input <= appearEnemies.Count)
                         {
-                            Console.ForegroundColor = ConsoleColor.DarkRed;
-                            Console.WriteLine($"{target.Name}은 이미 죽었습니다.");
-                            Console.ReadKey();
-                            continue;
+                            Enemy target = appearEnemies[input - 1];
+                            if (target.IsDead)
+                            {
+                                Console.ForegroundColor = ConsoleColor.DarkRed;
+                                Console.WriteLine($"{target.Name}은 이미 죽었습니다.");
+                                Console.ReadKey();
+                                continue;
+                            }
+                            PlayerAttack(input, player, attackBonus, canDodge);
+                            return;
                         }
-                        PlayerAttack(input, player);
-                        return;
-                    }
+                        break;
                 }
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("잘못된 입력입니다.");
-                Console.ReadKey();
-                continue;
             }
         }
 
-        static void PlayerAttack(int select, Character player)
+        static void PlayerAttack(int select, Character player, float attackBonus, bool canDodge)
         {
             Enemy selectedEnemy = appearEnemies[select - 1]; // 선택된 적 객체 가져오기
-            int Damage = (int)player.TotalAttack; // 플레이어의 총 공격력을 기본 데미지로 설정
+            int Damage = (int)(player.TotalAttack * attackBonus); // 플레이어의 총 공격력을 기본 데미지로 설정
 
             bool critical = (random.Next(1, 101) < 15); // 15% 확률로 치명타 발생 여부 결정
             if (critical) Damage = (int)(player.TotalAttack * 1.6f); // 치명타 시 데미지 1.6배 증가
 
-            bool hit = (random.Next(1, 101) > 10); // 90% 확률로 공격 성공 여부 결정
-            if (!hit) Damage = 0; // 공격 실패 시 데미지는 0
-
+            bool hit = true;
+            if (canDodge)
+            {
+                hit = (random.Next(1, 101) > 10); // 90% 확률로 공격 성공 여부 결정
+                if (!hit) Damage = 0; // 공격 실패 시 데미지는 0
+            }
             selectedEnemy.Hp -= Damage; // 선택된 적의 HP에서 데미지 감소
             if (selectedEnemy.Hp <= 0) selectedEnemy.IsDead = true; // 적의 HP가 0 이하가 되면 IsDead 상태를 true로 변경
 
@@ -184,7 +257,7 @@
             Console.ReadKey();
         }
 
-        static void EnemyAttack(List<Enemy> enemies, Character player)
+        static void EnemyAttack(List<Enemy> enemies, Character player, float blockBonus, bool hidden)
         {
             if (enemies.All(enemy => enemy.IsDead)) return;
             Console.Clear();
@@ -195,30 +268,37 @@
             {
                 if (enemies[i].IsDead) continue; // 이미 죽은 적은 공격하지 않음
 
-                int Damage = enemies[i].Attack; // 현재 적의 공격력을 데미지로 설정
+                int Damage = (int)(enemies[i].Attack / blockBonus); // 현재 적의 공격력을 데미지로 설정
 
-                bool critical = (random.Next(1, 101) < 15); // 15% 확률로 치명타 발생 여부 결정
-                if (critical) Damage = (int)(enemies[i].Attack * 1.6f); // 치명타 시 데미지 1.6배 증가
-
-                bool hit = (random.Next(1, 101) > 10); // 90% 확률로 공격 성공 여부 결정
-                if (!hit) Damage = 0; // 공격 실패 시 데미지는 0
-
+                bool critical = false;
+                bool hit = false;
                 bool block = false;
-                if(hit && player.TotalDefense - enemies[i].Attack > 0)
+
+                if (!hidden)
                 {
-                    if (player.TotalDefense - enemies[i].Attack >= 100) block = true;
-                    else
+                    critical = (random.Next(1, 101) < 15); // 15% 확률로 치명타 발생 여부 결정
+                    if (critical) Damage = (int)(enemies[i].Attack * 1.6f); // 치명타 시 데미지 1.6배 증가
+
+                    hit = (random.Next(1, 101) > 10); // 90% 확률로 공격 성공 여부 결정
+                    if (!hit) Damage = 0; // 공격 실패 시 데미지는 0
+
+                    if (hit && player.TotalDefense - enemies[i].Attack > 0)
                     {
-                        block = (random.Next(player.TotalDefense - enemies[i].Attack, 101) > 50);
+                        if (player.TotalDefense - enemies[i].Attack >= 100) block = true;
+                        else
+                        {
+                            block = (random.Next(player.TotalDefense - enemies[i].Attack, 101) > 50);
+                        }
                     }
-                }
-                if (block)
-                {
-                    int blockDamage = (int)Damage / 2;
-                    Damage = blockDamage;
+                    if (block)
+                    {
+                        int blockDamage = (int)Damage / 2;
+                        Damage = blockDamage;
+                    }
+
+                    player.Hp -= Damage; // 플레이어의 HP에서 데미지 감소
                 }
 
-                player.Hp -= Damage; // 플레이어의 HP에서 데미지 감소
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"{enemies[i].Name} 의 공격!");
                 Console.Write($"Lv.{player.Level} {player.Name}을(를)");
@@ -233,7 +313,7 @@
                 else if (block) Console.WriteLine($"{(critical ? "강하게 " : "")}공격했지만 막아냈습니다! [데미지 : {Damage}]\n");
             }
             Console.WriteLine($"Lv.{player.Level} {player.Name}");
-            if(player.Hp <= 0) Console.ForegroundColor = ConsoleColor.DarkRed;
+            if (player.Hp <= 0) Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.WriteLine($"HP {originalHp} => {player.Hp}");
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.Write("\n아무 키나 눌러서 계속\n>>");
@@ -329,9 +409,9 @@
                 Console.WriteLine("[획득 보상]");
                 Console.WriteLine($"{gold} Gold");
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine($"{stage-1} 스테이지 클리어!\n");
+                Console.WriteLine($"{stage - 1} 스테이지 클리어!\n");
 
-                foreach(Quest quest in QuestManager.Quests)
+                foreach (Quest quest in QuestManager.Quests)
                 {
                     if (quest.IsClear)
                     {
@@ -393,19 +473,19 @@
 
             switch (player.Job)
             {
-                case "전사":
+                case PlayerClass.Warrior:
                     player.Attack = 15;
                     player.Defense = 10;
                     player.Hp = 120;
                     player.MaxHp = 120;
                     break;
-                case "마법사":
+                case PlayerClass.Wizard:
                     player.Attack = 20;
                     player.Defense = 5;
                     player.Hp = 80;
                     player.MaxHp = 80;
                     break;
-                case "도적":
+                case PlayerClass.Thief:
                     player.Attack = 12;
                     player.Defense = 7;
                     player.Hp = 100;
@@ -430,7 +510,7 @@
                         Console.ResetColor();
                     }
                 }
-                int input = GameSystem.Select(zeroSelection: "0.다음",question: "\n>>");
+                int input = GameSystem.Select(zeroSelection: "0.다음", question: "\n>>");
 
                 if (input == 0)
                 {

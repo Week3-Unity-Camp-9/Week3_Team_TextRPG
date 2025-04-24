@@ -13,7 +13,8 @@ namespace TextRPG_Week3
                 {
                 new Item("스파르타의 창", ItemType.Weapon,7, "스파르타의 전사들이 사용했다는 전설의 창입니다.", false),
                 new Item("무쇠갑옷", ItemType.Armor, 5, "무쇠로 만들어져 튼튼한 갑옷입니다.", true),
-                new Item("회복 포션", ItemType.Consumable, 30, "체력을 30 회복합니다", false, 3)
+                new Item("회복 포션", ItemType.HealthPotion, 30, "체력을 30 회복합니다", false, 3, true),
+                new Item("마나 포션", ItemType.ManaPotion, 30, "체력을 30 회복합니다", false, 3, true)
                 });
 
             shop.InitShopItems();
@@ -357,21 +358,27 @@ namespace TextRPG_Week3
                     case 3:
                         while (true)
                         {
-                            Item healingPotion = player.Inventory.FirstOrDefault(item => item.Name == "회복 포션");
+                            Item healingPotion = player.Inventory.FirstOrDefault(item => item.Type == ItemType.HealthPotion);
+                            Item manaPotion = player.Inventory.FirstOrDefault(item => item.Type == ItemType.ManaPotion);
                             int healingPotionCount = 0;
+                            int manaPotionCount = 0;
                             if (healingPotion != null)
                             {
                                 healingPotionCount = healingPotion.Count;
+                            }
+                            if (manaPotion != null)
+                            {
+                                manaPotionCount = manaPotion.Count;
                             }
 
                             Console.Clear();
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("회복");
                             Console.ResetColor();
-                            Console.WriteLine($"포션을 사용하면 체력을 30 회복 할 수 있습니다. (남은 포션 : {healingPotionCount})");
-                            Console.WriteLine($"Hp : {player.Hp}/{player.MaxHp}\n");
+                            Console.WriteLine($"포션을 사용하면 체력이나 마나를 30 회복 할 수 있습니다. (회복 포션 : {healingPotionCount}개, 마나 포션 : {manaPotionCount}개)");
+                            Console.WriteLine($"Hp : {player.Hp}/{player.MaxHp}\nMp : {player.Mp}/{player.MaxMp}\n");
 
-                            int select = GameSystem.Select(new string[] { "1.사용하기" });
+                            int select = GameSystem.Select(new string[] { "1.회복 포션 사용", "2.마나 포션 사용" });
                             switch (select)
                             {
                                 case 0:
@@ -385,6 +392,16 @@ namespace TextRPG_Week3
                                         continue;
                                     }
                                     player.UseConsumableItem(healingPotion);
+                                    continue;
+                                case 2:
+                                    if (manaPotion == null)
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.Red;
+                                        Console.WriteLine("포션이 부족합니다.");
+                                        Console.ReadKey();
+                                        continue;
+                                    }
+                                    player.UseConsumableItem(manaPotion);
                                     continue;
                                 default:
                                     continue;
