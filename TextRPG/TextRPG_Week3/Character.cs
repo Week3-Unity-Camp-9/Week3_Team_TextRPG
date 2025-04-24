@@ -170,7 +170,7 @@ namespace TextRPG_Week3
                 if (int.TryParse(input, out int selected))
                 {
                     if (selected == 0) return;
-                    else if (Inventory[selected - 1] == healingPotion)
+                    else if (healingPotion != null && selected <= Inventory.Count && Inventory[selected - 1] == healingPotion)
                     {
                         UseConsumableItem(healingPotion);
                         continue;
@@ -179,9 +179,16 @@ namespace TextRPG_Week3
                     {
                         ToggleEquipItem(selected - 1);
                     }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("잘못된 입력입니다.");
+                        Console.ReadKey();
+                    }
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("잘못된 입력입니다.");
                     Console.ReadKey();
                 }
