@@ -204,17 +204,29 @@ namespace TextRPG_Week3
                 bool hit = (random.Next(1, 101) > 10); // 90% 확률로 공격 성공 여부 결정
                 if (!hit) Damage = 0; // 공격 실패 시 데미지는 0
 
+                bool block = false;
+                if(hit && player.TotalDefense - enemies[i].Attack > 0)
+                {
+                    if (player.TotalDefense - enemies[i].Attack >= 100) block = true;
+                    else
+                    {
+                        block = (random.Next(player.TotalDefense - enemies[i].Attack, 101) > 50);
+                    }
+                }
+                if (block) Damage = (int)Damage / 2;
+
                 player.Hp -= Damage; // 플레이어의 HP에서 데미지 감소
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"{enemies[i].Name} 의 공격!");
                 Console.Write($"Lv.{player.Level} {player.Name}을(를)");
-                if (hit)
+                if (hit && !block)
                 {
-                    if(critical) Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    if (critical) Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Console.WriteLine($"맞췄습니다. [데미지 : {Damage}]" + $"{(critical ? "- 치명타 공격!!" : "")}" + "\n");
                     Console.ForegroundColor = ConsoleColor.Red;
                 }
-                else Console.WriteLine("공격했지만 아무일도 일어나지 않았습니다.\n");
+                else if (!hit) Console.WriteLine("공격했지만 아무일도 일어나지 않았습니다.\n");
+                else if (block) Console.WriteLine($"{(critical ? "강하게 " : "")}공격했지만 막아냈습니다! [데미지 : {Damage}]\n");
             }
             Console.WriteLine($"Lv.{player.Level} {player.Name}");
             if(player.Hp <= 0) Console.ForegroundColor = ConsoleColor.DarkRed;
