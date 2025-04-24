@@ -12,11 +12,15 @@ namespace TextRPG_Week3
 
         static Random random = new Random();
 
-        static List<Enemy> enemyList = new List<Enemy>
+        public static List<Enemy> enemyList = new List<Enemy>
         {
             new Enemy(1, "미니언", 10, 4),
             new Enemy(2, "공허충", 5, 8),
-            new Enemy(4, "대포미니언", 20, 7)
+            new Enemy(4, "대포미니언", 20, 7),
+        };
+        public static List<Enemy> bossList = new List<Enemy>
+        {
+            new Boss(5, "내셔 남작", 85, 15, "불멸")
         };
 
         static List<Enemy> appearEnemies = new List<Enemy>();
@@ -35,7 +39,7 @@ namespace TextRPG_Week3
             if(stage % 10 == 0) // 10의 배수 스테이지마다 보스 등장
             {
                 appearEnemies.Clear();
-                appearEnemies.Add(new Boss(5, "내셔 남작", 85, 15, "불멸")); // 보스 몬스터 추가
+                appearEnemies.Add(bossList[0]); // 보스 몬스터 추가
             }
             else
             {
@@ -54,7 +58,7 @@ namespace TextRPG_Week3
         {
             while (true)
             {
-                if (appearEnemies.All(enemy => enemy.IsDead))
+                if (appearEnemies.All(enemy => enemy.IsDead)) //적을 전부 쓰러트렸을때
                 {
                     BattleWin(player);
                     return;
@@ -274,6 +278,33 @@ namespace TextRPG_Week3
 
             stage++;
 
+            //퀘스트 클리어 여부 따지기
+            foreach (Quest quest in QuestManager.Quests) //퀘스트 목록의 각 퀘스트를 참조하고 만큼 반복
+            {
+                if (quest is DefeatQuest defeatQuest && !defeatQuest.IsClear) //해당 퀘스트가 처치퀘스트에 미달성이라면
+                {
+                    foreach (Enemy enemy in appearEnemies) //나타난 몬스터들을 참조해서 그 수 만큼 반복
+                    {
+                        if (defeatQuest.Target(enemy)) //몬스터가 조건에 맞는 목표일때
+                        {
+                            defeatQuest.DefeatCount++;
+                            if (defeatQuest.DefeatCount >= defeatQuest.RequiredDefeatCount)
+                            {
+                                defeatQuest.IsClear = true;
+                            }
+                        }
+                    }
+                }
+                else if (quest is DungeonQuest dungeonQuest && !dungeonQuest.IsClear) //던전 도달 퀘스트를 참조하고 수만큼 반복
+                {
+                    dungeonQuest.ReachedStage++;
+                    if (dungeonQuest.ReachedStage >= dungeonQuest.RequiredStage)
+                    {
+                        dungeonQuest.IsClear = true;
+                    }
+                }
+            }
+
             while (true)
             {
                 Console.Clear();
@@ -291,7 +322,17 @@ namespace TextRPG_Week3
                 Console.WriteLine("[획득 보상]");
                 Console.WriteLine($"{gold} Gold");
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine($"{stage-1} 스테이지 클리어!");
+                Console.WriteLine($"{stage-1} 스테이지 클리어!\n");
+
+                foreach(Quest quest in QuestManager.Quests)
+                {
+                    if (quest.IsClear)
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.WriteLine($"퀘스트 : {quest.QuestName} 달성!");
+                        Console.ResetColor();
+                    }
+                }
 
                 int input = GameSystem.Select(zeroSelection: "0.다음", question: "\n>>");
 

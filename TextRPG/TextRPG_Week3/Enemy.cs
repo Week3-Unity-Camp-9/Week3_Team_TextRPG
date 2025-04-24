@@ -13,6 +13,8 @@ namespace TextRPG_Week3
         public int Hp;
         public int Attack;
         public bool IsDead;
+        public bool IsBoss;
+
 
         public Enemy(int level, string name, int hp, int attack, bool isDead = false)
         {
@@ -26,7 +28,8 @@ namespace TextRPG_Week3
 
     public class Boss : Enemy
     {
-        public string SpecialSkill { get; set; }
+
+        public string SpecialSkill;
         public Boss(int level, string name, int hp, int attack, string specialSkill) : base(level, name, hp, attack)
         {
             SpecialSkill = specialSkill;

@@ -40,7 +40,8 @@ namespace TextRPG_Week3
                 Console.WriteLine("1. 상태 보기");
                 Console.WriteLine("2. 인벤토리");
                 Console.WriteLine("3. 상점");
-                Console.WriteLine("4. 전투 시작");
+                Console.WriteLine("4. 퀘스트 열람");
+                Console.WriteLine("5. 던전 입장");
                 Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine("0. 게임 종료");
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
@@ -60,6 +61,9 @@ namespace TextRPG_Week3
                         shop.OpenShop(player);
                         break;
                     case "4":
+                        OpenQuest();
+                        break;
+                    case "5":
                         EnteringDungeon();
                         break;
                     case "0":
@@ -184,6 +188,76 @@ namespace TextRPG_Week3
                     {
                         Console.WriteLine("선택한 슬롯은 저장된 데이터가 없습니다.");
                         continue;
+                    }
+                }
+            }
+        }
+
+        static void OpenQuest()
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine("퀘스트 열람");
+                Console.ResetColor();
+                Console.WriteLine("퀘스트 목록에서 조건과 달성여부를 확인할 수 있습니다.\n");
+
+                List<Quest> quest = QuestManager.Quests;
+                string[] options = new string[quest.Count];
+
+                for (int i = 0; i < quest.Count; i++)
+                {
+                    Console.ResetColor();
+                    if (quest[i].IsClear) Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    options[i] = $"{i + 1}. {quest[i].QuestName}";
+                }
+
+                int input = GameSystem.Select(options, question: "열람하고 싶은 퀘스트를 선택해 주세요\n>>");
+
+                if (input == 0) return;
+                else if (input > 0 && input <= quest.Count)
+                {
+                    input--;
+                    while (true)
+                    {
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.WriteLine("퀘스트 열람\n");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine($"{quest[input].QuestDescription}");
+                        Console.Write($"달성 상황 : ");
+                        Console.ResetColor();
+
+                        if (quest[input].IsClear)
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.WriteLine("달성\n");
+
+                            int selection = GameSystem.Select(new string[] { "1.보상 받기" });
+                            switch (selection)
+                            {
+                                case 0:
+                                    break;
+                                case 1:
+                                    quest[input].IsClear = false;
+                                    player.Gold += quest[input].Reword;
+                                    quest[input].ClearCount++;
+                                    Console.WriteLine($"퀘스트 달성! 보상으로 {quest[input].Reword} Gold를 받았습니다!");
+                                    Console.ReadKey();
+                                    break;
+                                default:
+                                    continue;
+                            }
+                            break;
+                        }
+                        else
+                        {
+                            Console.ResetColor();
+                            Console.WriteLine("미달성\n");
+                            int selection = GameSystem.Select();
+                            if (selection == 0) break;
+                        }
                     }
                 }
             }
