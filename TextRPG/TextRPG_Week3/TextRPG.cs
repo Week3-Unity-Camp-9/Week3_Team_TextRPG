@@ -359,17 +359,11 @@ namespace TextRPG_Week3
                         while (true)
                         {
                             Item healingPotion = player.Inventory.FirstOrDefault(item => item.Type == ItemType.HealthPotion);
-                            Item manaPotion = player.Inventory.FirstOrDefault(item => item.Type == ItemType.ManaPotion);
                             int healingPotionCount = 0;
+                            if (healingPotion != null) healingPotionCount = healingPotion.Count;
+                            Item manaPotion = player.Inventory.FirstOrDefault(item => item.Type == ItemType.ManaPotion);
                             int manaPotionCount = 0;
-                            if (healingPotion != null)
-                            {
-                                healingPotionCount = healingPotion.Count;
-                            }
-                            if (manaPotion != null)
-                            {
-                                manaPotionCount = manaPotion.Count;
-                            }
+                            if (manaPotion != null) manaPotionCount = manaPotion.Count;
 
                             Console.Clear();
                             Console.ForegroundColor = ConsoleColor.Red;
