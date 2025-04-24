@@ -4,15 +4,16 @@
     {
         public void Customizing(Character player, bool hasName)
         {
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.ForegroundColor = ConsoleColor.Yellow;
             if (hasName)
             {
                 Console.Clear();
-                Console.WriteLine("==== 캐릭터 커스터마이징 ====");
+                Console.WriteLine("==== 캐릭터 커스터마이징 ====\n");
             }
-            else Console.WriteLine("스파르타 던전에 오신 여러분 환영합니다.");
+            else Console.WriteLine("스파르타 던전에 오신 여러분 환영합니다.\n");
 
             // 이름 입력
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.Write("원하시는 이름을 설정해주세요.\n>>");
             Console.ResetColor();
             string name = Console.ReadLine();
@@ -20,12 +21,14 @@
                 player.Name = name;
 
             // 직업 선택
+            Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("직업을 선택하세요:");
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("1. 전사");
             Console.WriteLine("2. 마법사");
             Console.WriteLine("3. 도적");
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.Write("원하시는 직업을 골라주세요.\n>>");
             Console.ResetColor();
             string jobInput = Console.ReadLine();
@@ -63,8 +66,9 @@
                     player.MaxHp = 120;
                     break;
             }
+            Console.Clear();
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("\n적용이 완료되었습니다!");
+            Console.WriteLine("적용이 완료되었습니다!");
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"이름: {player.Name}");
             Console.WriteLine($"직업: {player.Job}");

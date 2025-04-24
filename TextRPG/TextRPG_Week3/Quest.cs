@@ -9,16 +9,18 @@ namespace TextRPG_Week3
         public int Reword { get; set; }
         public bool IsClear { get; set; }
         public int ClearCount { get; set; }
+        public bool IsAccept { get; set; }
 
         public Quest() { }
 
-        public Quest(string questName, string questDescription, int reword, bool isClear = false, int clearCount = 0)
+        public Quest(string questName, string questDescription, int reword, bool isClear = false, int clearCount = 0, bool isAccept = false)
         {
             QuestName = questName;
             QuestDescription = questDescription;
             Reword = reword;
             IsClear = isClear;
             ClearCount = clearCount;
+            IsAccept = isAccept;
         }
     }
 

@@ -163,7 +163,7 @@ namespace TextRPG_Week3
                 Character loadedPlayer = null;
                 ShopItem loadedStore = null;
                 List<Quest> loadedQuests = null;
-                if(selection == 0)
+                if (selection == 0)
                 {
                     return;
                 }
@@ -216,52 +216,77 @@ namespace TextRPG_Week3
                 }
 
                 int input = GameSystem.Select(options, question: "열람하고 싶은 퀘스트를 선택해 주세요\n>>");
-
                 if (input == 0) return;
-                else if (input > 0 && input <= quest.Count)
+                else if (input > 0 && input <= quest.Count) SelectQuest(input);
+            }
+        }
+
+        static void SelectQuest(int input)
+        {
+            List<Quest> quest = QuestManager.Quests;
+            input--;
+            while (true)
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine("퀘스트 열람\n");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"{quest[input].QuestDescription}");
+                Console.Write($"달성 상황 : ");
+
+                switch (quest[input].IsClear)
                 {
-                    input--;
-                    while (true)
-                    {
-                        Console.Clear();
+                    case true:
                         Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine("퀘스트 열람\n");
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine($"{quest[input].QuestDescription}");
-                        Console.Write($"달성 상황 : ");
-                        Console.ResetColor();
+                        Console.WriteLine("달성\n");
 
-                        if (quest[input].IsClear)
+                        int selection = GameSystem.Select(new string[] { "1.보상 받기" });
+                        switch (selection)
                         {
-                            Console.ForegroundColor = ConsoleColor.DarkYellow;
-                            Console.WriteLine("달성\n");
+                            case 0:
+                                break;
+                            case 1:
+                                quest[input].IsClear = false;
+                                player.Gold += quest[input].Reword;
+                                quest[input].ClearCount++;
+                                Console.ForegroundColor = ConsoleColor.Cyan;
+                                Console.WriteLine($"퀘스트 달성! 보상으로 {quest[input].Reword} Gold를 받았습니다!");
+                                Console.ReadKey();
+                                break;
+                            default:
+                                continue;
+                        }
+                        break;
+                    case false:
+                        switch (quest[input].IsAccept)
+                        {
+                            case true:
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("진행중\n");
 
-                            int selection = GameSystem.Select(new string[] { "1.보상 받기" });
-                            switch (selection)
-                            {
-                                case 0:
-                                    break;
-                                case 1:
-                                    quest[input].IsClear = false;
-                                    player.Gold += quest[input].Reword;
-                                    quest[input].ClearCount++;
-                                    Console.WriteLine($"퀘스트 달성! 보상으로 {quest[input].Reword} Gold를 받았습니다!");
+                                int select = GameSystem.Select();
+                                if (select == 0) break;
+                                continue;
+                            case false:
+                                Console.ForegroundColor = ConsoleColor.Blue;
+                                Console.WriteLine("수주가능\n");
+
+                                int select1 = GameSystem.Select(new string[] { "1.퀘스트 수주" });
+                                if (select1 == 0) break;
+                                else if(select1 == 1)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Yellow;
+                                    Console.WriteLine($"{quest[input].QuestName}을(를) 수주했습니다.");
+
+                                    quest[input].IsAccept = true;
                                     Console.ReadKey();
                                     break;
-                                default:
-                                    continue;
-                            }
-                            break;
+                                }
+                                continue;
                         }
-                        else
-                        {
-                            Console.ResetColor();
-                            Console.WriteLine("미달성\n");
-                            int selection = GameSystem.Select();
-                            if (selection == 0) break;
-                        }
-                    }
+                        break;
                 }
+                break;
             }
         }
 

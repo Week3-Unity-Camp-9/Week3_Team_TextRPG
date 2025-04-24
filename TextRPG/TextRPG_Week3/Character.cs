@@ -214,6 +214,7 @@
             Inventory = Inventory
             .OrderBy(item => item.Type)
             .ThenBy(item => item.Value)
+            .ThenBy(item => item.Name.Length)
             .ToList();
 
             Console.WriteLine($"{item.Name}을(를) 인벤토리에 추가했습니다.");

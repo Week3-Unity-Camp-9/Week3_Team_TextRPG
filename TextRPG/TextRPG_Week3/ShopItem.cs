@@ -212,6 +212,7 @@
                 player.Inventory = player.Inventory
                 .OrderBy(item => item.Type)
                 .ThenBy(item => item.Value)
+                .ThenBy(item => item.Name.Length)
                 .ToList();
 
                 if (item.ItemData.Type != ItemType.Consumable) item.IsPurchased = true;

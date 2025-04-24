@@ -261,30 +261,34 @@
         }
         static void Result(Character player, ResultMode mode)
         {
-            //퀘스트 클리어 여부 따지기
-            foreach (Quest quest in QuestManager.Quests) //퀘스트 목록의 각 퀘스트를 참조하고 만큼 반복
+            foreach (Quest quest in QuestManager.Quests)
             {
-                if (quest is DefeatQuest defeatQuest && !defeatQuest.IsClear) //해당 퀘스트가 처치퀘스트에 미달성이라면
+                if (quest.IsClear || !quest.IsAccept) continue;
+
+                switch (quest)
                 {
-                    foreach (Enemy enemy in appearEnemies) //나타난 몬스터들을 참조해서 그 수 만큼 반복
-                    {
-                        if (defeatQuest.Target(enemy)) //몬스터가 조건에 맞는 목표일때
+                    case DefeatQuest defeatQuest:
+                        foreach (Enemy enemy in appearEnemies) //나타난 몬스터들을 참조해서 그 수 만큼 반복
                         {
-                            defeatQuest.DefeatCount++;
-                            if (defeatQuest.DefeatCount >= defeatQuest.RequiredDefeatCount)
+                            if (defeatQuest.Target(enemy)) //몬스터가 조건에 맞는 목표일때
                             {
-                                defeatQuest.IsClear = true;
+                                defeatQuest.DefeatCount++;
+                                if (defeatQuest.DefeatCount >= defeatQuest.RequiredDefeatCount)
+                                {
+                                    defeatQuest.IsClear = true;
+                                    break;
+                                }
                             }
                         }
-                    }
-                }
-                else if (quest is DungeonQuest dungeonQuest && !dungeonQuest.IsClear) //던전 도달 퀘스트를 참조하고 수만큼 반복
-                {
-                    if(stage > dungeonQuest.ReachedStage) dungeonQuest.ReachedStage = stage;
-                    if (dungeonQuest.ReachedStage >= dungeonQuest.RequiredStage)
-                    {
-                        dungeonQuest.IsClear = true;
-                    }
+                        break;
+
+                    case DungeonQuest dungeonQuest:
+                        if (stage > dungeonQuest.ReachedStage) dungeonQuest.ReachedStage = stage;
+                        if (dungeonQuest.ReachedStage >= dungeonQuest.RequiredStage)
+                        {
+                            dungeonQuest.IsClear = true;
+                        }
+                        break;
                 }
             }
             if (mode == ResultMode.Win) BattleWin(player);
