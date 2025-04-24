@@ -14,7 +14,7 @@ namespace TextRPG_Week3
                 new Item("스파르타의 창", ItemType.Weapon,7, "스파르타의 전사들이 사용했다는 전설의 창입니다.", false),
                 new Item("무쇠갑옷", ItemType.Armor, 5, "무쇠로 만들어져 튼튼한 갑옷입니다.", true),
                 new Item("회복 포션", ItemType.HealthPotion, 30, "체력을 30 회복합니다", false, 3, true),
-                new Item("마나 포션", ItemType.ManaPotion, 30, "체력을 30 회복합니다", false, 3, true)
+                new Item("마나 포션", ItemType.ManaPotion, 30, "마나를 30 회복합니다", false, 3, true)
                 });
 
             shop.InitShopItems();

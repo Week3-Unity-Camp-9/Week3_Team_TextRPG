@@ -124,7 +124,7 @@ namespace TextRPG_Week3
                 },
                 new ShopItem
                 {
-                    ItemData = new Item("마나 포션", ItemType.ManaPotion, 30, "체력을 30 회복합니다", isConsumable: true),
+                    ItemData = new Item("마나 포션", ItemType.ManaPotion, 30, "마나를 30 회복합니다", isConsumable: true),
                     Price = 100
                 }
             };
@@ -196,10 +196,10 @@ namespace TextRPG_Week3
                 return;
             }
             ItemType type = item.ItemData.Type;
-            Item invenPotion = player.Inventory.FirstOrDefault(item => item.Type == type);
-            if (invenPotion != null && item.ItemData.Type == invenPotion.Type)
+            if(type == ItemType.HealthPotion || type == ItemType.ManaPotion)
             {
-                invenPotion.Count++;
+                Item invenPotion = player.Inventory.FirstOrDefault(item => item.Type == type);
+                if (invenPotion != null && item.ItemData.Type == invenPotion.Type) invenPotion.Count++;
             }
             else
             {

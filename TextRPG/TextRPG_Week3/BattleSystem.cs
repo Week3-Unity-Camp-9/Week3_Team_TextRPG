@@ -92,12 +92,12 @@ namespace TextRPG_Week3
                 if (input == 1)
                 {
                     SelectTarget(player);
-                    return(1, false);
+                    return (1, false);
                 }
                 else if (input == 2)
                 {
                     (float blockBonus, bool hidden) = UseSkill(player);
-                    return(blockBonus, hidden);
+                    return (blockBonus, hidden);
                 }
                 else continue;
             }
@@ -124,7 +124,7 @@ namespace TextRPG_Week3
                                 break;
                             case 2:
                                 SelectTarget(player, canDodge: false);
-                                return(2, false);
+                                return (2, false);
                         }
                         break;
                     case PlayerClass.Wizard:
@@ -138,7 +138,7 @@ namespace TextRPG_Week3
                                 Console.ForegroundColor = ConsoleColor.DarkRed;
                                 Console.WriteLine($"{count}번 공격!!");
                                 Console.ReadKey();
-                                for(int i = 0; i < count; i++)
+                                for (int i = 0; i < count; i++)
                                 {
                                     int randomTarget = random.Next(0, appearEnemies.Count);
                                     Enemy target = appearEnemies[randomTarget];
@@ -159,7 +159,7 @@ namespace TextRPG_Week3
                                 break;
                             case 2:
                                 SelectTarget(player);
-                                return(1, true);
+                                return (1, true);
                         }
                         break;
                 }
