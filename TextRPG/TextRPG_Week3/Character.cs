@@ -170,7 +170,7 @@ namespace TextRPG_Week3
                 if (int.TryParse(input, out int selected))
                 {
                     if (selected == 0) return;
-                    else if (healingPotion != null && selected <= Inventory.Count && Inventory[selected - 1] == healingPotion)
+                    else if (selected <= Inventory.Count && healingPotion != null && Inventory[selected - 1] == healingPotion)
                     {
                         UseConsumableItem(healingPotion);
                         continue;
