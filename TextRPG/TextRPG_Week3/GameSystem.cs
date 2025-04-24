@@ -11,32 +11,34 @@ namespace TextRPG_Week3
     {
         public Character Player { get; set; }
         public ShopItem Shop { get; set; }
+        public List<Quest> Quests { get; set; }
         public GameData() { }
-        public GameData(Character player, ShopItem shop)
+        public GameData(Character player, ShopItem shop, List<Quest> quests)
         {
             Player = player;
             Shop = shop;
+            Quests = quests;
         }
     }
 
     public static class SaveManager
     {
-        public static void SaveGame(Character player, ShopItem shop, int slot)
+        public static void SaveGame(Character player, ShopItem shop, List<Quest> quests, int slot)
         {
             string saveFilePath = $"save{slot}.json";
-            GameData gameData = new GameData(player, shop);
+            GameData gameData = new GameData(player, shop, quests);
             string json = JsonConvert.SerializeObject(gameData, Formatting.Indented);
             File.WriteAllText(saveFilePath, json);
         }
 
-        public static (Character, ShopItem) LoadGame(int slot)
+        public static (Character, ShopItem, List<Quest>) LoadGame(int slot)
         {
             string saveFilePath = $"save{slot}.json";
 
             string json = File.ReadAllText(saveFilePath);
             GameData gameData = JsonConvert.DeserializeObject<GameData>(json);
 
-            return (gameData.Player, gameData.Shop);
+            return (gameData.Player, gameData.Shop, gameData.Quests);
         }
     }
 

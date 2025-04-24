@@ -60,7 +60,7 @@ namespace TextRPG_Week3
             {
                 if (appearEnemies.All(enemy => enemy.IsDead)) //적을 전부 쓰러트렸을때
                 {
-                    BattleWin(player);
+                    Result(player, ResultMode.Win);
                     return;
                 }
 
@@ -247,7 +247,7 @@ namespace TextRPG_Week3
             Console.ReadKey();
             if (player.Hp <= 0) // 플레이어의 HP가 0 이하이면
             {
-                BattleLose(player); // 전투 결과 처리 (패배)
+                Result(player, ResultMode.Lose); // 전투 결과 처리 (패배)
                 return; // 메서드 종료
             }
             foreach (var appearEnemy in appearEnemies)
@@ -260,24 +260,13 @@ namespace TextRPG_Week3
             }
         }
 
-        static void BattleWin(Character player)
+        enum ResultMode
         {
-            int heal = (int)(player.MaxHp / 10);
-            int originalEXP = player.EXP;
-            int gold = (stage * 500) + (appearEnemies.Count * 100);
-
-            player.Hp += heal;
-            if (player.Hp > player.MaxHp) player.Hp = player.MaxHp;
-
-            for (int i = 0; i < appearEnemies.Count; i++)
-            {
-                player.EXP += appearEnemies[i].Level;
-            }
-
-            player.Gold += gold;
-
-            stage++;
-
+            Win,
+            Lose
+        }
+        static void Result(Character player, ResultMode mode)
+        {
             //퀘스트 클리어 여부 따지기
             foreach (Quest quest in QuestManager.Quests) //퀘스트 목록의 각 퀘스트를 참조하고 만큼 반복
             {
@@ -297,13 +286,33 @@ namespace TextRPG_Week3
                 }
                 else if (quest is DungeonQuest dungeonQuest && !dungeonQuest.IsClear) //던전 도달 퀘스트를 참조하고 수만큼 반복
                 {
-                    dungeonQuest.ReachedStage++;
+                    if(stage > dungeonQuest.ReachedStage) dungeonQuest.ReachedStage = stage;
                     if (dungeonQuest.ReachedStage >= dungeonQuest.RequiredStage)
                     {
                         dungeonQuest.IsClear = true;
                     }
                 }
             }
+            if (mode == ResultMode.Win) BattleWin(player);
+            else BattleLose(player);
+        }
+        static void BattleWin(Character player)
+        {
+            int heal = (int)(player.MaxHp / 10);
+            int originalEXP = player.EXP;
+            int gold = (stage * 500) + (appearEnemies.Count * 100);
+
+            player.Hp += heal;
+            if (player.Hp > player.MaxHp) player.Hp = player.MaxHp;
+
+            for (int i = 0; i < appearEnemies.Count; i++)
+            {
+                player.EXP += appearEnemies[i].Level;
+            }
+
+            player.Gold += gold;
+
+            stage++;
 
             while (true)
             {

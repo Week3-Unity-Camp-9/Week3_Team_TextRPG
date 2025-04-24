@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static TextRPG_Week3.Quest;
+using Newtonsoft.Json;
 
 namespace TextRPG_Week3
 {
@@ -43,14 +45,26 @@ namespace TextRPG_Week3
     {
         public int RequiredDefeatCount { get; set; }
         public int DefeatCount { get; set; }
+        public string TargetTag { get; set; }
 
-        public Func<Enemy, bool> Target { get; set; }
-        public DefeatQuest(string questName, string questDescription,int reword, int requiredDefeatCount, Func<Enemy, bool> target, int defeatCount = 0)
+        [JsonIgnore]
+        public Func<Enemy, bool> Target => GetTarget();
+
+        public DefeatQuest(string questName, string questDescription, int reword, int requiredDefeatCount, string targetTag, int defeatCount = 0)
             : base(questName, questDescription, reword)
         {
             RequiredDefeatCount = requiredDefeatCount;
-            Target = target;
+            TargetTag = targetTag;
             DefeatCount = defeatCount;
+        }
+        private Func<Enemy, bool> GetTarget()
+        {
+            return TargetTag switch
+            {
+                "미니언" => enemy => enemy.Name == "미니언",
+                "보스" => enemy => BattleSystem.bossList.Contains(enemy),
+                _ => enemy => false
+            };
         }
     }
 
@@ -60,8 +74,8 @@ namespace TextRPG_Week3
         {
         new DungeonQuest("던전 도달!", "던전에 들어가 10층에 도달하자!", 5000, 10),
         new DungeonQuest("던전 타파!", "던전에 들어가 20층에 도달하자!", 10000, 20),
-        new DefeatQuest("미니언 해치우기!", "미니언을 10마리 쓰러뜨리자!", 1000, 10, target: enemy => enemy.Name == "미니언"),
-        new DefeatQuest("보스 격파자!", "아무 보스나 3번 처치하자!", 50000,3, target: enemy => BattleSystem.bossList.Contains(enemy))
+        new DefeatQuest("미니언 해치우기!", "미니언을 10마리 쓰러뜨리자!", 1000, 10, "미니언"),
+        new DefeatQuest("보스 격파자!", "아무 보스나 3번 처치하자!", 50000,3, "보스")
         };
     }
 }
