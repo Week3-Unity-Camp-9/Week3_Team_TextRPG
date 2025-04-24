@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TextRPG_Week3
+﻿namespace TextRPG_Week3
 {
     public class Character
     {

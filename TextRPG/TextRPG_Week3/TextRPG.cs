@@ -1,6 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Numerics;
 
 namespace TextRPG_Week3
 {

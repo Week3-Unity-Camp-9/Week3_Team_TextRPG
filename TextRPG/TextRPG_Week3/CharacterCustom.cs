@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TextRPG_Week3
+﻿namespace TextRPG_Week3
 {
     public class CharacterCustom
     {

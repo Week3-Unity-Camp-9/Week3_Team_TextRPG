@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace TextRPG_Week3
+﻿namespace TextRPG_Week3
 {
     public class ShopItem
     {

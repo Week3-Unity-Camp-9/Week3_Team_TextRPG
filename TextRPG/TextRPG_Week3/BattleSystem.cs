@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using TextRPG_Week3; // 현재 프로젝트의 네임스페이스 참조
-
-namespace TextRPG_Week3
+﻿namespace TextRPG_Week3
 {
     public static class BattleSystem // 전투 시스템 클래스 정의
     {
