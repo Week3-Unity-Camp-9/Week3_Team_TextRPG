@@ -20,18 +20,26 @@ namespace TextRPG_Week3
     {
         public static void SaveGame(Character player, ShopItem shop, List<Quest> quests, int slot)
         {
+            var settings = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                Formatting = Formatting.Indented
+            };
             string saveFilePath = $"save{slot}.json";
             GameData gameData = new GameData(player, shop, quests);
-            string json = JsonConvert.SerializeObject(gameData, Formatting.Indented);
+            string json = JsonConvert.SerializeObject(gameData, settings);
             File.WriteAllText(saveFilePath, json);
         }
 
         public static (Character, ShopItem, List<Quest>) LoadGame(int slot)
         {
+            var settings = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto
+            };
             string saveFilePath = $"save{slot}.json";
-
             string json = File.ReadAllText(saveFilePath);
-            GameData gameData = JsonConvert.DeserializeObject<GameData>(json);
+            GameData gameData = JsonConvert.DeserializeObject<GameData>(json, settings);
 
             return (gameData.Player, gameData.Shop, gameData.Quests);
         }
