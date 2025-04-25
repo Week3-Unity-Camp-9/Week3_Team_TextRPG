@@ -6,7 +6,6 @@ namespace TextRPG_Week3
     {
         static Character player = new Character();
         static ShopItem shop = new ShopItem();
-        static List<Quest> quests = QuestManager.Quests;
         static void Main()
         {
             player.Inventory.AddRange(new List<Item>
@@ -122,8 +121,16 @@ namespace TextRPG_Week3
                 GameData gameData = null;
                 if (File.Exists(path))
                 {
-                    string json = File.ReadAllText(path);
-                    gameData = JsonConvert.DeserializeObject<GameData>(json);
+                    try
+                    {
+                        string json = File.ReadAllText(path);
+                        gameData = JsonConvert.DeserializeObject<GameData>(json);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"데이터 로드 실패: {ex.Message}");
+                        gameData = null;
+                    }
                 }
 
                 if (gameData != null && gameData.Player != null)
@@ -151,7 +158,7 @@ namespace TextRPG_Week3
                 if (selection == 0) return;
                 else if (selection > 0 && selection <= options.Length)
                 {
-                    SaveManager.SaveGame(player, shop, quests, selection);
+                    SaveManager.SaveGame(player, shop, QuestManager.Quests, selection);
                     Console.WriteLine($"{selection}파일에 {player.Name}의 정보를 저장했습니다.");
                     Console.ReadKey();
                 }
@@ -189,7 +196,7 @@ namespace TextRPG_Week3
 
                         player = loadedPlayer;
                         shop = loadedStore;
-                        quests = loadedQuests;
+                        QuestManager.Quests = loadedQuests;
 
                         Console.WriteLine($"{loadedPlayer.Name}의 정보를 불러왔습니다.");
                         Console.ReadKey();

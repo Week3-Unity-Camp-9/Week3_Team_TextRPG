@@ -96,6 +96,7 @@
             Console.WriteLine();
 
             Console.WriteLine($"체 력 : {Hp}/{MaxHp}");
+            Console.WriteLine($"마 나 : {Mp}/{MaxMp}");
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine($"Gold   : {Gold} G");
             Console.ResetColor();
