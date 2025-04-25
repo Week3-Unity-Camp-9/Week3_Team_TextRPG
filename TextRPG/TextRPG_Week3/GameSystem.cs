@@ -38,7 +38,6 @@ namespace TextRPG_Week3
                 TypeNameHandling = TypeNameHandling.Auto
             };
             string saveFilePath = $"save{slot}.json";
-
             try
             {
                 string json = File.ReadAllText(saveFilePath);
@@ -64,36 +63,27 @@ namespace TextRPG_Week3
                     Console.WriteLine($"{options[i]}");
                 }
             }
+
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Write($"{(hasExit ? $"\n{zeroSelection}\n" : "\n")}");
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.Write($"{question}");
             Console.ResetColor();
+
             if (int.TryParse(Console.ReadLine(), out int input) && input >= 0)
             {
                 if ((options != null && input >= 1 && input <= options.Length) || (hasExit && input == 0))
                 {
                     return input;
                 }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("잘못된 입력입니다.");
-                    Console.ResetColor();
-                    Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
-                    Console.ReadKey();
-                    return -1;
-                }
             }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("잘못된 입력입니다.");
-                Console.ResetColor();
-                Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
-                Console.ReadKey();
-                return -1;
-            }
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("잘못된 입력입니다.");
+            Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
+            Console.ReadKey();
+            return -1;
         }
     }
 }
