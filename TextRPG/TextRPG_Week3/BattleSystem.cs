@@ -190,30 +190,41 @@ namespace TextRPG_Week3
                 Console.WriteLine($"Lv.{player.Level}  {player.Name} ({player.Job})");
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"HP {player.Hp}/{player.MaxHp}");
-                int input = GameSystem.Select(zeroSelection: "0.취소", question: "대상을 선택해 주세요.\n>>");
-                switch (input)
+                Console.WriteLine("\n0.취소\n");
+                Console.WriteLine("대상을 선택해 주세요.\n >>");
+                if(int.TryParse(Console.ReadLine(), out int input))
                 {
-                    case -1:
-                        continue;
-                    case 0:
-                        Console.WriteLine("행동을 취소하고 턴을 넘깁니다.");
-                        Console.ReadKey();
-                        return;
-                    default:
-                        if (input >= 1 && input <= appearEnemies.Count)
-                        {
-                            Enemy target = appearEnemies[input - 1];
-                            if (target.IsDead)
-                            {
-                                Console.ForegroundColor = ConsoleColor.DarkRed;
-                                Console.WriteLine($"{target.Name}은 이미 죽었습니다.");
-                                Console.ReadKey();
-                                continue;
-                            }
-                            PlayerAttack(input, player, attackBonus, canDodge);
+                    switch (input)
+                    {
+                        case -1:
+                            continue;
+                        case 0:
+                            Console.WriteLine("행동을 취소하고 턴을 넘깁니다.");
+                            Console.ReadKey();
                             return;
-                        }
-                        break;
+                        default:
+                            if (input >= 1 && input <= appearEnemies.Count)
+                            {
+                                Enemy target = appearEnemies[input - 1];
+                                if (target.IsDead)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                                    Console.WriteLine($"{target.Name}은 이미 죽었습니다.");
+                                    Console.ReadKey();
+                                    continue;
+                                }
+                                PlayerAttack(input, player, attackBonus, canDodge);
+                                return;
+                            }
+                            break;
+                    }
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("잘못된 입력입니다.");
+                    Console.ResetColor();
+                    Console.ReadKey();
                 }
             }
         }
