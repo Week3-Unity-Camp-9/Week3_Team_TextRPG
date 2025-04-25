@@ -245,25 +245,26 @@ namespace TextRPG_Week3
 
                 int input = GameSystem.Select(options, question: "열람하고 싶은 퀘스트를 선택해 주세요\n>>");
                 if (input == 0) return;
-                else if (input > 0 && input <= quest.Count) SelectQuest(input, fromTown);
+                else if (input > 0 && input <= quest.Count) SelectQuest(input - 1, fromTown);
             }
         }
 
         static void SelectQuest(int input, bool fromTown)
         {
-            List<Quest> quest = QuestManager.Quests;
-            input--;
+            Quest quest = QuestManager.Quests[input];
+
             while (true)
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine("퀘스트 열람\n");
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"{quest[input].QuestDescription}");
+                Console.WriteLine($"{quest.QuestDescription}");
                 Console.Write($"달성 상황 : ");
 
-                switch (quest[input].IsClear)
+                switch (quest.IsClear)
                 {
+                    //퀘스트가 달성 상태일때
                     case true:
                         Console.ForegroundColor = ConsoleColor.DarkYellow;
                         Console.WriteLine("달성\n");
@@ -283,11 +284,11 @@ namespace TextRPG_Week3
                             case 0:
                                 break;
                             case 1:
-                                quest[input].IsClear = false;
-                                quest[input].IsAccept = false;
-                                player.Gold += quest[input].Reword;
-                                quest[input].ClearCount++;
-                                switch (quest[input])
+                                quest.IsClear = false;
+                                quest.IsAccept = false;
+                                player.Gold += quest.Reword;
+                                quest.ClearCount++;
+                                switch (quest)
                                 {
                                     case DefeatQuest defeatQuest:
                                         defeatQuest.DefeatCount = 0;
@@ -297,25 +298,29 @@ namespace TextRPG_Week3
                                         break;
                                 }
                                 Console.ForegroundColor = ConsoleColor.Cyan;
-                                Console.WriteLine($"퀘스트 달성! 보상으로 {quest[input].Reword} Gold를 받았습니다!");
+                                Console.WriteLine($"퀘스트 달성! 보상으로 {quest.Reword} Gold를 받았습니다!");
                                 Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                                 Console.ReadKey();
-                                break;
+                                continue;
                             default:
                                 continue;
                         }
                         break;
+                    //퀘스트가 달성 상태가 아닐때
                     case false:
-                        switch (quest[input].IsAccept)
+                        switch (quest.IsAccept)
                         {
+                            //퀘스트가 진행중 일때
                             case true:
                                 Console.ForegroundColor = ConsoleColor.Green;
                                 Console.Write("진행중\n진행률 : ");
-                                switch (quest[input])
+                                switch (quest)
                                 {
+                                    //처치 퀘스트일때
                                     case DefeatQuest defeatQuest:
                                         Console.WriteLine($"{defeatQuest.DefeatCount}/{defeatQuest.RequiredDefeatCount} 마리");
                                         break;
+                                    //층 도달 퀘스트일때
                                     case DungeonQuest dungeonQuest:
                                         Console.WriteLine($"{dungeonQuest.ReachedStage}/{dungeonQuest.RequiredStage} 층");
                                         break;
@@ -323,6 +328,7 @@ namespace TextRPG_Week3
                                 int select = GameSystem.Select();
                                 if (select == 0) break;
                                 continue;
+                            //퀘스트가 진행중이 아닐때
                             case false:
                                 Console.ForegroundColor = ConsoleColor.Blue;
                                 Console.WriteLine("수주가능\n");
@@ -335,17 +341,18 @@ namespace TextRPG_Week3
                                     Console.ReadKey();
                                     break;
                                 }
+
                                 int select1 = GameSystem.Select(new string[] { "1.퀘스트 수주" });
                                 if (select1 == 0) break;
                                 else if(select1 == 1)
                                 {
                                     Console.ForegroundColor = ConsoleColor.Yellow;
-                                    Console.WriteLine($"{quest[input].QuestName}을(를) 수주했습니다.");
+                                    Console.WriteLine($"{quest.QuestName}을(를) 수주했습니다.");
 
-                                    quest[input].IsAccept = true;
+                                    quest.IsAccept = true;
                                     Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                                     Console.ReadKey();
-                                    break;
+                                    continue;
                                 }
                                 continue;
                         }
@@ -376,7 +383,7 @@ namespace TextRPG_Week3
                     case 2:
                         BattleSystem.Encounting(player);
                         if (BattleSystem.lose) return;
-                        continue;
+                        break;
                     case 3:
                         while (true)
                         {
@@ -431,7 +438,7 @@ namespace TextRPG_Week3
                         OpenQuest(false);
                         break;
                     default:
-                        continue;
+                        break;
                 }
             }
         }
