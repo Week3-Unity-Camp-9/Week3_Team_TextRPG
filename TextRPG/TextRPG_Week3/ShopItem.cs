@@ -21,7 +21,7 @@ namespace TextRPG_Week3
                 _ => ""
             };
 
-            string rightText = IsPurchased && ItemData.IsConsumable
+            string rightText = IsPurchased
                 ? "구매완료"
                 : $"{Price} G";
 
@@ -199,7 +199,7 @@ namespace TextRPG_Week3
             if(type == ItemType.HealthPotion || type == ItemType.ManaPotion)
             {
                 Item invenPotion = player.Inventory.FirstOrDefault(item => item.Type == type);
-                if (invenPotion != null && item.ItemData.Type == invenPotion.Type) invenPotion.Count++;
+                if (invenPotion != null) invenPotion.Count++;
             }
             else
             {

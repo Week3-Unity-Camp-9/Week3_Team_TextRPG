@@ -20,20 +20,34 @@ namespace TextRPG_Week3
     {
         public static void SaveGame(Character player, ShopItem shop, List<Quest> quests, int slot)
         {
+            var settings = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                Formatting = Formatting.Indented
+            };
             string saveFilePath = $"save{slot}.json";
             GameData gameData = new GameData(player, shop, quests);
-            string json = JsonConvert.SerializeObject(gameData, Formatting.Indented);
+            string json = JsonConvert.SerializeObject(gameData, settings);
             File.WriteAllText(saveFilePath, json);
         }
 
         public static (Character, ShopItem, List<Quest>) LoadGame(int slot)
         {
+            var settings = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto
+            };
             string saveFilePath = $"save{slot}.json";
-
-            string json = File.ReadAllText(saveFilePath);
-            GameData gameData = JsonConvert.DeserializeObject<GameData>(json);
-
-            return (gameData.Player, gameData.Shop, gameData.Quests);
+            try
+            {
+                string json = File.ReadAllText(saveFilePath);
+                GameData gameData = JsonConvert.DeserializeObject<GameData>(json, settings);
+                return (gameData.Player, gameData.Shop, gameData.Quests);
+            }
+            catch
+            {
+                return (null, null, null);
+            }
         }
     }
 
@@ -49,34 +63,27 @@ namespace TextRPG_Week3
                     Console.WriteLine($"{options[i]}");
                 }
             }
+
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Write($"{(hasExit ? $"\n{zeroSelection}\n" : "\n")}");
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.Write($"{question}");
             Console.ResetColor();
+
             if (int.TryParse(Console.ReadLine(), out int input) && input >= 0)
             {
                 if ((options != null && input >= 1 && input <= options.Length) || (hasExit && input == 0))
                 {
                     return input;
                 }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("잘못된 입력입니다.");
-                    Console.ResetColor();
-                    Console.ReadKey();
-                    return -1;
-                }
             }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("잘못된 입력입니다.");
-                Console.ResetColor();
-                Console.ReadKey();
-                return -1;
-            }
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("잘못된 입력입니다.");
+            Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
+            Console.ReadKey();
+            return -1;
         }
     }
 }
