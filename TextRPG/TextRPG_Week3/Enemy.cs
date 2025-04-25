@@ -1,6 +1,4 @@
-﻿using static TextRPG_Week3.Boss;
-
-namespace TextRPG_Week3
+﻿namespace TextRPG_Week3
 {
     public class Enemy
     {
@@ -24,15 +22,6 @@ namespace TextRPG_Week3
 
     public class Boss : Enemy
     {
-        //Public class Enemy 적의 기본 클래스
-        //적의 기본 속성값들
-        
-        //적의 속성값을 받아오는 방식
-        
-        //public class Boss : Enemy 적의 기본 클래스를 상속받는 클래스
-        //Boss에만 있는 속성
-        
-        //Boss의 속성값을 받아오는 방식
 
         public string SpecialSkill;
         public Boss(int level, string name, int hp, int attack, string specialSkill) : base(level, name, hp, attack)
@@ -60,17 +49,6 @@ namespace TextRPG_Week3
             }
 
         }
-        //UseSpecialSkill함수
-        //메세지 출력
-        //힐값 초기화
-        //특수스킬에 따라
-        //-"불멸"일 경우
-        //--힐값 12
-        //--12회복
-        //--회복 메세지 출력
-        
-        //-나머지일 경우
-        //--메세지 출력
     }
 
 }
