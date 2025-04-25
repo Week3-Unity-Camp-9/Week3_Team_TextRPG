@@ -140,7 +140,7 @@ namespace TextRPG_Week3
                                 SelectTarget(player, 2, canDodge: false);
                                 break;
                             case 2:
-                                SelectTarget(player, canDodge: false);
+                                SelectTarget(player);
                                 return (2, false, false);
                         }
                         break;
