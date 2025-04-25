@@ -199,7 +199,7 @@ namespace TextRPG_Week3
             if(type == ItemType.HealthPotion || type == ItemType.ManaPotion)
             {
                 Item invenPotion = player.Inventory.FirstOrDefault(item => item.Type == type);
-                if (invenPotion != null && item.ItemData.Type == invenPotion.Type) invenPotion.Count++;
+                if (invenPotion != null) invenPotion.Count++;
             }
             else
             {
