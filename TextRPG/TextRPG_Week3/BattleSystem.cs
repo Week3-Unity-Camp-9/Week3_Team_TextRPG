@@ -214,8 +214,6 @@ namespace TextRPG_Week3
                 {
                     switch (input)
                     {
-                        case -1:
-                            continue;
                         case 0:
                             Console.WriteLine("행동을 취소하고 턴을 넘깁니다.");
                             Console.ReadKey();
@@ -252,8 +250,8 @@ namespace TextRPG_Week3
             Enemy selectedEnemy = appearEnemies[select - 1]; // 선택된 적 객체 가져오기
             int Damage = (int)(player.TotalAttack * attackBonus); // 플레이어의 총 공격력을 기본 데미지로 설정
 
-            bool critical = (random.Next(1, 101) < 15); // 15% 확률로 치명타 발생 여부 결정
-            if (critical) Damage = (int)(player.TotalAttack * 1.6f); // 치명타 시 데미지 1.6배 증가
+            bool critical = (random.Next(1, 101) < 100); // 15% 확률로 치명타 발생 여부 결정
+            if (critical) Damage = (int)(Damage * 1.6f); // 치명타 시 데미지 1.6배 증가
 
             bool hit = true;
             if (canDodge)
