@@ -6,6 +6,7 @@ namespace TextRPG_Week3
     {
         static Character player = new Character();
         static ShopItem shop = new ShopItem();
+        static List<Quest> quests = QuestManager.Quests;
         static void Main()
         {
             player.Inventory.AddRange(new List<Item>
@@ -77,7 +78,6 @@ namespace TextRPG_Week3
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("잘못된 입력입니다.");
                         Console.ResetColor();
-                        Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                         Console.ReadKey();
                         break;
                 }
@@ -104,7 +104,7 @@ namespace TextRPG_Week3
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("던전에서는 기능을 사용할 수 없습니다.");
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
+                    Console.Write(">>");
                     Console.ReadKey();
                     break;
                 }
@@ -144,17 +144,8 @@ namespace TextRPG_Week3
                 GameData gameData = null;
                 if (File.Exists(path))
                 {
-                    try
-                    {
-                        string json = File.ReadAllText(path);
-                        gameData = JsonConvert.DeserializeObject<GameData>(json);
-                    }
-                    catch
-                    {
-                        options[i] = $"{i + 1}번 슬롯 [불러오기 실패!]";
-                        gameData = null;
-                        continue;
-                    }
+                    string json = File.ReadAllText(path);
+                    gameData = JsonConvert.DeserializeObject<GameData>(json);
                 }
 
                 if (gameData != null && gameData.Player != null)
@@ -175,84 +166,25 @@ namespace TextRPG_Week3
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("저장할 파일을 선택해 주세요.");
-
                 string[] options = SaveFileRead();
                 int selection = GameSystem.Select(options, question: "\n>>");
-
+                Console.WriteLine("\n>>");
                 if (selection == 0) return;
                 else if (selection > 0 && selection <= options.Length)
                 {
-                    SaveManager.SaveGame(player, shop, QuestManager.Quests, selection);
+                    SaveManager.SaveGame(player, shop, quests, selection);
                     Console.WriteLine($"{selection}파일에 {player.Name}의 정보를 저장했습니다.");
-                    Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                     Console.ReadKey();
                 }
             }
         }
         static void Load()
-<<<<<<< HEAD
         //SaveFileRead함수
 
         //Save함수
 
         //Load함수
         //게임 플레이 데이터를 저장하고 불러들이는데 사용된 함수이다.
-=======
-        {
-            while (true)
-            {
-                Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("불러올 파일을 선택해 주세요.");
-
-                string[] options = SaveFileRead();
-                int selection = GameSystem.Select(options, question: "\n>>");
-
-                Character loadedPlayer = null;
-                ShopItem loadedStore = null;
-                List<Quest> loadedQuests = null;
-
-                if (selection == 0)
-                {
-                    return;
-                }
-                else if (selection > 0 && selection <= options.Length)
-                {
-                    string saveFilePath = $"save{selection}.json";
-
-                    if (File.Exists(saveFilePath) && new FileInfo(saveFilePath).Length > 0)
-                    {
-                        (loadedPlayer, loadedStore, loadedQuests) = SaveManager.LoadGame(selection);
-                        if (loadedPlayer == null || loadedStore == null || loadedQuests == null)
-                        {
-                            Console.WriteLine("\n불러오기에 실패했습니다.");
-                            Console.ForegroundColor = ConsoleColor.Yellow; Console.Write("계속>>"); Console.ResetColor();
-                            Console.ReadKey();
-                            continue;
-                        }
-
-                        player.Inventory.Clear();
-                        shop.ItemList.Clear();
-                        QuestManager.Quests.Clear();
-
-                        player = loadedPlayer;
-                        shop = loadedStore;
-                        QuestManager.Quests = loadedQuests;
-
-                        Console.WriteLine($"{loadedPlayer.Name}의 정보를 불러왔습니다.");
-                        Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
-                        Console.ReadKey();
-                        return;
-                    }
-                    else
-                    {
-                        Console.WriteLine("선택한 슬롯은 저장된 데이터가 없습니다.");
-                        continue;
-                    }
-                }
-            }
-        }
->>>>>>> 6d3085d7e3e9886d7c9dbda1b9d956d4ab3e826f
 
         static void OpenQuest(bool fromTown = true)
         {
@@ -269,12 +201,14 @@ namespace TextRPG_Week3
 
                 for (int i = 0; i < quest.Count; i++)
                 {
-                    options[i] = $"{i + 1}.{quest[i].QuestName} : {(quest[i].IsAccept ? (quest[i].IsClear ? "달성!" : "진행중") : "수주가능")}";
+                    Console.ResetColor();
+                    if (quest[i].IsClear) Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    options[i] = $"{i + 1}.{quest[i].QuestName}";
                 }
 
                 int input = GameSystem.Select(options, question: "열람하고 싶은 퀘스트를 선택해 주세요\n>>");
                 if (input == 0) return;
-                else if (input > 0 && input <= quest.Count) SelectQuest(input - 1, fromTown);
+                else if (input > 0 && input <= quest.Count) SelectQuest(input, fromTown);
             }
         }
         //OpenQuest함수
@@ -282,20 +216,19 @@ namespace TextRPG_Week3
 
         static void SelectQuest(int input, bool fromTown)
         {
-            Quest quest = QuestManager.Quests[input];
-
+            List<Quest> quest = QuestManager.Quests;
+            input--;
             while (true)
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine("퀘스트 열람\n");
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"{quest.QuestDescription}");
+                Console.WriteLine($"{quest[input].QuestDescription}");
                 Console.Write($"달성 상황 : ");
 
-                switch (quest.IsClear)
+                switch (quest[input].IsClear)
                 {
-                    //퀘스트가 달성 상태일때
                     case true:
                         Console.ForegroundColor = ConsoleColor.DarkYellow;
                         Console.WriteLine("달성\n");
@@ -304,7 +237,7 @@ namespace TextRPG_Week3
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("보상 수령은 마을에서만 가능합니다.");
                             Console.ForegroundColor = ConsoleColor.DarkGreen;
-                            Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
+                            Console.Write(">>");
                             Console.ReadKey();
                             break;
                         }
@@ -315,11 +248,10 @@ namespace TextRPG_Week3
                             case 0:
                                 break;
                             case 1:
-                                quest.IsClear = false;
-                                quest.IsAccept = false;
-                                player.Gold += quest.Reword;
-                                quest.ClearCount++;
-                                switch (quest)
+                                quest[input].IsClear = false;
+                                player.Gold += quest[input].Reword;
+                                quest[input].ClearCount++;
+                                switch (quest[input])
                                 {
                                     case DefeatQuest defeatQuest:
                                         defeatQuest.DefeatCount = 0;
@@ -329,29 +261,24 @@ namespace TextRPG_Week3
                                         break;
                                 }
                                 Console.ForegroundColor = ConsoleColor.Cyan;
-                                Console.WriteLine($"퀘스트 달성! 보상으로 {quest.Reword} Gold를 받았습니다!");
-                                Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
+                                Console.WriteLine($"퀘스트 달성! 보상으로 {quest[input].Reword} Gold를 받았습니다!");
                                 Console.ReadKey();
-                                continue;
+                                break;
                             default:
                                 continue;
                         }
                         break;
-                    //퀘스트가 달성 상태가 아닐때
                     case false:
-                        switch (quest.IsAccept)
+                        switch (quest[input].IsAccept)
                         {
-                            //퀘스트가 진행중 일때
                             case true:
                                 Console.ForegroundColor = ConsoleColor.Green;
                                 Console.Write("진행중\n진행률 : ");
-                                switch (quest)
+                                switch (quest[input])
                                 {
-                                    //처치 퀘스트일때
                                     case DefeatQuest defeatQuest:
                                         Console.WriteLine($"{defeatQuest.DefeatCount}/{defeatQuest.RequiredDefeatCount} 마리");
                                         break;
-                                    //층 도달 퀘스트일때
                                     case DungeonQuest dungeonQuest:
                                         Console.WriteLine($"{dungeonQuest.ReachedStage}/{dungeonQuest.RequiredStage} 층");
                                         break;
@@ -359,7 +286,6 @@ namespace TextRPG_Week3
                                 int select = GameSystem.Select();
                                 if (select == 0) break;
                                 continue;
-                            //퀘스트가 진행중이 아닐때
                             case false:
                                 Console.ForegroundColor = ConsoleColor.Blue;
                                 Console.WriteLine("수주가능\n");
@@ -368,22 +294,20 @@ namespace TextRPG_Week3
                                     Console.ForegroundColor = ConsoleColor.Red;
                                     Console.WriteLine("퀘스트 수주는 마을에서만 가능합니다.");
                                     Console.ForegroundColor = ConsoleColor.DarkGreen;
-                                    Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
+                                    Console.Write(">>");
                                     Console.ReadKey();
                                     break;
                                 }
-
                                 int select1 = GameSystem.Select(new string[] { "1.퀘스트 수주" });
                                 if (select1 == 0) break;
                                 else if(select1 == 1)
                                 {
                                     Console.ForegroundColor = ConsoleColor.Yellow;
-                                    Console.WriteLine($"{quest.QuestName}을(를) 수주했습니다.");
+                                    Console.WriteLine($"{quest[input].QuestName}을(를) 수주했습니다.");
 
-                                    quest.IsAccept = true;
-                                    Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
+                                    quest[input].IsAccept = true;
                                     Console.ReadKey();
-                                    continue;
+                                    break;
                                 }
                                 continue;
                         }
@@ -427,7 +351,7 @@ namespace TextRPG_Week3
                     case 2:
                         BattleSystem.Encounting(player);
                         if (BattleSystem.lose) return;
-                        break;
+                        continue;
                     case 3:
                         while (true)
                         {
@@ -455,7 +379,6 @@ namespace TextRPG_Week3
                                     {
                                         Console.ForegroundColor = ConsoleColor.Red;
                                         Console.WriteLine("포션이 부족합니다.");
-                                        Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                                         Console.ReadKey();
                                         continue;
                                     }
@@ -466,7 +389,6 @@ namespace TextRPG_Week3
                                     {
                                         Console.ForegroundColor = ConsoleColor.Red;
                                         Console.WriteLine("포션이 부족합니다.");
-                                        Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                                         Console.ReadKey();
                                         continue;
                                     }
@@ -482,7 +404,7 @@ namespace TextRPG_Week3
                         OpenQuest(false);
                         break;
                     default:
-                        break;
+                        continue;
                 }
             }
         }

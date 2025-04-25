@@ -43,7 +43,7 @@ namespace TextRPG_Week3
                     player.Hp = 120;
                     player.MaxHp = 120;
                     player.Mp = 50;
-                    player.MaxMp = 50;
+                    player.MaxHp = 50;
                     break;
                 case "2":
                     player.Job = PlayerClass.Wizard;
@@ -52,7 +52,7 @@ namespace TextRPG_Week3
                     player.Hp = 80;
                     player.MaxHp = 80;
                     player.Mp = 120;
-                    player.MaxMp = 120;
+                    player.MaxHp = 120;
                     break;
                 case "3":
                     player.Job = PlayerClass.Thief;
@@ -61,7 +61,7 @@ namespace TextRPG_Week3
                     player.Hp = 100;
                     player.MaxHp = 100;
                     player.Mp = 100;
-                    player.MaxMp = 100;
+                    player.MaxHp = 100;
                     break;
                 default:
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -71,8 +71,6 @@ namespace TextRPG_Week3
                     player.Defense = 10;
                     player.Hp = 120;
                     player.MaxHp = 120;
-                    player.Mp = 50;
-                    player.MaxMp = 50;
                     break;
             }
             Console.Clear();
@@ -80,13 +78,13 @@ namespace TextRPG_Week3
             Console.WriteLine("적용이 완료되었습니다!");
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"이름: {player.Name}");
-            Console.WriteLine($"직업: {player.GetJob()}");
+            Console.WriteLine($"직업: {player.Job}");
             Console.WriteLine($"공격력: {player.Attack}");
             Console.WriteLine($"방어력: {player.Defense}");
             Console.WriteLine($"최대 체력: {player.MaxHp}");
             Console.WriteLine($"골드: {player.Gold}");
             Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine("\n계속>>");
+            Console.WriteLine("\n아무 키나 누르면 계속합니다...");
             Console.ResetColor();
             Console.ReadKey();
             Console.Clear();
