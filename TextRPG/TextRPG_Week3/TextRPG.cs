@@ -23,6 +23,11 @@ namespace TextRPG_Week3
 
             Town();
         }
+        //Main함수
+        //플레이어의 기본 지급 아이템을 설정.
+        //상점의 아이템 구성.
+        //캐릭터의 이름, 직업을 정하는 함수를 호출.
+        //이후 시작화면으로 넘어감
 
         static void Town()
         {
@@ -78,6 +83,15 @@ namespace TextRPG_Week3
                 }
             }
         }
+        //Town함수
+        //마을에서 할 수 있는 행동을 출력한 뒤,
+        //값을 입력받음
+        //1번 = 상태보기 함수 호출
+        //2번 = 플레이어 인벤토리표시 함수
+        //3번 = 상점 함수에 플레이어 정보를 넘겨주고 호출
+        //4번 = 퀘스트 열람 함수 호출
+        //5번 = 던전 입장 함수 호출
+        //0번 = 종료
 
         static void Status(bool fromTown = true)
         {
@@ -113,6 +127,14 @@ namespace TextRPG_Week3
                 }
             }
         }
+        //Status함수 플레이어의 정보를 표시하는 함수를 호출하고
+        //값을 입력받는다.
+        //입력된 값.
+        //1번 = 커스터마이징
+        //2번 = 저장
+        //3번 = 불러오기
+        //0번 = 나가기
+
         static string[] SaveFileRead()
         {
             string[] options = new string[3];
@@ -146,7 +168,6 @@ namespace TextRPG_Week3
             }
             return options;
         }
-
         static void Save()
         {
             while (true)
@@ -168,42 +189,12 @@ namespace TextRPG_Week3
                 }
             }
         }
-
         static void Load()
 <<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         //SaveFileRead함수
-=======
-=======
->>>>>>> parent of edb4432 (기능 설명 주석)
-        {
-            while (true)
-            {
-                Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("불러올 파일을 선택해 주세요.");
-                string[] options = SaveFileRead();
-                int selection = GameSystem.Select(options, question: "\n>>");
-                Console.WriteLine("\n>>");
-<<<<<<< HEAD
->>>>>>> parent of edb4432 (기능 설명 주석)
-=======
->>>>>>> parent of edb4432 (기능 설명 주석)
 
-                Character loadedPlayer = null;
-                ShopItem loadedStore = null;
-                List<Quest> loadedQuests = null;
-                if (selection == 0)
-                {
-                    return;
-                }
-                else if (selection > 0 && selection <= options.Length)
-                {
-                    string saveFilePath = $"save{selection}.json";
+        //Save함수
 
-<<<<<<< HEAD
-<<<<<<< HEAD
         //Load함수
         //게임 플레이 데이터를 저장하고 불러들이는데 사용된 함수이다.
 =======
@@ -240,38 +231,16 @@ namespace TextRPG_Week3
                             continue;
                         }
 
-=======
-                    if (File.Exists(saveFilePath) && new FileInfo(saveFilePath).Length > 0)
-                    {
-                        (loadedPlayer, loadedStore, loadedQuests) = SaveManager.LoadGame(selection);
->>>>>>> parent of edb4432 (기능 설명 주석)
-=======
-                    if (File.Exists(saveFilePath) && new FileInfo(saveFilePath).Length > 0)
-                    {
-                        (loadedPlayer, loadedStore, loadedQuests) = SaveManager.LoadGame(selection);
->>>>>>> parent of edb4432 (기능 설명 주석)
                         player.Inventory.Clear();
                         shop.ItemList.Clear();
                         QuestManager.Quests.Clear();
 
                         player = loadedPlayer;
                         shop = loadedStore;
-<<<<<<< HEAD
-<<<<<<< HEAD
                         QuestManager.Quests = loadedQuests;
 
                         Console.WriteLine($"{loadedPlayer.Name}의 정보를 불러왔습니다.");
                         Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
-=======
-                        quests = loadedQuests;
-
-                        Console.WriteLine($"{loadedPlayer.Name}의 정보를 불러왔습니다.");
->>>>>>> parent of edb4432 (기능 설명 주석)
-=======
-                        quests = loadedQuests;
-
-                        Console.WriteLine($"{loadedPlayer.Name}의 정보를 불러왔습니다.");
->>>>>>> parent of edb4432 (기능 설명 주석)
                         Console.ReadKey();
                         return;
                     }
@@ -283,13 +252,7 @@ namespace TextRPG_Week3
                 }
             }
         }
-<<<<<<< HEAD
-<<<<<<< HEAD
 >>>>>>> 6d3085d7e3e9886d7c9dbda1b9d956d4ab3e826f
-=======
->>>>>>> parent of edb4432 (기능 설명 주석)
-=======
->>>>>>> parent of edb4432 (기능 설명 주석)
 
         static void OpenQuest(bool fromTown = true)
         {
@@ -314,6 +277,8 @@ namespace TextRPG_Week3
                 else if (input > 0 && input <= quest.Count) SelectQuest(input - 1, fromTown);
             }
         }
+        //OpenQuest함수
+        //퀘스트 목록을 불러와서 표시한다.
 
         static void SelectQuest(int input, bool fromTown)
         {
@@ -427,6 +392,19 @@ namespace TextRPG_Week3
                 break;
             }
         }
+        //SelectQuest함수
+        //퀘스트를 관리하는 함수이다.
+        
+        //퀘스트 달성시
+        //-달성여부 표시
+        //-달성할 경우 보상 받기
+        
+        //퀘스트 미달성시
+        //-퀘스트를 수주했을 시
+        //--진행중임을 표시하고 진행률을 표시
+        
+        //-퀘스트를 수주하지 않았을 시
+        //--수주가능함을 표시하고 퀘스트를 수주한다.        
 
         static void EnteringDungeon()
         {
@@ -508,5 +486,24 @@ namespace TextRPG_Week3
                 }
             }
         }
+        //EnteringDungeon함수
+        //던전의 진행상황을 나타내는 함수이다.
+        //던전 진행 중 플레이어의 상태를 확인하거나 전투 전 부족한 체력을 채우는 등의 일을 진행한다.
+        
+        //1번 = 상태보기(fromTown: false) = 기능 사용 불가
+        //2번 = 전투 시작
+        //3번 = 회복 아이템
+        //4번 = 퀘스트 열람(fromTown: false) = 기능 사용 불가
+        
+        //회복 아이템 기능
+        //회복 포션과 마나 포션이 인벤토리에 있을 경우 불러와서 저장
+        //플레이어의 체력과 마나의 현상태를 표시하고
+        //값을 입력받는다.
+        //1번 = 회복 포션 사용
+        //회복포션이 없으면 포션이 부족하다 알리고 돌아감
+        //회폭표션이 있다면 회복포션을 매개변수로 소모품사용 함수 호출
+        //2번 = 마나 포션 사용
+        //마나포션이 없다면 포션이 부족하다 알리고 돌아감
+        //마나포션이 있다면 마나포션을 매개변수로 소모품사용 함수 호출
     }
 }
