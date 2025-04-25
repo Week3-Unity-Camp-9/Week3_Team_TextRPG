@@ -240,9 +240,7 @@ namespace TextRPG_Week3
 
                 for (int i = 0; i < quest.Count; i++)
                 {
-                    Console.ResetColor();
-                    if (quest[i].IsClear) Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    options[i] = $"{i + 1}.{quest[i].QuestName}";
+                    options[i] = $"{i + 1}.{quest[i].QuestName} : {(quest[i].IsAccept ? (quest[i].IsClear ? "달성!" : "진행중") : "수주가능")}";
                 }
 
                 int input = GameSystem.Select(options, question: "열람하고 싶은 퀘스트를 선택해 주세요\n>>");
