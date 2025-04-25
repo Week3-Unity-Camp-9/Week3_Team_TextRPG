@@ -111,6 +111,13 @@ namespace TextRPG_Week3
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine("Battle!!\n");
+                foreach (var enemy in appearEnemies)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    if (enemy.IsDead) Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine($"Lv.{enemy.Level} {enemy.Name} HP {(enemy.IsDead ? "Dead" : enemy.Hp.ToString())}");
+                    Console.ResetColor();
+                }
                 (string skill1, string skill2) = player.GetSkills();
                 string[] skills = new string[] { $"1.{skill1}", $"2.{skill2}" };
                 int input = GameSystem.Select(skills, zeroSelection: "0.취소", question: "사용할 스킬을 골라주세요.\n>>");
