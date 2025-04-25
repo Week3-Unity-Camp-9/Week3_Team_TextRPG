@@ -23,10 +23,6 @@ namespace TextRPG_Week3
             IsAccept = isAccept;
         }
     }
-    //public class Quest 퀘스트의 기본 클래스
-    //퀘스트 속성값들
-    
-    //퀘스트 속성값 입력방식
 
     public class DungeonQuest : Quest
     {
@@ -40,12 +36,6 @@ namespace TextRPG_Week3
             ReachedStage = reachedStage;
         }
     }
-    //DungeonQuest 속성값 입력 방식
-
-    //public class DefeatQuest : Quest 퀘스트 클래스를 상속받는 클래스
-    //DefeatQuest에만 들어가는 속성값들
-    //Json에 저장시 무시할 속성
-    //앞의 값을 가지고 뒤의 값을 반환하는 델리게이트 => GetTarget함수로 지정
 
     public class DefeatQuest : Quest
     {
@@ -73,13 +63,6 @@ namespace TextRPG_Week3
             };
         }
     }
-    //DefeatQuest 속성값 입력방식
-
-    //GetTarget함수 델리게이트Func<Enemy, bool> 값을 반환
-    //속성값 TargetTag에 따라
-    //"미니언"일 경우 적의 이름이 "미니언"일 경우 True
-    //"보스"일 경우 적이 보스리스트에 속할 경우 True
-    //그 외에는 반드시 False
 
     public static class QuestManager
     {
@@ -91,6 +74,4 @@ namespace TextRPG_Week3
         new DefeatQuest("보스 격파자!", "아무 보스나 3번 처치하자!", 50000,3, "보스")
         };
     }
-    //public static class QuestManager 퀘스트 목록을 저장해두는 정적 클래스
-    //퀘스트 리스트 생성
 }
