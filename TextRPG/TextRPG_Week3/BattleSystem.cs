@@ -30,7 +30,8 @@ namespace TextRPG_Week3
             lose = false;
             appearEnemies.Clear(); // 이전 전투에서 등장했던 적 목록을 초기화
 
-            int enemyCount = random.Next(1 + (stage / 3), 5); // 1마리에서 4마리 사이의 적 개수를 랜덤으로 결정
+            int min = Math.Min(1 + (stage / 3), 4);
+            int enemyCount = random.Next(min, 5); // 1마리에서 4마리 사이의 적 개수를 랜덤으로 결정
 
             if (stage % 10 == 0) // 10의 배수 스테이지마다 보스 등장
             {
