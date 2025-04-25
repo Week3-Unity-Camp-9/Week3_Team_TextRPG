@@ -122,7 +122,7 @@ namespace TextRPG_Week3
                 (string skill1, string skill2) = player.GetSkills();
                 string[] skills = new string[] { $"1.{skill1}", $"2.{skill2}" };
                 int input = GameSystem.Select(skills, zeroSelection: "0.취소", question: "사용할 스킬을 골라주세요.\n>>");
-                if (input == 0) return (1, false, false);
+                if (input == 0) return (1, false, true);
                 else if (input == -1) continue;
                 switch (player.Job)
                 {
