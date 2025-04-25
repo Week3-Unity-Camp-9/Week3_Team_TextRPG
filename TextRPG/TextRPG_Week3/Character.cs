@@ -32,7 +32,7 @@
         // ============================
         // 1. 상태 보기
         // ============================
-        private string GetJob()
+        public string GetJob()
         {
             return Job switch
             {

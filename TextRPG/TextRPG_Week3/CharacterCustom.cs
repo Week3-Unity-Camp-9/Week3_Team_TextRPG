@@ -80,7 +80,7 @@ namespace TextRPG_Week3
             Console.WriteLine("적용이 완료되었습니다!");
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"이름: {player.Name}");
-            Console.WriteLine($"직업: {player.Job}");
+            Console.WriteLine($"직업: {player.GetJob()}");
             Console.WriteLine($"공격력: {player.Attack}");
             Console.WriteLine($"방어력: {player.Defense}");
             Console.WriteLine($"최대 체력: {player.MaxHp}");
