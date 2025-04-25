@@ -195,6 +195,14 @@ namespace TextRPG_Week3
                     if (File.Exists(saveFilePath) && new FileInfo(saveFilePath).Length > 0)
                     {
                         (loadedPlayer, loadedStore, loadedQuests) = SaveManager.LoadGame(selection);
+                        if (loadedPlayer == null || loadedStore == null || loadedQuests == null)
+                        {
+                            Console.WriteLine("\n불러오기에 실패했습니다.");
+                            Console.ForegroundColor = ConsoleColor.Yellow; Console.Write("계속>>"); Console.ResetColor();
+                            Console.ReadKey();
+                            continue;
+                        }
+
                         player.Inventory.Clear();
                         shop.ItemList.Clear();
                         QuestManager.Quests.Clear();

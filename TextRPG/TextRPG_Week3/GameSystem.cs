@@ -38,10 +38,17 @@ namespace TextRPG_Week3
                 TypeNameHandling = TypeNameHandling.Auto
             };
             string saveFilePath = $"save{slot}.json";
-            string json = File.ReadAllText(saveFilePath);
-            GameData gameData = JsonConvert.DeserializeObject<GameData>(json, settings);
 
-            return (gameData.Player, gameData.Shop, gameData.Quests);
+            try
+            {
+                string json = File.ReadAllText(saveFilePath);
+                GameData gameData = JsonConvert.DeserializeObject<GameData>(json, settings);
+                return (gameData.Player, gameData.Shop, gameData.Quests);
+            }
+            catch
+            {
+                return (null, null, null);
+            }
         }
     }
 
