@@ -377,7 +377,7 @@ namespace TextRPG_Week3
                     case DefeatQuest defeatQuest:
                         foreach (Enemy enemy in appearEnemies) //나타난 몬스터들을 참조해서 그 수 만큼 반복
                         {
-                            if (defeatQuest.Target(enemy)) //몬스터가 조건에 맞는 목표일때
+                            if (defeatQuest.Target(enemy) && enemy.IsDead) //몬스터가 조건에 맞는 목표이고 쓰러뜨렸을때
                             {
                                 defeatQuest.DefeatCount++;
                                 if (defeatQuest.DefeatCount >= defeatQuest.RequiredDefeatCount)
