@@ -272,6 +272,7 @@ namespace TextRPG_Week3
                                 break;
                             case 1:
                                 quest[input].IsClear = false;
+                                quest[input].IsAccept = false;
                                 player.Gold += quest[input].Reword;
                                 quest[input].ClearCount++;
                                 switch (quest[input])

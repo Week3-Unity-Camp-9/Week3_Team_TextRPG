@@ -137,9 +137,23 @@ namespace TextRPG_Week3
                         switch (input)
                         {
                             case 1:
+                                if(player.Mp < 10)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("마나가 부족합니다.");
+                                    continue;
+                                }
+                                player.Mp -= 10;
                                 SelectTarget(player, 2, canDodge: false);
                                 break;
                             case 2:
+                                if (player.Mp < 15)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("마나가 부족합니다.");
+                                    continue;
+                                }
+                                player.Mp -= 15;
                                 SelectTarget(player);
                                 return (2, false, false);
                         }
@@ -148,9 +162,23 @@ namespace TextRPG_Week3
                         switch (input)
                         {
                             case 1:
+                                if (player.Mp < 5)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("마나가 부족합니다.");
+                                    continue;
+                                }
+                                player.Mp -= 5;
                                 SelectTarget(player, 1.5f, canDodge: false);
                                 break;
                             case 2:
+                                if (player.Mp < 20)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("마나가 부족합니다.");
+                                    continue;
+                                }
+                                player.Mp -= 20;
                                 int count = random.Next(2, 5);
                                 Console.ForegroundColor = ConsoleColor.DarkRed;
                                 Console.WriteLine($"{count}번 공격!!");
@@ -161,6 +189,7 @@ namespace TextRPG_Week3
                                     Enemy target = appearEnemies[randomTarget];
                                     int enemyHp = target.Hp;
                                     target.Hp -= (int)player.TotalAttack;
+                                    if (target.Hp <= 0) target.IsDead = true;
                                     Console.WriteLine($"Lv.{target.Level} {target.Name}을 맞췄다! [{(int)player.TotalAttack}의 데미지!]");
                                     Console.WriteLine($"HP {enemyHp} -> {target.Hp}\n");
                                     Thread.Sleep(500);
@@ -172,9 +201,23 @@ namespace TextRPG_Week3
                         switch (input)
                         {
                             case 1:
+                                if (player.Mp < 10)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("마나가 부족합니다.");
+                                    continue;
+                                }
+                                player.Mp -= 10;
                                 SelectTarget(player, 3);
                                 break;
                             case 2:
+                                if (player.Mp < 20)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("마나가 부족합니다.");
+                                    continue;
+                                }
+                                player.Mp -= 20;
                                 SelectTarget(player);
                                 return (1, true, false);
                         }
@@ -209,7 +252,7 @@ namespace TextRPG_Week3
                 Console.WriteLine($"HP {player.Hp}/{player.MaxHp}");
                 Console.WriteLine($"MP {player.Mp}/{player.MaxMp}\n");
                 Console.WriteLine("\n0.취소\n");
-                Console.WriteLine("대상을 선택해 주세요.\n >>");
+                Console.Write("공격할 대상을 선택해 주세요.\n>>");
                 if(int.TryParse(Console.ReadLine(), out int input))
                 {
                     switch (input)
@@ -448,7 +491,7 @@ namespace TextRPG_Week3
                     }
                 }
 
-                int input = GameSystem.Select(zeroSelection: "0.다음", question: "\n>>");
+                int input = GameSystem.Select(zeroSelection: "0.다음", question: ">>");
 
                 if (input == 0)
                 {
@@ -537,7 +580,7 @@ namespace TextRPG_Week3
                         Console.ResetColor();
                     }
                 }
-                int input = GameSystem.Select(zeroSelection: "0.다음", question: "\n>>");
+                int input = GameSystem.Select(zeroSelection: "0.다음", question: ">>");
 
                 if (input == 0)
                 {
