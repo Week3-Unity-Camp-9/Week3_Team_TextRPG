@@ -21,7 +21,7 @@ namespace TextRPG_Week3
                 _ => ""
             };
 
-            string rightText = IsPurchased && !ItemData.IsConsumable
+            string rightText = IsPurchased
                 ? "구매완료"
                 : $"{Price} G";
 
