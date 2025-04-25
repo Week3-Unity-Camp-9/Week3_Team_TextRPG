@@ -32,7 +32,7 @@
         // ============================
         // 1. 상태 보기
         // ============================
-        private string GetJob()
+        public string GetJob()
         {
             return Job switch
             {
@@ -100,6 +100,7 @@
             Console.WriteLine();
 
             Console.WriteLine($"체 력 : {Hp}/{MaxHp}");
+            Console.WriteLine($"마 나 : {Mp}/{MaxMp}");
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine($"Gold   : {Gold} G");
             Console.ResetColor();
@@ -173,7 +174,15 @@
                     {
                         if (Inventory[i].IsConsumable)
                         {
-                            Console.ForegroundColor = ConsoleColor.Red;
+                            switch (Inventory[i].Type)
+                            {
+                                case ItemType.HealthPotion:
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    break;
+                                case ItemType.ManaPotion:
+                                    Console.ForegroundColor = ConsoleColor.Blue;
+                                    break;
+                            }
                             Console.WriteLine($"{i + 1}. {Inventory[i].GetDisplayInfo()} | {Inventory[i].Count} 개");
                             continue;
                         }
@@ -184,12 +193,6 @@
                                 break;
                             case ItemType.Armor:
                                 Console.ForegroundColor = ConsoleColor.DarkBlue;
-                                break;
-                            case ItemType.HealthPotion:
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                break;
-                            case ItemType.ManaPotion:
-                                Console.ForegroundColor = ConsoleColor.Blue;
                                 break;
                             default:
                                 Console.ResetColor();

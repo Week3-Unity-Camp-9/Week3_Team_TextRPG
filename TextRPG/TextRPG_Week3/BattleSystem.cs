@@ -30,7 +30,8 @@ namespace TextRPG_Week3
             lose = false;
             appearEnemies.Clear(); // 이전 전투에서 등장했던 적 목록을 초기화
 
-            int enemyCount = random.Next(1 + (stage / 3), 5); // 1마리에서 4마리 사이의 적 개수를 랜덤으로 결정
+            int min = Math.Min(1 + (stage / 3), 4);
+            int enemyCount = random.Next(min, 5); // 1마리에서 4마리 사이의 적 개수를 랜덤으로 결정
 
             if (stage % 10 == 0) // 10의 배수 스테이지마다 보스 등장
             {
@@ -106,6 +107,7 @@ namespace TextRPG_Week3
                 Console.WriteLine($"Lv.{player.Level}  {player.Name} ({player.Job})");
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"HP {player.Hp}/{player.MaxHp}\n");
+                Console.WriteLine($"MP {player.Mp}/{player.MaxMp}\n");
 
                 int input = GameSystem.Select(new string[] { "1.공격", "2.스킬" }, false);
 
@@ -116,7 +118,8 @@ namespace TextRPG_Week3
                 }
                 else if (input == 2)
                 {
-                    (float blockBonus, bool hidden) = UseSkill(player);
+                    (float blockBonus, bool hidden, bool cancel) = UseSkill(player);
+                    if (cancel) continue;
                     return (blockBonus, hidden);
                 }
                 else continue;
@@ -132,40 +135,83 @@ namespace TextRPG_Week3
         //반환받은 blockBonus, hidden반환
         //나머지 = 반복
 
-        static (float, bool) UseSkill(Character player)
+        static (float, bool, bool) UseSkill(Character player)
         {
             while (true)
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine("Battle!!\n");
+                foreach (var enemy in appearEnemies)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    if (enemy.IsDead) Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine($"Lv.{enemy.Level} {enemy.Name} HP {(enemy.IsDead ? "Dead" : enemy.Hp.ToString())}");
+                    Console.ResetColor();
+                }
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("\n[내정보]");
+                Console.WriteLine($"Lv.{player.Level}  {player.Name} ({player.Job})");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"HP {player.Hp}/{player.MaxHp}\n");
+                Console.WriteLine($"MP {player.Mp}/{player.MaxMp}\n");
                 (string skill1, string skill2) = player.GetSkills();
                 string[] skills = new string[] { $"1.{skill1}", $"2.{skill2}" };
                 int input = GameSystem.Select(skills, zeroSelection: "0.취소", question: "사용할 스킬을 골라주세요.\n>>");
-                if (input == 0 || input == -1) continue;
+                if (input == 0) return (1, false, true);
+                else if (input == -1) continue;
                 switch (player.Job)
                 {
                     case PlayerClass.Warrior:
                         switch (input)
                         {
                             case 1:
+                                if(player.Mp < 10)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("마나가 부족합니다.");
+                                    continue;
+                                }
+                                player.Mp -= 10;
                                 SelectTarget(player, 2, canDodge: false);
                                 break;
                             case 2:
-                                SelectTarget(player, canDodge: false);
-                                return (2, false);
+                                if (player.Mp < 15)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("마나가 부족합니다.");
+                                    continue;
+                                }
+                                player.Mp -= 15;
+                                SelectTarget(player);
+                                return (2, false, false);
                         }
                         break;
                     case PlayerClass.Wizard:
                         switch (input)
                         {
                             case 1:
+                                if (player.Mp < 5)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("마나가 부족합니다.");
+                                    continue;
+                                }
+                                player.Mp -= 5;
                                 SelectTarget(player, 1.5f, canDodge: false);
                                 break;
                             case 2:
+                                if (player.Mp < 20)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("마나가 부족합니다.");
+                                    continue;
+                                }
+                                player.Mp -= 20;
                                 int count = random.Next(2, 5);
                                 Console.ForegroundColor = ConsoleColor.DarkRed;
                                 Console.WriteLine($"{count}번 공격!!");
+                                Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                                 Console.ReadKey();
                                 for (int i = 0; i < count; i++)
                                 {
@@ -173,6 +219,7 @@ namespace TextRPG_Week3
                                     Enemy target = appearEnemies[randomTarget];
                                     int enemyHp = target.Hp;
                                     target.Hp -= (int)player.TotalAttack;
+                                    if (target.Hp <= 0) target.IsDead = true;
                                     Console.WriteLine($"Lv.{target.Level} {target.Name}을 맞췄다! [{(int)player.TotalAttack}의 데미지!]");
                                     Console.WriteLine($"HP {enemyHp} -> {target.Hp}\n");
                                     Thread.Sleep(500);
@@ -184,17 +231,31 @@ namespace TextRPG_Week3
                         switch (input)
                         {
                             case 1:
+                                if (player.Mp < 10)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("마나가 부족합니다.");
+                                    continue;
+                                }
+                                player.Mp -= 10;
                                 SelectTarget(player, 3);
                                 break;
                             case 2:
+                                if (player.Mp < 20)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("마나가 부족합니다.");
+                                    continue;
+                                }
+                                player.Mp -= 20;
                                 SelectTarget(player);
-                                return (1, true);
+                                return (1, true, false);
                         }
                         break;
                 }
                 break;
             }
-            return (1, false);
+            return (1, false, false);
         }
         //UseSkill함수
         //플레이어의 직업에 따라 스킬 문자열을 2개 받아옴
@@ -237,16 +298,16 @@ namespace TextRPG_Week3
                 Console.WriteLine($"Lv.{player.Level}  {player.Name} ({player.Job})");
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"HP {player.Hp}/{player.MaxHp}");
+                Console.WriteLine($"MP {player.Mp}/{player.MaxMp}\n");
                 Console.WriteLine("\n0.취소\n");
-                Console.WriteLine("대상을 선택해 주세요.\n >>");
+                Console.Write("공격할 대상을 선택해 주세요.\n>>");
                 if(int.TryParse(Console.ReadLine(), out int input))
                 {
                     switch (input)
                     {
-                        case -1:
-                            continue;
                         case 0:
                             Console.WriteLine("행동을 취소하고 턴을 넘깁니다.");
+                            Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                             Console.ReadKey();
                             return;
                         default:
@@ -257,6 +318,7 @@ namespace TextRPG_Week3
                                 {
                                     Console.ForegroundColor = ConsoleColor.DarkRed;
                                     Console.WriteLine($"{target.Name}은 이미 죽었습니다.");
+                                    Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                                     Console.ReadKey();
                                     continue;
                                 }
@@ -270,7 +332,7 @@ namespace TextRPG_Week3
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("잘못된 입력입니다.");
-                    Console.ResetColor();
+                    Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                     Console.ReadKey();
                 }
             }
@@ -296,7 +358,7 @@ namespace TextRPG_Week3
             int Damage = (int)(player.TotalAttack * attackBonus); // 플레이어의 총 공격력을 기본 데미지로 설정
 
             bool critical = (random.Next(1, 101) < 15); // 15% 확률로 치명타 발생 여부 결정
-            if (critical) Damage = (int)(player.TotalAttack * 1.6f); // 치명타 시 데미지 1.6배 증가
+            if (critical) Damage = (int)(Damage * 1.6f); // 치명타 시 데미지 1.6배 증가
 
             bool hit = true;
             if (canDodge)
@@ -323,9 +385,7 @@ namespace TextRPG_Week3
                 Console.WriteLine($"HP {selectedEnemy.Hp + Damage} => {(selectedEnemy.IsDead ? "Dead" : selectedEnemy.Hp)}");
             }
             else Console.WriteLine("공격했지만 아무일도 일어나지 않았습니다.\n");
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.Write("\n아무 키나 눌러서 계속\n>>");
-            Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
             Console.ReadKey();
         }
         //PlayerAttack함수(정수, 캐릭터, 실수, 불값 매개변수)
@@ -400,9 +460,7 @@ namespace TextRPG_Week3
             Console.WriteLine($"Lv.{player.Level} {player.Name}");
             if (player.Hp <= 0) Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.WriteLine($"HP {originalHp} => {player.Hp}");
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.Write("\n아무 키나 눌러서 계속\n>>");
-            Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.DarkGreen; Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("\n계속>>"); Console.ResetColor(); Console.ResetColor();
             Console.ReadKey();
             if (player.Hp <= 0) // 플레이어의 HP가 0 이하이면
             {
@@ -414,6 +472,7 @@ namespace TextRPG_Week3
                 if (appearEnemy is Boss boss)
                 {
                     boss.UseSpecialSkill(player);
+                    Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                     Console.ReadKey();
                 }
             }
@@ -457,7 +516,7 @@ namespace TextRPG_Week3
                     case DefeatQuest defeatQuest:
                         foreach (Enemy enemy in appearEnemies) //나타난 몬스터들을 참조해서 그 수 만큼 반복
                         {
-                            if (defeatQuest.Target(enemy)) //몬스터가 조건에 맞는 목표일때
+                            if (defeatQuest.Target(enemy) && enemy.IsDead) //몬스터가 조건에 맞는 목표이고 쓰러뜨렸을때
                             {
                                 defeatQuest.DefeatCount++;
                                 if (defeatQuest.DefeatCount >= defeatQuest.RequiredDefeatCount)
@@ -545,7 +604,7 @@ namespace TextRPG_Week3
                     }
                 }
 
-                int input = GameSystem.Select(zeroSelection: "0.다음", question: "\n>>");
+                int input = GameSystem.Select(zeroSelection: "0.다음", question: ">>");
 
                 if (input == 0)
                 {
@@ -570,8 +629,7 @@ namespace TextRPG_Week3
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine($"체력을 {heal}만큼 회복합니다!");
                             Console.WriteLine($"{player.Hp - heal} => {player.Hp}");
-                            Console.ForegroundColor = ConsoleColor.DarkGreen;
-                            Console.WriteLine("\n아무 키나 누르면 계속합니다...");
+                            Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("\n계속>>"); Console.ResetColor();
                             Console.ReadKey();
                         }
                         else break;
@@ -608,7 +666,7 @@ namespace TextRPG_Week3
         static void BattleLose(Character player)
         {
             lose = true;
-            string[] lastStats = new string[] { player.Level.ToString(), player.TotalAttack.ToString(), player.TotalDefense.ToString(), player.MaxHp.ToString() };
+            string[] lastStats = new string[] { player.Level.ToString(), player.TotalAttack.ToString(), player.TotalDefense.ToString(), player.MaxHp.ToString(), player.MaxMp.ToString() };
             int originalHp = player.Hp;
             int gold = (int)((player.Level * 500));
 
@@ -657,7 +715,7 @@ namespace TextRPG_Week3
                         Console.ResetColor();
                     }
                 }
-                int input = GameSystem.Select(zeroSelection: "0.다음", question: "\n>>");
+                int input = GameSystem.Select(zeroSelection: "0.다음", question: ">>");
 
                 if (input == 0)
                 {
@@ -670,17 +728,17 @@ namespace TextRPG_Week3
                     Console.WriteLine($"공격력 : {player.TotalAttack}");
                     Console.WriteLine($"방어력 : {player.TotalDefense}");
                     Console.WriteLine($"HP {player.MaxHp}");
+                    Console.WriteLine($"HP {player.MaxMp}");
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine("\n레벨이 1로 돌아갑니다.\n");
                     Console.WriteLine($"Lv : {lastStats[0]} => {player.Level}");
                     Console.WriteLine($"공격력 : {lastStats[1]} => {player.TotalAttack}");
                     Console.WriteLine($"방어력 : {lastStats[2]} => {player.TotalDefense}");
                     Console.WriteLine($"HP : {lastStats[3]} => {player.MaxHp}");
+                    Console.WriteLine($"HP : {lastStats[4]} => {player.MaxMp}");
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Console.WriteLine($"레벨에 대한 보상으로 {gold} Gold를 획득했습니다.");
-                    Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.WriteLine("\n아무 키나 누르면 계속합니다...");
-                    Console.ResetColor();
+                    Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("\n계속>>"); Console.ResetColor();
                     Console.ReadKey();
                     return;
                 }
