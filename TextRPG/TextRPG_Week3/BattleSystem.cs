@@ -87,6 +87,7 @@ namespace TextRPG_Week3
                 Console.WriteLine($"Lv.{player.Level}  {player.Name} ({player.Job})");
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"HP {player.Hp}/{player.MaxHp}\n");
+                Console.WriteLine($"MP {player.Mp}/{player.MaxMp}\n");
 
                 int input = GameSystem.Select(new string[] { "1.공격", "2.스킬" }, false);
 
@@ -119,6 +120,12 @@ namespace TextRPG_Week3
                     Console.WriteLine($"Lv.{enemy.Level} {enemy.Name} HP {(enemy.IsDead ? "Dead" : enemy.Hp.ToString())}");
                     Console.ResetColor();
                 }
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("\n[내정보]");
+                Console.WriteLine($"Lv.{player.Level}  {player.Name} ({player.Job})");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"HP {player.Hp}/{player.MaxHp}\n");
+                Console.WriteLine($"MP {player.Mp}/{player.MaxMp}\n");
                 (string skill1, string skill2) = player.GetSkills();
                 string[] skills = new string[] { $"1.{skill1}", $"2.{skill2}" };
                 int input = GameSystem.Select(skills, zeroSelection: "0.취소", question: "사용할 스킬을 골라주세요.\n>>");
@@ -200,6 +207,7 @@ namespace TextRPG_Week3
                 Console.WriteLine($"Lv.{player.Level}  {player.Name} ({player.Job})");
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"HP {player.Hp}/{player.MaxHp}");
+                Console.WriteLine($"MP {player.Mp}/{player.MaxMp}\n");
                 Console.WriteLine("\n0.취소\n");
                 Console.WriteLine("대상을 선택해 주세요.\n >>");
                 if(int.TryParse(Console.ReadLine(), out int input))
@@ -482,7 +490,7 @@ namespace TextRPG_Week3
         static void BattleLose(Character player)
         {
             lose = true;
-            string[] lastStats = new string[] { player.Level.ToString(), player.TotalAttack.ToString(), player.TotalDefense.ToString(), player.MaxHp.ToString() };
+            string[] lastStats = new string[] { player.Level.ToString(), player.TotalAttack.ToString(), player.TotalDefense.ToString(), player.MaxHp.ToString(), player.MaxMp.ToString() };
             int originalHp = player.Hp;
             int gold = (int)((player.Level * 500));
 
@@ -544,12 +552,14 @@ namespace TextRPG_Week3
                     Console.WriteLine($"공격력 : {player.TotalAttack}");
                     Console.WriteLine($"방어력 : {player.TotalDefense}");
                     Console.WriteLine($"HP {player.MaxHp}");
+                    Console.WriteLine($"HP {player.MaxMp}");
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine("\n레벨이 1로 돌아갑니다.\n");
                     Console.WriteLine($"Lv : {lastStats[0]} => {player.Level}");
                     Console.WriteLine($"공격력 : {lastStats[1]} => {player.TotalAttack}");
                     Console.WriteLine($"방어력 : {lastStats[2]} => {player.TotalDefense}");
                     Console.WriteLine($"HP : {lastStats[3]} => {player.MaxHp}");
+                    Console.WriteLine($"HP : {lastStats[4]} => {player.MaxMp}");
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Console.WriteLine($"레벨에 대한 보상으로 {gold} Gold를 획득했습니다.");
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
