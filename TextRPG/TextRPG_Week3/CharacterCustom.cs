@@ -71,6 +71,8 @@ namespace TextRPG_Week3
                     player.Defense = 10;
                     player.Hp = 120;
                     player.MaxHp = 120;
+                    player.Mp = 50;
+                    player.MaxHp = 50;
                     break;
             }
             Console.Clear();
