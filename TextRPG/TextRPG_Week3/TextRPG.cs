@@ -72,6 +72,7 @@ namespace TextRPG_Week3
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("잘못된 입력입니다.");
                         Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                         Console.ReadKey();
                         break;
                 }
@@ -89,7 +90,7 @@ namespace TextRPG_Week3
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("던전에서는 기능을 사용할 수 없습니다.");
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.Write(">>");
+                    Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                     Console.ReadKey();
                     break;
                 }
@@ -126,10 +127,11 @@ namespace TextRPG_Week3
                         string json = File.ReadAllText(path);
                         gameData = JsonConvert.DeserializeObject<GameData>(json);
                     }
-                    catch (Exception ex)
+                    catch
                     {
-                        Console.WriteLine($"데이터 로드 실패: {ex.Message}");
+                        options[i] = $"{i + 1}번 슬롯 [불러오기 실패!]";
                         gameData = null;
+                        continue;
                     }
                 }
 
@@ -152,14 +154,16 @@ namespace TextRPG_Week3
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("저장할 파일을 선택해 주세요.");
+
                 string[] options = SaveFileRead();
                 int selection = GameSystem.Select(options, question: "\n>>");
-                Console.WriteLine("\n>>");
+
                 if (selection == 0) return;
                 else if (selection > 0 && selection <= options.Length)
                 {
                     SaveManager.SaveGame(player, shop, QuestManager.Quests, selection);
                     Console.WriteLine($"{selection}파일에 {player.Name}의 정보를 저장했습니다.");
+                    Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                     Console.ReadKey();
                 }
             }
@@ -172,13 +176,14 @@ namespace TextRPG_Week3
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("불러올 파일을 선택해 주세요.");
+
                 string[] options = SaveFileRead();
                 int selection = GameSystem.Select(options, question: "\n>>");
-                Console.WriteLine("\n>>");
 
                 Character loadedPlayer = null;
                 ShopItem loadedStore = null;
                 List<Quest> loadedQuests = null;
+
                 if (selection == 0)
                 {
                     return;
@@ -199,6 +204,7 @@ namespace TextRPG_Week3
                         QuestManager.Quests = loadedQuests;
 
                         Console.WriteLine($"{loadedPlayer.Name}의 정보를 불러왔습니다.");
+                        Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                         Console.ReadKey();
                         return;
                     }
@@ -260,7 +266,7 @@ namespace TextRPG_Week3
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("보상 수령은 마을에서만 가능합니다.");
                             Console.ForegroundColor = ConsoleColor.DarkGreen;
-                            Console.Write(">>");
+                            Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                             Console.ReadKey();
                             break;
                         }
@@ -286,6 +292,7 @@ namespace TextRPG_Week3
                                 }
                                 Console.ForegroundColor = ConsoleColor.Cyan;
                                 Console.WriteLine($"퀘스트 달성! 보상으로 {quest[input].Reword} Gold를 받았습니다!");
+                                Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                                 Console.ReadKey();
                                 break;
                             default:
@@ -318,7 +325,7 @@ namespace TextRPG_Week3
                                     Console.ForegroundColor = ConsoleColor.Red;
                                     Console.WriteLine("퀘스트 수주는 마을에서만 가능합니다.");
                                     Console.ForegroundColor = ConsoleColor.DarkGreen;
-                                    Console.Write(">>");
+                                    Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                                     Console.ReadKey();
                                     break;
                                 }
@@ -330,6 +337,7 @@ namespace TextRPG_Week3
                                     Console.WriteLine($"{quest[input].QuestName}을(를) 수주했습니다.");
 
                                     quest[input].IsAccept = true;
+                                    Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                                     Console.ReadKey();
                                     break;
                                 }
@@ -390,6 +398,7 @@ namespace TextRPG_Week3
                                     {
                                         Console.ForegroundColor = ConsoleColor.Red;
                                         Console.WriteLine("포션이 부족합니다.");
+                                        Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                                         Console.ReadKey();
                                         continue;
                                     }
@@ -400,6 +409,7 @@ namespace TextRPG_Week3
                                     {
                                         Console.ForegroundColor = ConsoleColor.Red;
                                         Console.WriteLine("포션이 부족합니다.");
+                                        Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                                         Console.ReadKey();
                                         continue;
                                     }

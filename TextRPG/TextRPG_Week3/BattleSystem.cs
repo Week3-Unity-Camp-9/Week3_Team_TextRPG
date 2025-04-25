@@ -182,6 +182,7 @@ namespace TextRPG_Week3
                                 int count = random.Next(2, 5);
                                 Console.ForegroundColor = ConsoleColor.DarkRed;
                                 Console.WriteLine($"{count}번 공격!!");
+                                Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                                 Console.ReadKey();
                                 for (int i = 0; i < count; i++)
                                 {
@@ -259,6 +260,7 @@ namespace TextRPG_Week3
                     {
                         case 0:
                             Console.WriteLine("행동을 취소하고 턴을 넘깁니다.");
+                            Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                             Console.ReadKey();
                             return;
                         default:
@@ -269,6 +271,7 @@ namespace TextRPG_Week3
                                 {
                                     Console.ForegroundColor = ConsoleColor.DarkRed;
                                     Console.WriteLine($"{target.Name}은 이미 죽었습니다.");
+                                    Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                                     Console.ReadKey();
                                     continue;
                                 }
@@ -282,7 +285,7 @@ namespace TextRPG_Week3
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("잘못된 입력입니다.");
-                    Console.ResetColor();
+                    Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                     Console.ReadKey();
                 }
             }
@@ -321,9 +324,7 @@ namespace TextRPG_Week3
                 Console.WriteLine($"HP {selectedEnemy.Hp + Damage} => {(selectedEnemy.IsDead ? "Dead" : selectedEnemy.Hp)}");
             }
             else Console.WriteLine("공격했지만 아무일도 일어나지 않았습니다.\n");
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.Write("\n아무 키나 눌러서 계속\n>>");
-            Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
             Console.ReadKey();
         }
 
@@ -385,9 +386,7 @@ namespace TextRPG_Week3
             Console.WriteLine($"Lv.{player.Level} {player.Name}");
             if (player.Hp <= 0) Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.WriteLine($"HP {originalHp} => {player.Hp}");
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.Write("\n아무 키나 눌러서 계속\n>>");
-            Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.DarkGreen; Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("\n계속>>"); Console.ResetColor(); Console.ResetColor();
             Console.ReadKey();
             if (player.Hp <= 0) // 플레이어의 HP가 0 이하이면
             {
@@ -399,6 +398,7 @@ namespace TextRPG_Week3
                 if (appearEnemy is Boss boss)
                 {
                     boss.UseSpecialSkill(player);
+                    Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                     Console.ReadKey();
                 }
             }
@@ -516,8 +516,7 @@ namespace TextRPG_Week3
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine($"체력을 {heal}만큼 회복합니다!");
                             Console.WriteLine($"{player.Hp - heal} => {player.Hp}");
-                            Console.ForegroundColor = ConsoleColor.DarkGreen;
-                            Console.WriteLine("\n아무 키나 누르면 계속합니다...");
+                            Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("\n계속>>"); Console.ResetColor();
                             Console.ReadKey();
                         }
                         else break;
@@ -603,9 +602,7 @@ namespace TextRPG_Week3
                     Console.WriteLine($"HP : {lastStats[4]} => {player.MaxMp}");
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Console.WriteLine($"레벨에 대한 보상으로 {gold} Gold를 획득했습니다.");
-                    Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.WriteLine("\n아무 키나 누르면 계속합니다...");
-                    Console.ResetColor();
+                    Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("\n계속>>"); Console.ResetColor();
                     Console.ReadKey();
                     return;
                 }

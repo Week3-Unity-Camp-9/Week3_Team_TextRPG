@@ -86,7 +86,7 @@ namespace TextRPG_Week3
             Console.WriteLine($"최대 체력: {player.MaxHp}");
             Console.WriteLine($"골드: {player.Gold}");
             Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine("\n아무 키나 누르면 계속합니다...");
+            Console.WriteLine("\n계속>>");
             Console.ResetColor();
             Console.ReadKey();
             Console.Clear();

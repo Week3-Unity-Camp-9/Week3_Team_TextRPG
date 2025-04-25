@@ -73,6 +73,7 @@ namespace TextRPG_Week3
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("잘못된 입력입니다.");
                     Console.ResetColor();
+                    Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                     Console.ReadKey();
                     return -1;
                 }
@@ -82,6 +83,7 @@ namespace TextRPG_Week3
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("잘못된 입력입니다.");
                 Console.ResetColor();
+                Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write("계속>>"); Console.ResetColor();
                 Console.ReadKey();
                 return -1;
             }
