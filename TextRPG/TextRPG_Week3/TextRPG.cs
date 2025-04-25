@@ -6,6 +6,11 @@ namespace TextRPG_Week3
     {
         static Character player = new Character();
         static ShopItem shop = new ShopItem();
+        /*7~9번줄
+        캐릭터클래스 player, 상점아이템클래스 shop, 퀘스트클래스quests
+        객체를 클래스 전역 변수로 불러온다
+        */
+
         static void Main()
         {
             player.Inventory.AddRange(new List<Item>
@@ -23,6 +28,12 @@ namespace TextRPG_Week3
 
             Town();
         }
+        /*Main함수
+        플레이어의 기본 지금 아이템을 추가해 주고,
+        상점의 아이템들을 구성하는 함수를 호출해주고,
+        캐릭터의 이름,직업을 정하는 함수를 호출해
+        시작화면으로 넘어간다.
+        */
 
         static void Town()
         {
@@ -78,6 +89,17 @@ namespace TextRPG_Week3
                 }
             }
         }
+        /*Town함수
+        마을에서 할 수 있는 행동을 출력한 뒤,
+        값을 입력받는다.
+        입력된 값이
+        1번 = 상태보기 함수 호출
+        2번 = 플레이어 인벤토리표시 함수
+        3번 = 상점 함수에 플레이어 정보를 넘겨주고 호출
+        4번 = 퀘스트 열람 함수 호출
+        5번 = 던전 입장 함수 호출
+        0번 = 종료
+        */
 
         static void Status(bool fromTown = true)
         {
@@ -113,6 +135,17 @@ namespace TextRPG_Week3
                 }
             }
         }
+        /*Status함수 (fromTown이라는 불값을 매개변수로 받기(기본값 true))
+        플레이어의 정보를 표시하는 함수를 호출하고
+        값을 입력받는다.
+        입력된 값이
+        1번 = 커스터마이징
+        2번 = 저장
+        3번 = 불러오기
+        0번 = 나가기
+        이때 fromTown매개변수가 true라면 기능 사용 불가
+        */
+
         static string[] SaveFileRead()
         {
             string[] options = new string[3];
@@ -146,6 +179,13 @@ namespace TextRPG_Week3
             }
             return options;
         }
+        /*SaveFileRead함수
+        Save와 Load에서 호출되는 함수로
+        save{i+1}.json 형식의 파일이 있는지 찾아서
+        파일이 있을 경우 슬롯과 저장된 플레이어 이름을 표시
+        파일이 없을 경우 슬롯과 비어있음을 표시
+        
+        */
 
         static void Save()
         {
@@ -168,6 +208,13 @@ namespace TextRPG_Week3
                 }
             }
         }
+        /*Save함수
+        SaveFileRead함수를 불러와 저장 슬롯을 표시하고
+        값을 입력받는다.
+        0을 입력하면 나간다
+        저장할 슬롯은 1~3까지만 가능하고 입력받은 값이 조건에 맞으면
+        입력된 값의 슬롯에 정보를 저장한다.
+        */
 
         static void Load()
         {
@@ -224,6 +271,14 @@ namespace TextRPG_Week3
                 }
             }
         }
+        /*Load함수
+        SaveFileRead함수를 불러와 저장 슬롯을 표시하고
+        값을 입력받는다.
+        0을 입력하면 나간다.
+        저장된 슬롯은 1~3까지만 가능하고 입력받은 값이 조건에 맞으면
+        입력된 값의 슬롯의 정보를 불러온다.
+        다만 저장파일이 비어있을때 불러오면 데이터가 없다고 경고하고 불러오지 않는다.
+        */
 
         static void OpenQuest(bool fromTown = true)
         {
@@ -248,6 +303,14 @@ namespace TextRPG_Week3
                 else if (input > 0 && input <= quest.Count) SelectQuest(input - 1, fromTown);
             }
         }
+        /*OpenQuest함수 (fromTown이란 불값을 매개변수로 받기(기본값 true))
+        퀘스트 목록을 불러와서 표시한다.
+        값을 입력받는다.
+        0을 입력하면 나간다.
+        입력받은 값이 퀘스트 목록의 값과 일치하면 
+        SelectQuest함수에 입력받은 번호와 매개변수 fromTown을 전달하여 호출한다.
+        
+        */
 
         static void SelectQuest(int input, bool fromTown)
         {
@@ -361,6 +424,34 @@ namespace TextRPG_Week3
                 break;
             }
         }
+        /*SelectQuest함수(정수 input과 불값 fromTown을 매개변수로 받는다.)
+        퀘스트 목록을 불러오고
+        input값을 1 뺀다(목록의 저장 순서는 0부터 이기 때문에)
+        퀘스트 목록의 input 순서의 퀘스트 설명을 표시하고
+        
+        퀘스트 달성시
+        -달성여부 표시
+        -fromTown이 false일 경우 기능사용 불가(자동으로 나가기)
+        -값을 입력받는다.
+        -0번 = 나가기
+        -1번 = 보상 받기
+        
+        퀘스트 미달성시
+        -퀘스트를 수주했을 시
+        --진행중임을 표시하고 진행률을 표시
+        --(퇴치 퀘스트일 경우 몇마리를 잡았는지)
+        --(던전 도달 퀘스트일 경우 몇층까지 도달했는지)
+        --값을 입력받는다.
+        --값이 0이면 나가고 아니면 반복표시
+        
+        
+        -퀘스트를 수주하지 않았을 시
+        --수주가능함을 표시하고
+        --formTown이 false일 경우 기능 사용 불가
+        --값을 입력받는다.
+        --0번 = 나가기
+        --1번 = 퀘스트 수주
+        */
 
         static void EnteringDungeon()
         {
@@ -442,5 +533,23 @@ namespace TextRPG_Week3
                 }
             }
         }
+        /*EnteringDungeon함수
+        값을 입력받는다.(나가기 없음)
+        1번 = 상태보기(fromTown: false) = 기능 사용 불가
+        2번 = 전투 시작
+        3번 = 회복 아이템
+        4번 = 퀘스트 열람(fromTown: false) = 기능 사용 불가
+        
+        회복 아이템 기능
+        회복 포션과 마나 포션이 인벤토리에 있을 경우 불러와서 저장
+        플레이어의 체력과 마나의 현상태를 표시하고
+        값을 입력받는다.
+        1번 = 회복 포션 사용
+        회복포션이 없으면 포션이 부족하다 알리고 돌아감
+        회폭표션이 있다면 회복포션을 매개변수로 소모품사용 함수 호출
+        2번 = 마나 포션 사용
+        마나포션이 없다면 포션이 부족하다 알리고 돌아감
+        마나포션이 있다면 마나포션을 매개변수로 소모품사용 함수 호출
+        */
     }
 }

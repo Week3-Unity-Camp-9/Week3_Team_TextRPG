@@ -7,7 +7,12 @@
         HealthPotion,
         ManaPotion
     }
-
+    /*아이템 종류 열거형
+    Weapon부터 1
+    Armor = 2
+    HealthPotion = 3
+    ManaPotion = 4
+    */
     public class Item
     {
         public string Name { get; set; }
@@ -28,6 +33,11 @@
             Count = count;
             IsConsumable = isConsumable;
         }
+        /*public class Item
+        아이템의 속성값들
+        
+        아이템 속성값 받는 방식
+        */
 
         public string GetDisplayInfo()
         {
@@ -46,5 +56,16 @@
 
             return $"- {equippedMark}{Name,-12} | {statText,-14} | {Description}";
         }
+        /*GetDisplayInfo함수 문자열을 반환
+        무기나 방어구이며 착용중일때 [E]표시 아니면 띄어쓰기
+        
+        타입에 따라 문자열로 변환
+        무기 = 공격력 +값
+        방어구 = 방어력 +값
+        회복포션 = 체력회복 +값
+        마나포션 = 마나회복 + 값
+        그외 = ""
+        
+        문자열 반환*/
     }
 }
