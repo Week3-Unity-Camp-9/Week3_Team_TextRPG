@@ -97,14 +97,15 @@ namespace TextRPG_Week3
                 }
                 else if (input == 2)
                 {
-                    (float blockBonus, bool hidden) = UseSkill(player);
+                    (float blockBonus, bool hidden, bool cancel) = UseSkill(player);
+                    if (cancel) continue;
                     return (blockBonus, hidden);
                 }
                 else continue;
             }
         }
 
-        static (float, bool) UseSkill(Character player)
+        static (float, bool, bool) UseSkill(Character player)
         {
             while (true)
             {
@@ -121,7 +122,8 @@ namespace TextRPG_Week3
                 (string skill1, string skill2) = player.GetSkills();
                 string[] skills = new string[] { $"1.{skill1}", $"2.{skill2}" };
                 int input = GameSystem.Select(skills, zeroSelection: "0.취소", question: "사용할 스킬을 골라주세요.\n>>");
-                if (input == 0 || input == -1) continue;
+                if (input == 0) return (1, false, false);
+                else if (input == -1) continue;
                 switch (player.Job)
                 {
                     case PlayerClass.Warrior:
@@ -132,7 +134,7 @@ namespace TextRPG_Week3
                                 break;
                             case 2:
                                 SelectTarget(player, canDodge: false);
-                                return (2, false);
+                                return (2, false, false);
                         }
                         break;
                     case PlayerClass.Wizard:
@@ -167,13 +169,13 @@ namespace TextRPG_Week3
                                 break;
                             case 2:
                                 SelectTarget(player);
-                                return (1, true);
+                                return (1, true, false);
                         }
                         break;
                 }
                 break;
             }
-            return (1, false);
+            return (1, false, false);
         }
 
         static void SelectTarget(Character player, float attackBonus = 1f, bool canDodge = true)
