@@ -43,7 +43,7 @@ namespace TextRPG_Week3
                     player.Hp = 120;
                     player.MaxHp = 120;
                     player.Mp = 50;
-                    player.MaxHp = 50;
+                    player.MaxMp = 50;
                     break;
                 case "2":
                     player.Job = PlayerClass.Wizard;
@@ -52,7 +52,7 @@ namespace TextRPG_Week3
                     player.Hp = 80;
                     player.MaxHp = 80;
                     player.Mp = 120;
-                    player.MaxHp = 120;
+                    player.MaxMp = 120;
                     break;
                 case "3":
                     player.Job = PlayerClass.Thief;
@@ -61,7 +61,7 @@ namespace TextRPG_Week3
                     player.Hp = 100;
                     player.MaxHp = 100;
                     player.Mp = 100;
-                    player.MaxHp = 100;
+                    player.MaxMp = 100;
                     break;
                 default:
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -72,7 +72,7 @@ namespace TextRPG_Week3
                     player.Hp = 120;
                     player.MaxHp = 120;
                     player.Mp = 50;
-                    player.MaxHp = 50;
+                    player.MaxMp = 50;
                     break;
             }
             Console.Clear();
